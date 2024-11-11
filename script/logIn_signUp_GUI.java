@@ -1,14 +1,12 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class logIn_signUp_GUI extends JFrame {
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
-    private JPanel loginPanel, signupPanel;
+    private final JPanel mainPanel;
+    private final CardLayout cardLayout;
+    private JPanel loginPanel, signupPanel, resetPasswordPanel;
 
-    private JTextField loginUsernameField;
+    private JTextField loginUsernameField, inputUsernameField;
     private JPasswordField loginPasswordField;
     private JTextField signupFullNameField, signupUsernameField;
     private JPasswordField signupPasswordField, signupConfirmPasswordField;
@@ -24,10 +22,12 @@ public class logIn_signUp_GUI extends JFrame {
         mainPanel.setLayout(cardLayout);
 
         createLoginPanel();
+        createResetPasswordPanel();
         createSignupPanel();
 
         mainPanel.add(loginPanel, "login");
         mainPanel.add(signupPanel, "signup");
+        mainPanel.add(resetPasswordPanel, "resetPassword");
 
         add(mainPanel);
         cardLayout.show(mainPanel, "login");
@@ -40,18 +40,21 @@ public class logIn_signUp_GUI extends JFrame {
         loginPanel.setLayout(new BoxLayout(loginPanel, BoxLayout.Y_AXIS));
         loginPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        // Centered title for Login Panel
         JLabel loginTitle = new JLabel("Log In", SwingConstants.CENTER);
         loginTitle.setFont(new Font("Serif", Font.BOLD, 22));
         loginPanel.add(loginTitle);
 
         loginUsernameField = createInputField();
         loginPasswordField = createPasswordField();
+        JButton resetPassword = new JButton("reset");
+        
 
         loginPanel.add(Box.createVerticalStrut(15));
         loginPanel.add(createLabeledField("Username:", loginUsernameField));
         loginPanel.add(Box.createVerticalStrut(10));
         loginPanel.add(createLabeledField("Password:", loginPasswordField));
+        loginPanel.add(Box.createVerticalStrut(20));
+        loginPanel.add(createLabeledField("Foget Password?", resetPassword));
         loginPanel.add(Box.createVerticalStrut(20));
 
         JPanel loginButtonPanel = new JPanel();
@@ -61,19 +64,38 @@ public class logIn_signUp_GUI extends JFrame {
         loginButtonPanel.add(goToSignupButton);
         loginPanel.add(loginButtonPanel);
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Login button clicked");
-            }
-        });
+        loginButton.addActionListener(e -> System.out.println("Login button clicked"));
+        resetPassword.addActionListener(e -> cardLayout.show(mainPanel, "resetPassword"));
+        goToSignupButton.addActionListener(e -> cardLayout.show(mainPanel, "signup"));
+    }
 
-        goToSignupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "signup");
-            }
-        });
+    private void createResetPasswordPanel() {
+        resetPasswordPanel = new JPanel();
+        resetPasswordPanel.setLayout(new BoxLayout(resetPasswordPanel, BoxLayout.Y_AXIS));
+        resetPasswordPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+
+        JLabel resetPasswordTitle = new JLabel("Reset Password", SwingConstants.CENTER);
+        resetPasswordPanel.setFont(new Font("Serif", Font.BOLD, 22));
+        resetPasswordPanel.add(resetPasswordTitle);
+
+        inputUsernameField = createInputField();
+        resetPasswordPanel.add(Box.createVerticalStrut(15));
+        resetPasswordPanel.add(createLabeledField("Email:", inputUsernameField));
+        JLabel resetPasswordText = new JLabel("Please enter email that linked to your account", SwingConstants.LEFT);
+        resetPasswordText.setFont(new Font("Serif", Font.PLAIN, 16));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.add(resetPasswordText);
+        resetPasswordPanel.add(panel);
+
+        JPanel resetPasswordButtonPanel = new JPanel();
+        JButton  resetPasswordButton = new JButton("Submit");
+        JButton  resetPasswordGoBackButton = new JButton("Go back");
+        resetPasswordButtonPanel.add(resetPasswordGoBackButton);
+        resetPasswordButtonPanel.add(resetPasswordButton);
+        resetPasswordPanel.add(resetPasswordButtonPanel);
+
+        resetPasswordButton.addActionListener(e -> System.out.println("reset password button clicked"));
+        resetPasswordGoBackButton.addActionListener(e -> cardLayout.show(mainPanel, "login"));
     }
 
     private void createSignupPanel() {
@@ -81,7 +103,6 @@ public class logIn_signUp_GUI extends JFrame {
         signupPanel.setLayout(new BoxLayout(signupPanel, BoxLayout.Y_AXIS));
         signupPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 
-        // Centered title for Signup Panel
         JLabel signupTitle = new JLabel("Sign Up", SwingConstants.CENTER);
         signupTitle.setFont(new Font("Serif", Font.BOLD, 22));
         signupPanel.add(signupTitle);
@@ -108,25 +129,15 @@ public class logIn_signUp_GUI extends JFrame {
         signupButtonPanel.add(goToLoginButton);
         signupPanel.add(signupButtonPanel);
 
-        signupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Sign Up button clicked");
-            }
-        });
+        signupButton.addActionListener(e -> System.out.println("Sign Up button clicked"));
 
-        goToLoginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(mainPanel, "login");
-            }
-        });
+        goToLoginButton.addActionListener(e -> cardLayout.show(mainPanel, "login"));
     }
 
     private JPanel createLabeledField(String labelText, JComponent inputField) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JLabel label = new JLabel(labelText);
-        label.setPreferredSize(new Dimension(130, 25));  // Static width for labels
+        label.setPreferredSize(new Dimension(130, 25));
         panel.add(label);
         panel.add(inputField);
         return panel;
@@ -134,13 +145,13 @@ public class logIn_signUp_GUI extends JFrame {
 
     private JTextField createInputField() {
         JTextField textField = new JTextField();
-        textField.setPreferredSize(new Dimension(200, 25));  // Static width and height
+        textField.setPreferredSize(new Dimension(200, 25));
         return textField;
     }
 
     private JPasswordField createPasswordField() {
         JPasswordField passwordField = new JPasswordField();
-        passwordField.setPreferredSize(new Dimension(200, 25));  // Static width and height
+        passwordField.setPreferredSize(new Dimension(200, 25));
         return passwordField;
     }
 
