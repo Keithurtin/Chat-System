@@ -1,7 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class logIn_signUp_GUI extends javax.swing.JFrame {
 
@@ -84,18 +82,10 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel8.setText("Password:");
 
-        signupUserInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                signupUserInputActionPerformed(evt);
-            }
-        });
+        signupUserInput.addActionListener(evt -> signupUserInputActionPerformed(evt));
 
         signupPasswordInput.setText("jPasswordField1");
-        signupPasswordInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                signupPasswordInputActionPerformed(evt);
-            }
-        });
+        signupPasswordInput.addActionListener(evt -> signupPasswordInputActionPerformed(evt));
 
         signupTitle.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         signupTitle.setForeground(new java.awt.Color(102, 153, 255));
@@ -104,19 +94,11 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
 
         signupButton.setBackground(new java.awt.Color(153, 204, 255));
         signupButton.setText("Sign Up");
-        signupButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                signupButtonActionPerformed(evt);
-            }
-        });
+        signupButton.addActionListener(evt -> signupButtonActionPerformed(evt));
 
         goToLogin.setBackground(new java.awt.Color(153, 204, 255));
         goToLogin.setText("Log In");
-        goToLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                goToLoginActionPerformed(evt);
-            }
-        });
+        goToLogin.addActionListener(evt -> goToLoginActionPerformed(evt));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel10.setText("Already had account?");
@@ -124,11 +106,7 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel11.setText("Email:");
 
-        signupEmailInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                signupEmailInputActionPerformed(evt);
-            }
-        });
+        signupEmailInput.addActionListener(evt -> signupEmailInputActionPerformed(evt));
 
         javax.swing.GroupLayout signupPanelLayout = new javax.swing.GroupLayout(signupPanel);
         signupPanel.setLayout(signupPanelLayout);
@@ -202,19 +180,11 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
 
         resetPasswordButton.setBackground(new java.awt.Color(153, 204, 255));
         resetPasswordButton.setText("Submit");
-        resetPasswordButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                resetPasswordButtonActionPerformed(evt);
-            }
-        });
+        resetPasswordButton.addActionListener(evt -> resetPasswordButtonActionPerformed(evt));
 
         goBackToLogin.setBackground(new java.awt.Color(153, 204, 255));
         goBackToLogin.setText("Go Back");
-        goBackToLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                goBackToLoginActionPerformed(evt);
-            }
-        });
+        goBackToLogin.addActionListener(evt -> goBackToLoginActionPerformed(evt));
 
         description.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         description.setText("Please enter the email that linked to your account.");
@@ -273,11 +243,7 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
         goToResetPassword.setBackground(new java.awt.Color(153, 204, 255));
         goToResetPassword.setText("Reset Password");
         goToResetPassword.setActionCommand("Reset");
-        goToResetPassword.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                goToResetPasswordActionPerformed(evt);
-            }
-        });
+        goToResetPassword.addActionListener(evt -> goToResetPasswordActionPerformed(evt));
 
         usernameLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         usernameLabel.setText("Username:");
@@ -285,16 +251,12 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
         passwordLabel.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         passwordLabel.setText("Password:");
 
-        loginUserInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginUserInputActionPerformed(evt);
-            }
+        loginUserInput.addActionListener((java.awt.event.ActionEvent evt) -> {
+            loginUserInputActionPerformed(evt);
         });
 
-        loginPassInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginPassInputActionPerformed(evt);
-            }
+        loginPassInput.addActionListener((java.awt.event.ActionEvent evt) -> {
+            loginPassInputActionPerformed(evt);
         });
 
         loginTitle.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
@@ -304,18 +266,14 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
 
         loginButton.setBackground(new java.awt.Color(153, 204, 255));
         loginButton.setText("Submit");
-        loginButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                loginButtonActionPerformed(evt);
-            }
+        loginButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+            loginButtonActionPerformed(evt);
         });
 
         goToSignUp.setBackground(new java.awt.Color(153, 204, 255));
         goToSignUp.setText("Sign Up");
-        goToSignUp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                goToSignUpActionPerformed(evt);
-            }
+        goToSignUp.addActionListener((java.awt.event.ActionEvent evt) -> {
+            goToSignUpActionPerformed(evt);
         });
 
         goToSignUpLabel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -393,11 +351,7 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
         setSize(400, 400);
         getContentPane().add(mainPanel);
         cardLayout.show(mainPanel, "loginPanel");
-    }   
-
-    // private void setPanel(javax.swing.GroupLayout layout, ) {
-
-    // }                   
+    }                  
 
     private void signupUserInputActionPerformed(java.awt.event.ActionEvent evt) {                                                
 
@@ -443,9 +397,7 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
         cardLayout.show(mainPanel, "signupPanel");
     }                                          
 
-    private void loginPassInputActionPerformed(java.awt.event.ActionEvent evt) {                                               
-        // TODO add your handling code here:
-    }                                              
+    private void loginPassInputActionPerformed(java.awt.event.ActionEvent evt) {}                                              
 
     public static void main(String args[]) {
         try {
@@ -455,19 +407,11 @@ public class logIn_signUp_GUI extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(logIn_signUp_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(logIn_signUp_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(logIn_signUp_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(logIn_signUp_GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new logIn_signUp_GUI().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new logIn_signUp_GUI().setVisible(true);
         });
     }    
 }
