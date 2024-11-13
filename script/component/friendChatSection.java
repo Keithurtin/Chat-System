@@ -51,7 +51,22 @@ public class friendChatSection extends JPanel {
         more_button.setForeground(new java.awt.Color(255, 255, 255));
         more_button.setText("...");
         more_button.setBorder(null);
-        more_button.addActionListener(this::moreAction);
+        
+        JPopupMenu dropdownMenu = new JPopupMenu();
+
+        JMenuItem unfriend_button = new JMenuItem("Unfriend");
+        JMenuItem block_button = new JMenuItem("Block");
+        JMenuItem add_to_group_button = new JMenuItem("Add Group");
+
+        unfriend_button.addActionListener(this::unfriend);
+        block_button.addActionListener(this::blockFriend);
+        add_to_group_button.addActionListener(this::addToGroup);
+
+        dropdownMenu.add(unfriend_button);
+        dropdownMenu.add(block_button);
+        dropdownMenu.add(add_to_group_button);
+
+        more_button.addActionListener(e -> dropdownMenu.show(more_button, 0, more_button.getHeight()));
 
         javax.swing.GroupLayout navigatorLayout = new javax.swing.GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -139,7 +154,11 @@ public class friendChatSection extends JPanel {
 
     private void reportUser(java.awt.event.ActionEvent evt) {}                                                  
 
-    private void moreAction(java.awt.event.ActionEvent evt) {}                                                       
+    private void unfriend(java.awt.event.ActionEvent evt) {}                                                       
+    
+    private void blockFriend(java.awt.event.ActionEvent evt) {} 
+
+    private void addToGroup(java.awt.event.ActionEvent evt) {}                                                       
 
     private void inputMessage(java.awt.event.ActionEvent evt) {}         
 }

@@ -9,29 +9,14 @@ public class chat_GUI_demo extends javax.swing.JFrame {
     private final JButton friend_chat_more_button;
     private final JPanel chat_navigator;
     private final JScrollBar chat_scroll_bar;
-    private final JButton friend1_block_button;
-    private final JLabel friend1_name;
-    private final JPanel friend1_panel;
     private final JButton friend1_request_approve_button;
     private final JLabel friend1_request_name;
     private final JButton friend1_request_reject_button;
     private final JLabel friend1_request_status;
-    private final JLabel friend1_status;
-    private final JButton friend1_unfriend_button;
-    private final JButton friend2_send_request_button;
-    private final JLabel friend2_name;
-    private final JPanel friend2_panel;
     private final JButton friend2_request_approve_button;
     private final JLabel friend2_request_name;
     private final JButton friend2_request_reject_button;
     private final JLabel friend2_request_status;
-    private final JPanel friend_list_navigator;
-    private final JPanel friend_list_panel;
-    private final JScrollBar friend_list_scroll_bar;
-    private final JButton friend_list_search_button;
-    private final JTextField friend_list_search_input;
-    private final JButton friend_list_sort_button;
-    private final JLabel friend_list_title;
     private final JPanel friend_request_friend1_panel;
     private final JPanel friend_request_friend2_panel;
     private final JPanel friend_request_navigator;
@@ -47,6 +32,7 @@ public class chat_GUI_demo extends javax.swing.JFrame {
     private final JLabel friend_name;
     private final JPanel friend_panel;
     private final JLabel friend_status;
+    private final JLabel group_member_label;
     private final JButton group_chat_change_name_button;
     private final JTextField group_chat_input_message;
     private final JLabel group_chat_label;
@@ -60,8 +46,11 @@ public class chat_GUI_demo extends javax.swing.JFrame {
     private final JButton group_chat_send_button;
     private final JPanel group_chat_send_message;
     private final JPanel group_panel;
+    private final JPanel not_friend_panel;
+    private final JLabel not_friend_name_label;
+    private final JButton not_friend_send_request_button;
     private final JLabel name_chat_label;
-    private final JButton new_chat_button;
+    private final JButton side_sort_button;
     private final JButton report_user_button;
     private final JPanel send_message;
     private final JButton side_more_button;
@@ -75,19 +64,52 @@ public class chat_GUI_demo extends javax.swing.JFrame {
     private final JLabel blank_chat_label;
     private final JPanel blank_chat_panel;
     private final JPanel blank_chat_navigator;
-    private JButton profile_change_password_button;
-    private JLabel profile_email_label;
-    private JButton profile_mange_email_button;
-    private JButton profile_mange_name_button;
-    private JLabel profile_name_label;
-    private JPanel profile_navigator;
-    private JLabel profile_num_friend_label;
-    private JPanel profile_panel;
-    private JLabel profile_password_label;
-    private JLabel profile_title;
+    private final JButton profile_change_password_button;
+    private final JLabel profile_email_label;
+    private final JButton profile_manage_email_button;
+    private final JButton profile_manage_name_button;
+    private final JLabel profile_name_label;
+    private final JPanel profile_navigator;
+    private final JLabel profile_num_friend_label;
+    private final JPanel profile_panel;
+    private final JLabel profile_password_label;
+    private final JLabel profile_title;
 
+    private final JPanel group_list_panel;
+    private final JPanel member1_panel;
+    private final JPanel member2_panel;
+    private final JPanel group_list_navigator;
+    private final JLabel group_list_title;
+    private final JLabel member1_name;
+    private final JLabel member2_name;
+    private final JLabel member1_status;
+    private final JLabel member2_status;
+    private final JButton member1_remove_button;
+    private final JButton member2_remove_button;
+    private final JButton group_list_sort_button;
+    private final JButton group_list_search_button;
+    private final JButton group_list_add_button;
+    private final JTextField group_list_search_input;
+    private final JScrollBar group_list_scroll_bar;
 
     public chat_GUI_demo() {
+
+        group_list_panel = new JPanel();
+        member1_panel = new JPanel();
+        member2_panel = new JPanel();
+        group_list_navigator  = new JPanel();
+        group_list_title = new JLabel();
+        member1_name = new JLabel();
+        member2_name = new JLabel();
+        member1_status = new JLabel();
+        member2_status = new JLabel();
+        member1_remove_button = new JButton();
+        member2_remove_button = new JButton();
+        group_list_sort_button = new JButton();
+        group_list_search_button = new JButton();
+        group_list_add_button = new JButton();
+        group_list_search_input = new JTextField();
+        group_list_scroll_bar = new JScrollBar();
 
         group_chat_panel = new javax.swing.JPanel();
         group_chat_navigator = new javax.swing.JPanel();
@@ -110,21 +132,6 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         friend_chat_input_message = new javax.swing.JTextField();
         friend_chat_send_button = new javax.swing.JButton();
         chat_scroll_bar = new javax.swing.JScrollBar();
-        friend_list_panel = new javax.swing.JPanel();
-        friend_list_navigator = new javax.swing.JPanel();
-        friend_list_search_input = new javax.swing.JTextField();
-        friend_list_search_button = new javax.swing.JButton();
-        friend_list_title = new javax.swing.JLabel();
-        friend_list_sort_button = new javax.swing.JButton();
-        friend_list_scroll_bar = new javax.swing.JScrollBar();
-        friend1_panel = new javax.swing.JPanel();
-        friend1_name = new javax.swing.JLabel();
-        friend1_status = new javax.swing.JLabel();
-        friend1_unfriend_button = new javax.swing.JButton();
-        friend1_block_button = new javax.swing.JButton();
-        friend2_panel = new javax.swing.JPanel();
-        friend2_name = new javax.swing.JLabel();
-        friend2_send_request_button = new javax.swing.JButton();
         friend_request_panel = new javax.swing.JPanel();
         friend_request_navigator = new javax.swing.JPanel();
         friend_request_search_input = new javax.swing.JTextField();
@@ -146,13 +153,17 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         side_navigator = new javax.swing.JPanel();
         side_search_input = new javax.swing.JTextField();
         side_search_button = new javax.swing.JButton();
-        new_chat_button = new javax.swing.JButton();
+        side_sort_button = new javax.swing.JButton();
         side_more_button = new javax.swing.JButton();
         friend_panel = new javax.swing.JPanel();
         friend_name = new javax.swing.JLabel();
         friend_status = new javax.swing.JLabel();
         group_panel = new javax.swing.JPanel();
         group_chat_label = new javax.swing.JLabel();
+        group_member_label = new javax.swing.JLabel();
+        not_friend_panel = new javax.swing.JPanel();
+        not_friend_name_label = new javax.swing.JLabel();
+        not_friend_send_request_button = new javax.swing.JButton();
         side_scroll_bar = new javax.swing.JScrollBar();
         blank_chat_panel = new javax.swing.JPanel();
         blank_chat_navigator = new javax.swing.JPanel();
@@ -164,10 +175,10 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         profile_name_label = new javax.swing.JLabel();
         profile_email_label = new javax.swing.JLabel();
         profile_num_friend_label = new javax.swing.JLabel();
-        profile_mange_name_button = new javax.swing.JButton();
+        profile_manage_name_button = new javax.swing.JButton();
         profile_change_password_button = new javax.swing.JButton();
         profile_password_label = new javax.swing.JLabel();
-        profile_mange_email_button = new javax.swing.JButton();
+        profile_manage_email_button = new javax.swing.JButton();
 
         group_chat_panel.setBackground(new java.awt.Color(255, 255, 255));
         group_chat_panel.setPreferredSize(new java.awt.Dimension(593, 450));
@@ -178,22 +189,14 @@ public class chat_GUI_demo extends javax.swing.JFrame {
 
         group_chat_report_button.setForeground(new java.awt.Color(255, 51, 51));
         group_chat_report_button.setText("Report!");
-        group_chat_report_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            group_chat_report_buttonActionPerformed(evt);
-        });
-
         group_chat_name.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         group_chat_name.setText("Group ABC");
 
         group_chat_manage.setText("Manage");
-        group_chat_manage.addActionListener((java.awt.event.ActionEvent evt) -> {
-            group_chat_manageActionPerformed(evt);
-        });
+        group_chat_manage.addActionListener(e -> openGroupList());
 
         group_chat_change_name_button.setText("change");
-        group_chat_change_name_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            group_chat_change_name_buttonActionPerformed(evt);
-        });
+        // group_chat_change_name_button.addActionListener();
 
         group_chat_number_member.setText("Member: ");
 
@@ -232,15 +235,11 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         group_chat_send_message.setBackground(new java.awt.Color(204, 204, 204));
 
         group_chat_input_message.setText("Text....");
-        group_chat_input_message.addActionListener((java.awt.event.ActionEvent evt) -> {
-            group_chat_input_messageActionPerformed(evt);
-        });
+        // group_chat_input_message.addActionListener();
 
         group_chat_send_button.setBackground(new java.awt.Color(153, 204, 255));
         group_chat_send_button.setText("Send");
-        group_chat_send_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            group_chat_send_buttonActionPerformed(evt);
-        });
+        // group_chat_send_button.addActionListener();
 
         javax.swing.GroupLayout group_chat_send_messageLayout = new javax.swing.GroupLayout(group_chat_send_message);
         group_chat_send_message.setLayout(group_chat_send_messageLayout);
@@ -292,9 +291,6 @@ public class chat_GUI_demo extends javax.swing.JFrame {
 
         report_user_button.setForeground(new java.awt.Color(255, 51, 51));
         report_user_button.setText("Report!");
-        report_user_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            report_user_buttonActionPerformed(evt);
-        });
 
         name_chat_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         name_chat_label.setText("ABC");
@@ -303,9 +299,17 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         status_chat_label.setText("Status: ");
 
         friend_chat_more_button.setText("...");
-        friend_chat_more_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend_chat_more_buttonActionPerformed(evt);
-        });
+        JPopupMenu friend_more_menu = new JPopupMenu();
+
+        JMenuItem unfriend_button = new JMenuItem("Unfriend");
+        JMenuItem block_button = new JMenuItem("Block");
+        JMenuItem add_to_group_button = new JMenuItem("Add Group");
+
+        friend_more_menu.add(unfriend_button);
+        friend_more_menu.add(block_button);
+        friend_more_menu.add(add_to_group_button);
+
+        friend_chat_more_button.addActionListener(e -> friend_more_menu.show(friend_chat_more_button, 0, friend_chat_more_button.getHeight()));
 
         javax.swing.GroupLayout chat_navigatorLayout = new javax.swing.GroupLayout(chat_navigator);
         chat_navigator.setLayout(chat_navigatorLayout);
@@ -338,15 +342,8 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         send_message.setBackground(new java.awt.Color(204, 204, 204));
 
         friend_chat_input_message.setText("Text....");
-        friend_chat_input_message.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend_chat_input_messageActionPerformed(evt);
-        });
-
         friend_chat_send_button.setBackground(new java.awt.Color(153, 204, 255));
         friend_chat_send_button.setText("Send");
-        friend_chat_send_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend_chat_send_buttonActionPerformed(evt);
-        });
 
         javax.swing.GroupLayout send_messageLayout = new javax.swing.GroupLayout(send_message);
         send_message.setLayout(send_messageLayout);
@@ -390,155 +387,158 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                 .addComponent(send_message, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        friend_list_panel.setBackground(new java.awt.Color(255, 255, 255));
-        friend_list_panel.setPreferredSize(new java.awt.Dimension(620, 500));
+        group_list_panel.setBackground(new java.awt.Color(255, 255, 255));
+        group_list_panel.setPreferredSize(new java.awt.Dimension(620, 500));
 
-        friend_list_navigator.setBackground(new java.awt.Color(153, 204, 255));
+        group_list_navigator.setBackground(new java.awt.Color(153, 204, 255));
 
-        friend_list_search_input.setText("Search...");
+        group_list_search_input.setText("Search...");
 
-        friend_list_search_button.setText("Search");
+        group_list_search_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        group_list_search_button.setText("Search");
 
-        friend_list_title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        friend_list_title.setForeground(new java.awt.Color(255, 255, 255));
-        friend_list_title.setText("Friend list");
+        group_list_title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        group_list_title.setForeground(new java.awt.Color(255, 255, 255));
+        group_list_title.setText("Group member list");
 
-        friend_list_sort_button.setText("Sort ");
-        friend_list_sort_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend_list_sort_buttonActionPerformed(evt);
-        });
+        group_list_sort_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        group_list_sort_button.setText("Sort ");
 
-        javax.swing.GroupLayout friend_list_navigatorLayout = new javax.swing.GroupLayout(friend_list_navigator);
-        friend_list_navigator.setLayout(friend_list_navigatorLayout);
-        friend_list_navigatorLayout.setHorizontalGroup(
-            friend_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(friend_list_navigatorLayout.createSequentialGroup()
-                .addGroup(friend_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(friend_list_navigatorLayout.createSequentialGroup()
-                        .addGap(82, 82, 82)
-                        .addComponent(friend_list_sort_button)
+        group_list_add_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        group_list_add_button.setText("Add");
+
+        javax.swing.GroupLayout group_list_navigatorLayout = new javax.swing.GroupLayout(group_list_navigator);
+        group_list_navigator.setLayout(group_list_navigatorLayout);
+        group_list_navigatorLayout.setHorizontalGroup(
+            group_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(group_list_navigatorLayout.createSequentialGroup()
+                .addGap(50, 50, 50)
+                .addGroup(group_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(group_list_title)
+                    .addGroup(group_list_navigatorLayout.createSequentialGroup()
+                        .addComponent(group_list_sort_button)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(friend_list_search_input, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(friend_list_search_button))
-                    .addGroup(friend_list_navigatorLayout.createSequentialGroup()
-                        .addGap(250, 250, 250)
-                        .addComponent(friend_list_title)))
-                .addContainerGap(100, Short.MAX_VALUE))
-        );
-        friend_list_navigatorLayout.setVerticalGroup(
-            friend_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, friend_list_navigatorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(friend_list_title)
+                        .addComponent(group_list_search_input, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(friend_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(friend_list_search_input, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(friend_list_search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(friend_list_sort_button, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(group_list_search_button)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(group_list_add_button, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                .addGap(46, 46, 46))
+        );
+        group_list_navigatorLayout.setVerticalGroup(
+            group_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, group_list_navigatorLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(group_list_title)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(group_list_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(group_list_search_input, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(group_list_search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(group_list_sort_button, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(group_list_add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        friend1_panel.setPreferredSize(new java.awt.Dimension(0, 85));
+        member1_panel.setPreferredSize(new java.awt.Dimension(0, 85));
 
-        friend1_name.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        friend1_name.setText("ABC");
+        member1_name.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        member1_name.setText("ABC");
 
-        friend1_status.setText("status");
+        member1_remove_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        member1_remove_button.setText("Remove");
 
-        friend1_unfriend_button.setText("Unfriend");
-        friend1_unfriend_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend1_unfriend_buttonActionPerformed(evt);
-        });
+        member1_status.setText("status");
 
-        friend1_block_button.setText("Block");
-
-        javax.swing.GroupLayout friend1_panelLayout = new javax.swing.GroupLayout(friend1_panel);
-        friend1_panel.setLayout(friend1_panelLayout);
-        friend1_panelLayout.setHorizontalGroup(
-            friend1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(friend1_panelLayout.createSequentialGroup()
+        javax.swing.GroupLayout member1_panelLayout = new javax.swing.GroupLayout(member1_panel);
+        member1_panel.setLayout(member1_panelLayout);
+        member1_panelLayout.setHorizontalGroup(
+            member1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(member1_panelLayout.createSequentialGroup()
                 .addGap(58, 58, 58)
-                .addGroup(friend1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(friend1_name, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(friend1_status, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(member1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(member1_name, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(member1_status, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(friend1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(friend1_block_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(friend1_unfriend_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18))
+                .addComponent(member1_remove_button)
+                .addGap(20, 20, 20))
         );
-        friend1_panelLayout.setVerticalGroup(
-            friend1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(friend1_panelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(friend1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(friend1_name, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(friend1_unfriend_button))
-                .addGap(18, 18, 18)
-                .addGroup(friend1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(friend1_status, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(friend1_block_button))
-                .addContainerGap(12, Short.MAX_VALUE))
+        member1_panelLayout.setVerticalGroup(
+            member1_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(member1_panelLayout.createSequentialGroup()
+                .addContainerGap(31, Short.MAX_VALUE)
+                .addComponent(member1_remove_button)
+                .addGap(31, 31, 31))
+            .addGroup(member1_panelLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(member1_name, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(member1_status, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        friend2_panel.setPreferredSize(new java.awt.Dimension(0, 85));
+        member2_panel.setPreferredSize(new java.awt.Dimension(0, 85));
 
-        friend2_name.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        friend2_name.setText("DEF");
+        member2_name.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        member2_name.setText("DEF");
 
-        friend2_send_request_button.setText("Send Request");
-        friend2_send_request_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend2_send_request_buttonActionPerformed(evt);
-        });
+        member2_remove_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        member2_remove_button.setText("Remove");
 
-        javax.swing.GroupLayout friend2_panelLayout = new javax.swing.GroupLayout(friend2_panel);
-        friend2_panel.setLayout(friend2_panelLayout);
-        friend2_panelLayout.setHorizontalGroup(
-            friend2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, friend2_panelLayout.createSequentialGroup()
+        member2_status.setText("status");
+
+        javax.swing.GroupLayout member2_panelLayout = new javax.swing.GroupLayout(member2_panel);
+        member2_panel.setLayout(member2_panelLayout);
+        member2_panelLayout.setHorizontalGroup(
+            member2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(member2_panelLayout.createSequentialGroup()
                 .addGap(57, 57, 57)
-                .addComponent(friend2_name, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(member2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(member2_name, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(member2_status, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(friend2_send_request_button)
+                .addComponent(member2_remove_button)
                 .addGap(19, 19, 19))
         );
-        friend2_panelLayout.setVerticalGroup(
-            friend2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(friend2_panelLayout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addGroup(friend2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(friend2_send_request_button)
-                    .addComponent(friend2_name, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(32, Short.MAX_VALUE))
+        member2_panelLayout.setVerticalGroup(
+            member2_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(member2_panelLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(member2_remove_button)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, member2_panelLayout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(member2_name, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(member2_status, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
 
-        javax.swing.GroupLayout friend2_Layout = new javax.swing.GroupLayout(friend_list_panel);
-        friend_list_panel.setLayout(friend2_Layout);
-        friend2_Layout.setHorizontalGroup(
-            friend2_Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(friend_list_navigator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(friend2_Layout.createSequentialGroup()
+        javax.swing.GroupLayout group_list_panelLayout = new javax.swing.GroupLayout(group_list_panel);
+        group_list_panel.setLayout(group_list_panelLayout);
+        group_list_panelLayout.setHorizontalGroup(
+            group_list_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(group_list_navigator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(group_list_panelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(friend_list_scroll_bar, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(group_list_scroll_bar, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(friend2_Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(friend1_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
-                    .addComponent(friend2_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE))
+                .addGroup(group_list_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(member1_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+                    .addComponent(member2_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        friend2_Layout.setVerticalGroup(
-            friend2_Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(friend2_Layout.createSequentialGroup()
-                .addComponent(friend_list_navigator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+        group_list_panelLayout.setVerticalGroup(
+            group_list_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(group_list_panelLayout.createSequentialGroup()
+                .addComponent(group_list_navigator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(friend2_Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(friend_list_scroll_bar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(friend2_Layout.createSequentialGroup()
-                        .addComponent(friend1_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(group_list_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(group_list_scroll_bar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(group_list_panelLayout.createSequentialGroup()
+                        .addComponent(member1_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(friend2_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 229, Short.MAX_VALUE)))
+                        .addComponent(member2_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 227, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -557,9 +557,7 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         friend_request_title.setText("Friend Request");
 
         friend_request_sort_button.setText("Sort ");
-        friend_request_sort_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend_request_sort_buttonActionPerformed(evt);
-        });
+        // friend_request_sort_button.addActionListener();
 
         javax.swing.GroupLayout friend_request_navigatorLayout = new javax.swing.GroupLayout(friend_request_navigator);
         friend_request_navigator.setLayout(friend_request_navigatorLayout);
@@ -600,9 +598,6 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         friend1_request_status.setText("status");
 
         friend1_request_approve_button.setText("Approve");
-        friend1_request_approve_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend1_request_approve_buttonActionPerformed(evt);
-        });
 
         friend1_request_reject_button.setText("Reject");
 
@@ -647,10 +642,6 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         friend2_request_reject_button.setText("Reject");
 
         friend2_request_approve_button.setText("Approve");
-        friend2_request_approve_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            friend2_request_approve_buttonActionPerformed(evt);
-        });
-
         javax.swing.GroupLayout friend_request_friend2_panelLayout = new javax.swing.GroupLayout(friend_request_friend2_panel);
         friend_request_friend2_panel.setLayout(friend_request_friend2_panelLayout);
         friend_request_friend2_panelLayout.setHorizontalGroup(
@@ -713,7 +704,7 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-                profile_panel.setBackground(new java.awt.Color(255, 255, 255));
+        profile_panel.setBackground(new java.awt.Color(255, 255, 255));
         profile_panel.setPreferredSize(new java.awt.Dimension(400, 370));
         profile_panel.setRequestFocusEnabled(false);
 
@@ -750,14 +741,14 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         profile_num_friend_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         profile_num_friend_label.setText("No. Friends:");
 
-        profile_mange_name_button.setText("Manage");
+        profile_manage_name_button.setText("Manage");
 
         profile_change_password_button.setText("Change");
 
         profile_password_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         profile_password_label.setText("Change password:");
 
-        profile_mange_email_button.setText("Manage");
+        profile_manage_email_button.setText("Manage");
 
         javax.swing.GroupLayout profile_panelLayout = new javax.swing.GroupLayout(profile_panel);
         profile_panel.setLayout(profile_panelLayout);
@@ -770,12 +761,12 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                     .addGroup(profile_panelLayout.createSequentialGroup()
                         .addComponent(profile_email_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(profile_mange_email_button))
+                        .addComponent(profile_manage_email_button))
                     .addComponent(profile_num_friend_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(profile_panelLayout.createSequentialGroup()
                         .addComponent(profile_name_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(profile_mange_name_button))
+                        .addComponent(profile_manage_name_button))
                     .addGroup(profile_panelLayout.createSequentialGroup()
                         .addComponent(profile_password_label)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
@@ -789,11 +780,11 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                 .addGap(39, 39, 39)
                 .addGroup(profile_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(profile_name_label)
-                    .addComponent(profile_mange_name_button))
+                    .addComponent(profile_manage_name_button))
                 .addGap(31, 31, 31)
                 .addGroup(profile_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(profile_email_label)
-                    .addComponent(profile_mange_email_button))
+                    .addComponent(profile_manage_email_button))
                 .addGap(30, 30, 30)
                 .addComponent(profile_num_friend_label)
                 .addGap(30, 30, 30)
@@ -811,34 +802,37 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         side_navigator.setPreferredSize(new java.awt.Dimension(218, 70));
 
         side_search_input.setText("Search");
-        side_search_input.addActionListener((java.awt.event.ActionEvent evt) -> {
-            side_search_inputActionPerformed(evt);
-        });
 
         side_search_button.setText("search");
 
-        new_chat_button.setText("New chat");
-        new_chat_button.addActionListener((java.awt.event.ActionEvent evt) -> {
-            new_chat_buttonActionPerformed(evt);
-        });
+        side_sort_button.setText("  sort   ");
+
+        JPopupMenu sort_menu = new JPopupMenu();
+
+        JMenuItem group_only_button = new JMenuItem("Group");
+        JMenuItem friend_only_button = new JMenuItem("Friend");
+        JMenuItem sort_by_name_button = new JMenuItem("By Name");
+
+        sort_menu.add(group_only_button);
+        sort_menu.add(friend_only_button);
+        sort_menu.add(sort_by_name_button);
+
+        side_sort_button.addActionListener(e -> sort_menu.show(side_sort_button, 0, side_sort_button.getHeight()));
 
         side_more_button.setText("...");
 
-        JPopupMenu dropdownMenu = new JPopupMenu();
+        JPopupMenu side_more_menu = new JPopupMenu();
 
-        JMenuItem friend_request_button = new JMenuItem("Friend List");
-        JMenuItem friend_list_button = new JMenuItem("Friend Request");
+        JMenuItem friend_request_button = new JMenuItem("Friend Request");
         JMenuItem user_profile_button = new JMenuItem("Profile");
 
         friend_request_button.addActionListener(e -> openFriendRequest());
-        friend_list_button.addActionListener(e -> openFriendList());
         user_profile_button.addActionListener(e -> openProfile());
 
-        dropdownMenu.add(friend_request_button);
-        dropdownMenu.add(friend_list_button);
-        dropdownMenu.add(user_profile_button);
+        side_more_menu.add(friend_request_button);
+        side_more_menu.add(user_profile_button);
 
-        side_more_button.addActionListener(e -> dropdownMenu.show(side_more_button, 0, side_more_button.getHeight()));
+        side_more_button.addActionListener(e -> side_more_menu.show(side_more_button, 0, side_more_button.getHeight()));
 
         javax.swing.GroupLayout side_navigatorLayout = new javax.swing.GroupLayout(side_navigator);
         side_navigator.setLayout(side_navigatorLayout);
@@ -854,7 +848,7 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                     .addGroup(side_navigatorLayout.createSequentialGroup()
                         .addComponent(side_more_button, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(new_chat_button)))
+                        .addComponent(side_sort_button)))
                 .addContainerGap())
         );
         side_navigatorLayout.setVerticalGroup(
@@ -863,7 +857,7 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(side_more_button)
-                    .addComponent(new_chat_button))
+                    .addComponent(side_sort_button))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(side_search_button)
@@ -873,7 +867,7 @@ public class chat_GUI_demo extends javax.swing.JFrame {
 
         friend_panel.setPreferredSize(new java.awt.Dimension(162, 50));
 
-        friend_name.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        friend_name.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         friend_name.setText("ABC");
 
         friend_status.setText("Status:");
@@ -901,8 +895,10 @@ public class chat_GUI_demo extends javax.swing.JFrame {
 
         group_panel.setPreferredSize(new java.awt.Dimension(162, 50));
 
-        group_chat_label.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        group_chat_label.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         group_chat_label.setText("Group ABC");
+
+        group_member_label.setText("Member:");
 
         javax.swing.GroupLayout group_panelLayout = new javax.swing.GroupLayout(group_panel);
         group_panel.setLayout(group_panelLayout);
@@ -910,7 +906,9 @@ public class chat_GUI_demo extends javax.swing.JFrame {
             group_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(group_panelLayout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addComponent(group_chat_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(group_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(group_chat_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(group_member_label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         group_panelLayout.setVerticalGroup(
@@ -918,7 +916,36 @@ public class chat_GUI_demo extends javax.swing.JFrame {
             .addGroup(group_panelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(group_chat_label)
+                .addComponent(group_member_label)
                 .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        not_friend_panel.setPreferredSize(new java.awt.Dimension(162, 50));
+
+        not_friend_name_label.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        not_friend_name_label.setText("XYZ");
+
+        not_friend_send_request_button.setText("Send Request");
+
+        javax.swing.GroupLayout not_friend_panelLayout = new javax.swing.GroupLayout(not_friend_panel);
+        not_friend_panel.setLayout(not_friend_panelLayout);
+        not_friend_panelLayout.setHorizontalGroup(
+            not_friend_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(not_friend_panelLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(not_friend_name_label, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(not_friend_send_request_button)
+                .addContainerGap())
+        );
+        not_friend_panelLayout.setVerticalGroup(
+            not_friend_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(not_friend_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(not_friend_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(not_friend_name_label)
+                    .addComponent(not_friend_send_request_button))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout side_panelLayout = new javax.swing.GroupLayout(side_panel);
@@ -932,7 +959,8 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(side_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(friend_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                    .addComponent(group_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
+                    .addComponent(group_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                    .addComponent(not_friend_panel, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
                 .addContainerGap())
         );
         side_panelLayout.setVerticalGroup(
@@ -944,7 +972,9 @@ public class chat_GUI_demo extends javax.swing.JFrame {
                     .addGroup(side_panelLayout.createSequentialGroup()
                         .addComponent(friend_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(group_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(group_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)                       
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(not_friend_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(side_scroll_bar, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1039,65 +1069,7 @@ public class chat_GUI_demo extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>                        
-    private void side_search_inputActionPerformed(java.awt.event.ActionEvent evt) {}                                                 
 
-    private void new_chat_buttonActionPerformed(java.awt.event.ActionEvent evt) {}                                               
-
-    private void friend_chat_send_buttonActionPerformed(java.awt.event.ActionEvent evt) {}                                                       
-
-    private void report_user_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                   
-    }                                                  
-
-    private void friend_chat_more_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
-    }                                                       
-
-    private void friend_chat_input_messageActionPerformed(java.awt.event.ActionEvent evt) {                                                          
-    }                                                         
-
-    private void group_chat_report_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-    }                                                        
-
-    private void group_chat_manageActionPerformed(java.awt.event.ActionEvent evt) {                                                  
-    }                                                 
-
-    private void group_chat_change_name_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                              
-    }                                                             
-
-    private void group_chat_input_messageActionPerformed(java.awt.event.ActionEvent evt) {                                                         
-    }                                                        
-
-    private void group_chat_send_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                       
-    }                                                      
-
-    private void friend_list_sort_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
-    }                                                       
-
-    private void friend1_unfriend_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                        
-    }                                                       
-
-    private void friend2_send_request_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                     
-    }                                                    
-
-    private void friend_request_sort_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                           
-    }                                                          
-
-    private void friend1_request_approve_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                               
-    }                                                              
-
-    private void friend2_request_approve_buttonActionPerformed(java.awt.event.ActionEvent evt) {                                                               
-    }
-
-    private void openFriendList() {
-        JFrame newWindow = new JFrame("Friend List");
-        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        Dimension panelSize = friend_list_panel.getPreferredSize();
-
-        newWindow.setSize(panelSize);
-        
-        newWindow.add(friend_list_panel);
-
-        newWindow.setVisible(true);
-    }
 
     private void openFriendRequest() {
         JFrame newWindow = new JFrame("Friend Request");
@@ -1114,6 +1086,16 @@ public class chat_GUI_demo extends javax.swing.JFrame {
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = profile_panel.getPreferredSize();
         newWindow.add(profile_panel);
+
+        newWindow.setSize(panelSize);
+        newWindow.setVisible(true);
+    }
+
+    private void openGroupList() {
+        JFrame newWindow = new JFrame("Group List");
+        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Dimension panelSize = group_list_panel.getPreferredSize();
+        newWindow.add(group_list_panel);
 
         newWindow.setSize(panelSize);
         newWindow.setVisible(true);
