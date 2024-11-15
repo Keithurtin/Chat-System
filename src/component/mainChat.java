@@ -15,8 +15,6 @@ public class mainChat extends JFrame {
     private final JButton side_sort_button;
     private final JPanel blank_chat_panel;
     private final JPanel friend_side;
-    // private groupChatSection;
-    // private friendChatSection;
     
     public mainChat() {
         cardLayout = new CardLayout();
