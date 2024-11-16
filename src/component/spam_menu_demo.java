@@ -1,7 +1,6 @@
+package component;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -152,12 +151,12 @@ public class spam_menu_demo extends JFrame {
         table_scroll.setViewportView(table);
 
         // Add sample data
-        addRowToTable("1", "Username1", "On");
-        addRowToTable("2", "Username2", "Off");
+        addRowToTable("1", "Username1", true);
+        addRowToTable("2", "Username2", false);
     }
 
-    private void addRowToTable(String stt, String username, String status) {
-        tableModel.addRow(new Object[]{stt, username, status, "Ban", "Reject"});
+    private void addRowToTable(String stt, String username, boolean  isOn) {
+        tableModel.addRow(new Object[]{stt, username, ("<html>" + (isOn ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>"), "Ban", "Reject"});
     }
 
     class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
@@ -173,14 +172,22 @@ public class spam_menu_demo extends JFrame {
         }
     }
 
-    class ButtonEditor extends AbstractCellEditor implements javax.swing.table.TableCellEditor, ActionListener {
+    class ButtonEditor extends AbstractCellEditor implements javax.swing.table.TableCellEditor {
 
         private final JButton button;
         private String label;
 
         public ButtonEditor(JButton button) {
             this.button = button;
-            button.addActionListener(this);
+            button.addActionListener(e -> {
+                fireEditingStopped();
+                System.out.println("Button clicked in row " + table.getSelectedRow() + ", column " + table.getSelectedColumn());
+                if (table.getSelectedColumn() == 3) {
+                    System.out.println("Ban button clicked.");
+                } else if (table.getSelectedColumn() == 4) {
+                    System.out.println("Reject button clicked.");
+                }
+            });
         }
 
         @Override
@@ -193,18 +200,6 @@ public class spam_menu_demo extends JFrame {
         @Override
         public Object getCellEditorValue() {
             return label;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            fireEditingStopped();
-            System.out.println("Button clicked in row " + table.getSelectedRow() + ", column " + table.getSelectedColumn());
-            // Handle the button click here
-            if (table.getSelectedColumn() == 3) {
-                System.out.println("Ban button clicked.");
-            } else if (table.getSelectedColumn() == 4) {
-                System.out.println("Reject button clicked.");
-            }
         }
     }
     public static void main(String[] args) {

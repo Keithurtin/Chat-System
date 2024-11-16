@@ -1,8 +1,12 @@
+import component.active_user_demo;
+import component.add_user_demo;
+import component.group_list_demo;
+import component.new_register_demo;
+import component.spam_menu_demo;
+import component.user_management_demo;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -79,46 +83,56 @@ public class admin_menu_demo extends JFrame {
         JMenuItem group_list_section = new JMenuItem("Groups Section");
         JMenuItem spam_section = new JMenuItem("Spam Report");
         JMenuItem new_register_section = new JMenuItem("New Registers");
+        JMenuItem active_user_button = new JMenuItem("Active Users");
+        JMenuItem chat_button = new JMenuItem("Chat Box");
+        JMenuItem add_new_user = new JMenuItem("Add User");
 
         group_list_section.addActionListener(e -> openGroupList());
         spam_section.addActionListener(e -> openSpamSection());
         new_register_section.addActionListener(e -> openNewRegister());
+        active_user_button.addActionListener(e -> openActiveUser());
+        add_new_user.addActionListener(e -> openAddUserMenu());
+        chat_button.addActionListener(e -> openChatBox());
 
         more_menu.add(group_list_section);
         more_menu.add(spam_section);
         more_menu.add(new_register_section);
+        more_menu.add(active_user_button);
+        more_menu.add(add_new_user);
+        more_menu.add(chat_button);
 
         more_button.addActionListener(e -> more_menu.show(more_button, 0, more_button.getHeight()));
-
-
-        JButton chart_button = new JButton("Chart");
-        chart_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
-
-        JPopupMenu year_menu = new JPopupMenu();
-
-        JMenuItem year1 = new JMenuItem("2024");
-        year1.addActionListener(e -> openChartView(year1.getText(), null));
-        year_menu.add(year1);
-        chart_button.addActionListener(e -> year_menu.show(chart_button, 0, chart_button.getHeight()));
 
         JButton sort_button = new JButton("Sort");
         sort_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
 
         JPopupMenu sort_menu = new JPopupMenu();
 
-        JMenuItem by_name = new JMenuItem("By Name");
-        JMenuItem by_username = new JMenuItem("By Username");
-        JMenuItem by_status = new JMenuItem("By status");
+        JMenuItem by_fullname = new JMenuItem("By Name");
+        JMenuItem by_created_date = new JMenuItem("By Created Date");
 
-        sort_menu.add(by_name);
-        sort_menu.add(by_username);
-        sort_menu.add(by_status);
+        sort_menu.add(by_fullname);
+        sort_menu.add(by_created_date);
 
         sort_button.addActionListener(e -> sort_menu.show(sort_button, 0, sort_button.getHeight()));
 
         JButton search_button = new JButton("Search");
         search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
         JTextField search_input = new JTextField("search");
+
+        JPopupMenu search_menu = new JPopupMenu();
+
+        JMenuItem by_name = new JMenuItem("By Name");
+        JMenuItem by_username = new JMenuItem("By Username");
+        JMenuItem by_status = new JMenuItem("By Status");
+        JMenuItem by_friend = new JMenuItem("By Friend");
+
+        search_menu.add(by_name);
+        search_menu.add(by_username);
+        search_menu.add(by_status);
+        search_menu.add(by_friend);
+
+        search_button.addActionListener(e -> search_menu.show(search_button, 0, search_button.getHeight()));
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -127,8 +141,8 @@ public class admin_menu_demo extends JFrame {
             .addGroup(navigatorLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(more_button)
-                    .addComponent(chart_button))
+                    .addComponent(more_button, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sort_button, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(navigatorLayout.createSequentialGroup()
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -139,8 +153,6 @@ public class admin_menu_demo extends JFrame {
                         .addComponent(search_input, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(search_button, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(sort_button, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(50, Short.MAX_VALUE))))
         );
         navigatorLayout.setVerticalGroup(
@@ -148,43 +160,15 @@ public class admin_menu_demo extends JFrame {
             .addGroup(navigatorLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(chart_button)
+                    .addComponent(sort_button)
                     .addComponent(title))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(more_button)
                     .addComponent(search_input, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(search_button)
-                    .addComponent(sort_button))
+                    .addComponent(search_button))
                 .addGap(10, 10, 10))
         );
-
-        // GroupLayout navigatorLayout = new GroupLayout(navigator);
-        // navigator.setLayout(navigatorLayout);
-        // navigatorLayout.setHorizontalGroup(
-        //     navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        //     .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createSequentialGroup()
-        //         .addGap(36, 36, 36)
-        //         .addComponent(more_button)
-        //         .addGap(15, 15, 15)
-        //         .addComponent(chart_button)
-        //         .addGap(50, 50, 50)
-        //         .addComponent(title, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
-        //         .addGap(70, 70, 70)
-        //         .addComponent(sort_button)
-        //         .addContainerGap(36, Short.MAX_VALUE))
-        // );
-        // navigatorLayout.setVerticalGroup(
-        //     navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        //     .addGroup(navigatorLayout.createSequentialGroup()
-        //         .addContainerGap()
-        //         .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        //             .addComponent(title)
-        //             .addComponent(sort_button)
-        //             .addComponent(chart_button)
-        //             .addComponent(more_button))
-        //         .addContainerGap(8, Short.MAX_VALUE))
-        // );
     }
 
     private void createTableLayout() {
@@ -255,13 +239,6 @@ public class admin_menu_demo extends JFrame {
         newWindow.setVisible(true);
     }
 
-    private void openChartActiceUser() {
-        JFrame newWindow = new spam_menu_demo();
-        newWindow.setResizable(false);
-        newWindow.setLocation(480, 190);
-        newWindow.setVisible(true);
-    }
-
     private void openNewRegister() {
         JFrame newWindow = new new_register_demo();
         newWindow.setResizable(false);
@@ -269,33 +246,32 @@ public class admin_menu_demo extends JFrame {
         newWindow.setVisible(true);
     }
 
-    private Map<String, Integer> generateExampleData() {
-        Map<String, Integer> data = new HashMap<>();
-        data.put("Jan", 120);
-        data.put("Feb", 80);
-        data.put("Mar", 150);
-        data.put("Apr", 90);
-        data.put("May", 130);
-        data.put("Jun", 170);
-        data.put("Jul", 160);
-        data.put("Aug", 140);
-        data.put("Sep", 180);
-        data.put("Oct", 110);
-        data.put("Nov", 190);
-        data.put("Dec", 200);
-        return data;
+    private void openActiveUser() {
+        JFrame newWindow = new active_user_demo();
+        newWindow.setResizable(false);
+        newWindow.setLocation(480, 190);
+        newWindow.setVisible(true);
     }
 
-    private void openChartView(String year, Map<String, Integer> data) {
-        JFrame chartFrame = new JFrame("Active Users Year " + year);
-        chartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        chartFrame.setSize(800, 600);
-        if(data == null){
-            data = generateExampleData();
-        }
-        chart_panel_demo chartPanel = new chart_panel_demo(year, data, false);
-        chartFrame.add(chartPanel);
-        chartFrame.setVisible(true);
+    private void openChatBox() {
+        JFrame newWindow = new chat_box_demo();
+        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        newWindow.setResizable(false);
+        newWindow.setLocation(480, 190);
+        newWindow.setVisible(true);
+    }
+
+    private void openAddUserMenu() {
+        JFrame newWindow = new JFrame("Add New User");
+        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        add_user_demo newPanel = new add_user_demo();
+        Dimension panelSize = newPanel.getPreferredSize();
+        newWindow.add(newPanel);
+        newWindow.setResizable(false);
+        newWindow.setLocation(600, 180);
+        newWindow.setSize(panelSize);
+        newWindow.setVisible(true);
     }
 
     public static void main(String[] args) {

@@ -1,10 +1,11 @@
+package component;
 import java.awt.*;
 import javax.swing.*;
 
 public class group_list_demo extends JFrame {
     private JPanel navigator;
     private JScrollPane list_scroll;
-    private JPanel content_side;
+    private JPanel list_side;
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
@@ -111,26 +112,26 @@ public class group_list_demo extends JFrame {
     }
 
     private void createGroupList() {
-        content_side = new JPanel();
-        content_side.setBackground(new java.awt.Color(255, 255, 255));
+        list_side = new JPanel();
+        list_side.setBackground(new java.awt.Color(255, 255, 255));
 
-        GroupLayout content_sideLayout = new GroupLayout(content_side);
-        content_side.setLayout(content_sideLayout);
+        GroupLayout list_sideLayout = new GroupLayout(list_side);
+        list_side.setLayout(list_sideLayout);
 
-        horizontalGroup = content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
-        verticalGroup = content_sideLayout.createSequentialGroup();
+        horizontalGroup = list_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        verticalGroup = list_sideLayout.createSequentialGroup();
 
-        content_sideLayout.setHorizontalGroup(
-            content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        list_sideLayout.setHorizontalGroup(
+            list_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(horizontalGroup)
         );
 
-        content_sideLayout.setVerticalGroup(
-            content_sideLayout.createSequentialGroup()
+        list_sideLayout.setVerticalGroup(
+            list_sideLayout.createSequentialGroup()
                 .addGroup(verticalGroup)
         );
 
-        list_scroll = new JScrollPane(content_side);
+        list_scroll = new JScrollPane(list_side);
         list_scroll.setBorder(null);
 
         addGroupToList("Group 1", "12/12/2004");
@@ -182,13 +183,20 @@ public class group_list_demo extends JFrame {
         verticalGroup.addComponent(group_panel, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED);
 
-        content_side.add(group_panel);
-        content_side.revalidate();
-        content_side.repaint();
+        list_side.add(group_panel);
+        list_side.revalidate();
+        list_side.repaint();
     }
 
     private void openGroupInformation(String name) {
         group_manage_demo newWindow = new group_manage_demo(name);
         newWindow.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            group_list_demo frame = new group_list_demo();
+            frame.setVisible(true);
+        });
     }
 }

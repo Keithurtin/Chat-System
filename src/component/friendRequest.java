@@ -1,3 +1,5 @@
+package component;
+
 import javax.swing.*;
 
 public class friendRequest extends JPanel{
@@ -18,11 +20,11 @@ public class friendRequest extends JPanel{
 
         approve_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         approve_button.setText("Approve");
-        approve_button.addActionListener(this::approveFriendRequest);
+        approve_button.addActionListener(e -> approveFriendRequest());
 
         reject_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         reject_button.setText("Reject");
-        reject_button.addActionListener(this::rejectFriendRequest);
+        reject_button.addActionListener(e -> rejectFriendRequest());
 
         GroupLayout panelLayout = new GroupLayout(main_panel);
         main_panel.setLayout(panelLayout);
@@ -56,7 +58,7 @@ public class friendRequest extends JPanel{
         );
     }
 
-    private void approveFriendRequest(java.awt.event.ActionEvent evt) {}                                                              
+    private void approveFriendRequest() {}                                                              
 
-    private void rejectFriendRequest(java.awt.event.ActionEvent evt) {} 
+    private void rejectFriendRequest() {} 
 }

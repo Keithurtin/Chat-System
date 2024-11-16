@@ -1,66 +1,69 @@
+package component;
+import java.awt.*;
 import javax.swing.*;
 
 public class groupChatSection extends JPanel {
+    private JPanel navigator;
 
-    private final JPanel main_panel;
+    private JPanel send_message_panel;
 
-    private final JPanel navigator;
-    private final JLabel name_label;
-    private final JLabel number_member_label;
-    private final JButton change_name_button;
-    private final JButton manage_button;
-    private final JButton report_button;
-
-    private final JPanel send_message_panel;
-    private final JTextField input_message;
-    private final JButton send_button;
-
-    private final JScrollPane chat_scroll;
-    private final JPanel chat_side;
+    private JScrollPane chat_scroll;
+    private JPanel chat_side;
 
     public groupChatSection(String name, int member) {
+        setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(new java.awt.Dimension(593, 450));
+        setVerifyInputWhenFocusTarget(false);
 
-        main_panel = new JPanel();
+        setupNavigatorLayout(name, member);
+        setupSendMessageLayout();
+        createChatSide();
+
+        GroupLayout chat_panelLayout = new GroupLayout(this);
+        this.setLayout(chat_panelLayout);
+        chat_panelLayout.setHorizontalGroup(
+            chat_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
+            .addComponent(send_message_panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(chat_scroll)
+        );
+        chat_panelLayout.setVerticalGroup(
+            chat_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(chat_panelLayout.createSequentialGroup()
+                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chat_scroll, GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(send_message_panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        );
+    }
+
+    private void setupNavigatorLayout(String name, int member) {
         navigator = new JPanel();
-        report_button = new JButton();
-        name_label = new JLabel();
-        manage_button = new JButton();
-        change_name_button = new JButton();
-        number_member_label = new JLabel();
-        chat_side = new JPanel();
-        send_message_panel = new JPanel();
-        input_message = new JTextField();
-        send_button = new JButton();
-        main_panel.setBackground(new java.awt.Color(255, 255, 255));
-        main_panel.setPreferredSize(new java.awt.Dimension(593, 450));
-        main_panel.setVerifyInputWhenFocusTarget(false);
-
         navigator.setBackground(new java.awt.Color(153, 204, 255));
         navigator.setPreferredSize(new java.awt.Dimension(390, 70));
 
+        JButton report_button = new JButton("Report!");
         report_button.setBackground(new java.awt.Color(255, 102, 102));
         report_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         report_button.setForeground(new java.awt.Color(255, 255, 255));
-        report_button.setText("Report!");
-        report_button.addActionListener(this::reportGroup);
+        report_button.addActionListener(e -> reportGroup());
 
+        JLabel name_label = new JLabel( name);
         name_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        name_label.setText(name);
 
+        JButton manage_button = new JButton("...");
         manage_button.setBackground(new java.awt.Color(153, 204, 255));
         manage_button.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         manage_button.setForeground(new java.awt.Color(255, 255, 255));
-        manage_button.setText("...");
         manage_button.setBorder(null);
-        manage_button.addActionListener(this::manageGroup);
+        manage_button.addActionListener(e -> manageGroup());
 
-        change_name_button.setBackground(new java.awt.Color(153, 204, 255));
-        change_name_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        change_name_button.setForeground(new java.awt.Color(255, 255, 255));
-        change_name_button.setText("Change");
-        change_name_button.addActionListener(this::changeGroupName);
+        JButton change_name_button = new JButton("Change");
+        change_name_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        change_name_button.addActionListener(e -> changeGroupName());
 
-        number_member_label.setText("Member: " + member);
+        JLabel number_member_label = new JLabel("Member: " + member);
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -94,19 +97,20 @@ public class groupChatSection extends JPanel {
                 .addComponent(number_member_label)
                 .addGap(32, 32, 32))
         );
+    }
 
+    private void setupSendMessageLayout() {
+        send_message_panel = new JPanel();
         send_message_panel.setBackground(new java.awt.Color(204, 204, 204));
 
-        input_message.setText("Text....");
-        input_message.addActionListener((java.awt.event.ActionEvent evt) -> {
-            inputMessage(evt);
-        });
+        JTextField input_message = new JTextField("Text....");
+        input_message.addActionListener(e -> inputMessage());
 
+        JButton send_button = new JButton("Send");
         send_button.setBackground(new java.awt.Color(153, 204, 255));
         send_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         send_button.setForeground(new java.awt.Color(255, 255, 255));
-        send_button.setText("Send");
-        send_button.addActionListener(this::sendMessage);
+        send_button.addActionListener(e -> sendMessage());
 
         GroupLayout send_message_panelLayout = new GroupLayout(send_message_panel);
         send_message_panel.setLayout(send_message_panelLayout);
@@ -128,42 +132,74 @@ public class groupChatSection extends JPanel {
                     .addComponent(send_button, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
-
+    }
+    
+    private void createChatSide() {
+        chat_side = new JPanel();
         chat_side.setLayout(new BoxLayout(chat_side, BoxLayout.Y_AXIS));
+        chat_side.setBackground(Color.WHITE);
 
         chat_scroll = new JScrollPane(chat_side);
-        chat_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS); 
-        chat_scroll.getVerticalScrollBar().setValue(chat_scroll.getVerticalScrollBar().getMaximum());  
-        chat_scroll.getVerticalScrollBar().setValue(chat_scroll.getVerticalScrollBar().getMaximum());
-
-        chat_scroll.setViewportView(chat_side);
-
-        GroupLayout chat_panelLayout = new GroupLayout(main_panel);
-        main_panel.setLayout(chat_panelLayout);
-        chat_panelLayout.setHorizontalGroup(
-            chat_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
-            .addComponent(send_message_panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(chat_scroll)
-        );
-        chat_panelLayout.setVerticalGroup(
-            chat_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(chat_panelLayout.createSequentialGroup()
-                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chat_scroll, GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(send_message_panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-        );
+        chat_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        chat_scroll.setBorder(null);
+        
+        addMessage("Hello there", false);
+        addMessage("How are you doing?", false);
+        addMessage("I'm doing great, thanks!", true);
+        addMessage("That's wonderful to hear!", false);
+        addMessage("How about you", true);
+        addMessage("Not so great", false);
     }
 
-    private void reportGroup(java.awt.event.ActionEvent evt) {}                                                        
+    private void addMessage(String message, boolean isYou) {
+        JPanel messagePanel = new JPanel();
+        messagePanel.setLayout(new FlowLayout(isYou ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        messagePanel.setOpaque(false);
 
-    private void manageGroup(java.awt.event.ActionEvent evt) {}                                                 
+        JPanel messageBox = new JPanel();
+        messageBox.setLayout(new BorderLayout());
+        messageBox.setBackground(isYou ? new Color(200, 255, 200) : new Color(200, 200, 255));
+        messageBox.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); // Padding inside the box
 
-    private void changeGroupName(java.awt.event.ActionEvent evt) {}                                                             
+        JLabel messageLabel = new JLabel(message);
+        messageBox.add(messageLabel, BorderLayout.CENTER);
 
-    private void inputMessage(java.awt.event.ActionEvent evt) {}                                                        
+        // Add the message box to the message panel
+        messagePanel.add(messageBox);
 
-    private void sendMessage(java.awt.event.ActionEvent evt) {}
+        // Add gap between messages
+        chat_side.add(messagePanel);
+        chat_side.add(Box.createVerticalStrut(10)); // Adds vertical spacing
+
+        chat_side.revalidate();
+        chat_side.repaint();
+
+        // Scroll to the bottom
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar verticalBar = chat_scroll.getVerticalScrollBar();
+            verticalBar.setValue(verticalBar.getMaximum());
+        });
+    }
+
+    private void reportGroup() {}                                                        
+
+    private void manageGroup() {}                                                 
+
+    private void changeGroupName() {}                                                             
+
+    private void inputMessage() {}                                                        
+
+    private void sendMessage() {}
+
+    public static void main(String[] args) {
+        JFrame newWindow = new JFrame("User Management");
+        JPanel userManage = new groupChatSection("group 1", 12);
+        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Dimension panelSize = userManage.getPreferredSize();
+        newWindow.add(userManage);
+        newWindow.setResizable(false);
+        newWindow.setLocation(600, 180);
+        newWindow.setSize(panelSize);
+        newWindow.setVisible(true);
+    }
 }

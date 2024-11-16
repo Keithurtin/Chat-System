@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class chat_GUI_demo extends JFrame {
+public class chat_box_demo extends JFrame {
  
     private JPanel chatPanel;
     private CardLayout cardLayout;                      
@@ -97,7 +97,7 @@ public class chat_GUI_demo extends JFrame {
     private final JPanel group_list_side;
     private final JScrollPane group_list_scroll;
 
-    public chat_GUI_demo() {
+    public chat_box_demo() {
 
         group_list_panel = new JPanel();
         member1_panel = new JPanel();
@@ -201,7 +201,6 @@ public class chat_GUI_demo extends JFrame {
         group_chat_manage.addActionListener(e -> openGroupList());
 
         group_chat_change_name_button.setText("change");
-        // group_chat_change_name_button.addActionListener();
 
         group_chat_number_member.setText("Member: ");
 
@@ -869,68 +868,53 @@ public class chat_GUI_demo extends JFrame {
         side_navigator.setBackground(new java.awt.Color(153, 204, 255));
         side_navigator.setPreferredSize(new java.awt.Dimension(218, 70));
 
-        side_search_input.setText("Search");
-
-        side_search_button.setText("search");
-
-        side_sort_button.setText("  sort   ");
-
-        JPopupMenu sort_menu = new JPopupMenu();
-
-        JMenuItem group_only_button = new JMenuItem("Group");
-        JMenuItem friend_only_button = new JMenuItem("Friend");
-        JMenuItem sort_by_name_button = new JMenuItem("By Name");
-
-        sort_menu.add(group_only_button);
-        sort_menu.add(friend_only_button);
-        sort_menu.add(sort_by_name_button);
-
-        side_sort_button.addActionListener(e -> sort_menu.show(side_sort_button, 0, side_sort_button.getHeight()));
-
         side_more_button.setText("...");
-
         JPopupMenu side_more_menu = new JPopupMenu();
 
         JMenuItem friend_request_button = new JMenuItem("Friend Request");
-        JMenuItem user_profile_button = new JMenuItem("Profile");
+        JMenuItem profile_button = new JMenuItem("Profile");
 
         friend_request_button.addActionListener(e -> openFriendRequest());
-        user_profile_button.addActionListener(e -> openProfile());
+        profile_button.addActionListener(e -> openProfile());
 
         side_more_menu.add(friend_request_button);
-        side_more_menu.add(user_profile_button);
-
+        side_more_menu.add(profile_button);
+        
         side_more_button.addActionListener(e -> side_more_menu.show(side_more_button, 0, side_more_button.getHeight()));
 
-        GroupLayout side_navigatorLayout = new GroupLayout(side_navigator);
+        side_sort_button.setText("Sort");
+
+        side_search_input.setText("search");
+
+        side_search_button.setText("Search");
+
+        javax.swing.GroupLayout side_navigatorLayout = new javax.swing.GroupLayout(side_navigator);
         side_navigator.setLayout(side_navigatorLayout);
         side_navigatorLayout.setHorizontalGroup(
-            side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(side_navigatorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(side_navigatorLayout.createSequentialGroup()
-                        .addComponent(side_search_input, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                        .addGap(7, 7, 7)
-                        .addComponent(side_search_button, GroupLayout.PREFERRED_SIZE, 66, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(side_navigatorLayout.createSequentialGroup()
-                        .addComponent(side_more_button, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(side_sort_button)))
-                .addContainerGap())
+                .addGap(17, 17, 17)
+                .addGroup(side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(side_search_input, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(side_more_button))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(side_search_button, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(side_sort_button, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
         side_navigatorLayout.setVerticalGroup(
-            side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, side_navigatorLayout.createSequentialGroup()
+            side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(side_navigatorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(side_more_button)
-                    .addComponent(side_sort_button))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(side_search_button)
-                    .addComponent(side_search_input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addGroup(side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(side_sort_button)
+                    .addComponent(side_more_button, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(side_navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(side_search_input, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(side_search_button))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         user_container.setBackground(new java.awt.Color(255, 255, 255));
         user_container.setLayout(new BoxLayout(user_container, BoxLayout.Y_AXIS));
@@ -1021,9 +1005,9 @@ public class chat_GUI_demo extends JFrame {
         user_container.setLayout(user_containerLayout);
         user_containerLayout.setHorizontalGroup(
             user_containerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(friend_panel, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-            .addComponent(group_panel, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-            .addComponent(not_friend_panel, GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+            .addComponent(friend_panel, GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+            .addComponent(group_panel, GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+            .addComponent(not_friend_panel, GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
         );
         user_containerLayout.setVerticalGroup(
             user_containerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -1197,11 +1181,11 @@ public class chat_GUI_demo extends JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(chat_GUI_demo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(chat_box_demo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(() -> {
-            new chat_GUI_demo().setVisible(true);
+            new chat_box_demo().setVisible(true);
         });
     }       
 }

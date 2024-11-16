@@ -1,3 +1,4 @@
+package component;
 import javax.swing.*;
 
 public class profileWindow extends JPanel {

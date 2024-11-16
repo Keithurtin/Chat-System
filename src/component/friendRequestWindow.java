@@ -1,3 +1,5 @@
+package component;
+
 import javax.swing.*;
 
 public class friendRequestWindow extends JPanel {
@@ -28,11 +30,11 @@ public class friendRequestWindow extends JPanel {
         navigator.setBackground(new java.awt.Color(153, 204, 255));
 
         search_input.setText("Search...");
-        search_input.addActionListener(this::inputSearch);
+        search_input.addActionListener(e -> inputSearch());
 
         search_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         search_button.setText("Search");
-        search_button.addActionListener(this::searchFriendRequest);
+        search_button.addActionListener(e -> searchFriendRequest());
 
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 255, 255));
@@ -40,7 +42,7 @@ public class friendRequestWindow extends JPanel {
 
         sort_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         sort_button.setText("Sort ");
-        sort_button.addActionListener(this::sortFriendRequest);
+        sort_button.addActionListener(e -> sortFriendRequest());
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -97,11 +99,11 @@ public class friendRequestWindow extends JPanel {
         );
     }
 
-    private void sortFriendRequest(java.awt.event.ActionEvent evt) {} 
+    private void sortFriendRequest() {} 
 
-    private void inputSearch(java.awt.event.ActionEvent evt) {}
+    private void inputSearch() {}
 
-    private void searchFriendRequest(java.awt.event.ActionEvent evt) {}
+    private void searchFriendRequest() {}
 
     private void createFriendRequest(String name, String status) {
 

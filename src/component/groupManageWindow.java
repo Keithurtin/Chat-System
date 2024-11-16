@@ -1,105 +1,182 @@
+package component;
+
 import javax.swing.*;
 
-public class groupManageWindow extends JPanel {
-    private final JPanel main_panel;
-    private final JPanel navigator;
-    private final JLabel title;
-    private final JButton sort_button;
-    private final JButton search_button;
-    private final JButton add_button;
-    private final JTextField search_input;
-    private final JPanel list_side;
-    private final JScrollPane list_scroll;
+public class groupManageWindow extends JFrame {
 
-    public groupManageWindow(){
-        main_panel = new JPanel();
-        navigator  = new JPanel();
-        title = new JLabel("Group member list");
-        sort_button = new JButton("Sort ");
-        search_button = new JButton("Search");
-        add_button = new JButton("Add");
-        search_input = new JTextField("Search...");
-        list_side = new JPanel();
+    private JPanel navigator;
 
-        main_panel.setBackground(new java.awt.Color(255, 255, 255));
-        main_panel.setPreferredSize(new java.awt.Dimension(620, 500));
+    private JPanel list_side;
+    private JScrollPane list_scroll;
+    private GroupLayout.ParallelGroup horizontalGroup;
+    private GroupLayout.SequentialGroup verticalGroup;
 
+    public groupManageWindow() {
+        JPanel menu = new JPanel();
+
+        menu.setBackground(new java.awt.Color(255, 255, 255));
+        menu.setFocusable(false);
+        menu.setPreferredSize(new java.awt.Dimension(620, 500));
+
+        setupNavigatorLayout();
+        createMemberList();
+
+        GroupLayout menuLayout = new GroupLayout(menu);
+        menu.setLayout(menuLayout);
+        menuLayout.setHorizontalGroup(
+                menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+        );
+        menuLayout.setVerticalGroup(
+                menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(menuLayout.createSequentialGroup()
+                                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
+        );
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        java.awt.Dimension panelSize = menu.getPreferredSize();
+        add(menu);
+        setResizable(false);
+        setLocation(600, 180);
+        setSize(panelSize);
+    }
+
+    private void setupNavigatorLayout() {
+        JLabel title = new JLabel("Group Members List");
+        JButton add_button = new JButton("Add Member");
+
+        navigator = new JPanel();
         navigator.setBackground(new java.awt.Color(153, 204, 255));
-
-        search_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        search_button.addActionListener(e -> searchMember());
 
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 255, 255));
-
-        sort_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        sort_button.addActionListener(e -> sortMember());
-
         add_button.setFont(new java.awt.Font("Segoe UI", 1, 12));
-        add_button.addActionListener(e -> addMember());
+        add_button.addActionListener(e -> openAddMemberWindow());
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
+
         navigatorLayout.setHorizontalGroup(
-            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(navigatorLayout.createSequentialGroup()
-                .addGap(50, 50, 50)
-                .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(title)
-                    .addGroup(navigatorLayout.createSequentialGroup()
-                        .addComponent(sort_button)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(search_input, GroupLayout.PREFERRED_SIZE, 282, GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(search_button)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(add_button, GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
-                .addGap(46, 46, 46))
+                navigatorLayout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(add_button, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50)
+                        .addComponent(title)
+                        .addContainerGap(120, Short.MAX_VALUE)
         );
+
         navigatorLayout.setVerticalGroup(
-            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(title)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(search_input, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(search_button, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(sort_button, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(add_button, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        
-        list_side.setBackground(new java.awt.Color(255, 255, 255));
-        list_side.setLayout(new BoxLayout(list_side, BoxLayout.Y_AXIS));
-
-        list_scroll = new JScrollPane(list_side);
-        list_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        list_scroll.getVerticalScrollBar().setValue(list_scroll.getVerticalScrollBar().getMaximum());
-
-        GroupLayout panelLayout = new GroupLayout(main_panel);
-        main_panel.setLayout(panelLayout);
-        panelLayout.setHorizontalGroup(
-            panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(list_scroll, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addContainerGap())
-        );
-        panelLayout.setVerticalGroup(
-            panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(panelLayout.createSequentialGroup()
-                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                navigatorLayout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                                .addComponent(add_button, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE) // Button
+                                .addComponent(title)
+                        )
+                        .addGap(15, 15, 15)
         );
     }
 
-    private void addMember() {}
-    private void searchMember() {}
-    private void sortMember() {}
+    private void createMemberList() {
+        list_side = new JPanel();
+        list_side.setBackground(new java.awt.Color(255, 255, 255));
+
+        GroupLayout list_sideLayout = new GroupLayout(list_side);
+        list_side.setLayout(list_sideLayout);
+
+        horizontalGroup = list_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        verticalGroup = list_sideLayout.createSequentialGroup();
+
+        list_sideLayout.setHorizontalGroup(
+                list_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(horizontalGroup)
+        );
+
+        list_sideLayout.setVerticalGroup(
+                list_sideLayout.createSequentialGroup()
+                        .addGroup(verticalGroup)
+        );
+
+        list_scroll = new JScrollPane(list_side);
+        list_scroll.setBorder(null);
+
+        addMemberToList("ABC", true, true);
+        addMemberToList("XYZ", true, false);
+        addMemberToList("LMN", false, false);
+    }
+
+    private void addMemberToList(String name, boolean isOn, boolean isAdmin) {
+        JPanel member_panel = new JPanel();
+        member_panel.setPreferredSize(new java.awt.Dimension(0, 85));
+
+        JLabel member_name = new JLabel("<html>" + name + (isAdmin ? " <span style='color: red; font-weight: bold;'>ADMIN</span></html>" : "</html>"));
+        member_name.setFont(new java.awt.Font("Segoe UI", 1, 14));
+
+        JLabel member_status = new JLabel("Status: " + (isOn ? "Online" : "Offline"));
+
+        JButton more_button = new JButton("More");
+        more_button.setFont(new java.awt.Font("Segoe UI", 1, 12));
+
+        JPopupMenu more_menu = new JPopupMenu();
+
+        JMenuItem chat_button = new JMenuItem("Chat");
+        JMenuItem kick_button = new JMenuItem("Kick");
+        JMenuItem asign_button = new JMenuItem("Asign Admin");
+
+        more_menu.add(chat_button);
+        more_menu.add(kick_button);
+        more_menu.add(asign_button);
+
+        more_button.addActionListener(e -> more_menu.show(more_button, 0, more_button.getHeight()));
+
+        GroupLayout member_panelLayout = new GroupLayout(member_panel);
+        member_panel.setLayout(member_panelLayout);
+        member_panelLayout.setHorizontalGroup(
+                member_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(member_panelLayout.createSequentialGroup()
+                                .addGap(58, 58, 58)
+                                .addGroup(member_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(member_status, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(member_name, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 220, Short.MAX_VALUE)
+                                .addComponent(more_button)
+                                .addGap(45, 45, 45))
+        );
+        member_panelLayout.setVerticalGroup(
+                member_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(member_panelLayout.createSequentialGroup()
+                                .addContainerGap(9, Short.MAX_VALUE)
+                                .addComponent(member_name, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(member_status, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14))
+                        .addGroup(member_panelLayout.createSequentialGroup()
+                                .addGap(24, 24, 24)
+                                .addComponent(more_button)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        // Update the GroupLayout groups
+        horizontalGroup.addComponent(member_panel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE);
+        verticalGroup.addComponent(member_panel, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED);
+
+        list_side.revalidate();
+        list_side.repaint();
+    }
+
+    private void openAddMemberWindow() {
+        addMemberMenu newWindow = new addMemberMenu();
+        newWindow.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            groupManageWindow frame = new groupManageWindow();
+            frame.setVisible(true);
+        });
+    }
 }
