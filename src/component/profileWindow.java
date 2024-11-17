@@ -1,124 +1,200 @@
 package component;
+import java.awt.*;
 import javax.swing.*;
 
-public class profileWindow extends JPanel {
+public class profileWindow extends JFrame {
+    private JPanel navigator;
+    private JPanel content_side;
+    private JScrollPane main_scroll;
 
-    private final JButton profile_change_password_button;
-    private final JLabel profile_email_label;
-    private final JButton profile_manage_email_button;
-    private final JButton profile_manage_name_button;
-    private final JLabel profile_name_label;
-    private final JPanel profile_navigator;
-    private final JLabel profile_num_friend_label;
-    private final JPanel profile_panel;
-    private final JLabel profile_password_label;
-    private final JLabel profile_title;
+    public profileWindow(String name, String fullname, String address, String birthday, boolean gender, String email, int noOfFriend) {
+        JPanel main_panel = new JPanel();
+        JPanel content_side= new JPanel();
+        JLabel username_label = new JLabel("Name: ");
+        JLabel fullname_label = new JLabel("Fullname: ");
+        JLabel gender_label = new JLabel("Gender: ");
+        JLabel address_label = new JLabel("Address: ");
+        JLabel birthdate_label = new JLabel("Birthday: ");
+        JLabel email_label = new JLabel("Email: ");
+        JLabel num_friend_label = new JLabel("No. Friends: ");
+        JLabel username_value_label = new JLabel(name);
+        JLabel fullname_value_label = new JLabel(fullname);
+        JLabel address_value_label = new JLabel(address);
+        JLabel birthdate_value_label = new JLabel(birthday);
+        JLabel gender_value_label = new JLabel(gender?"Male":"Female");
+        JLabel email_value_label = new JLabel(email);
+        JLabel num_of_friend_value_label = new JLabel(String.valueOf(noOfFriend));
 
-    public profileWindow(String name, String email, int noOfFriend) {
-        profile_panel = new JPanel();
-        profile_navigator = new JPanel();
-        profile_title = new JLabel();
-        profile_name_label = new JLabel();
-        profile_email_label = new JLabel();
-        profile_num_friend_label = new JLabel();
-        profile_manage_name_button = new JButton();
-        profile_change_password_button = new JButton();
-        profile_password_label = new JLabel();
-        profile_manage_email_button = new JButton();
+        setupNavigatorLayout();
 
 
-        profile_panel.setBackground(new java.awt.Color(255, 255, 255));
-        profile_panel.setPreferredSize(new java.awt.Dimension(400, 370));
-        profile_panel.setRequestFocusEnabled(false);
+        username_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        fullname_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        address_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        birthdate_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        gender_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        email_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        num_friend_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
 
-        profile_navigator.setBackground(new java.awt.Color(153, 204, 255));
-        profile_navigator.setPreferredSize(new java.awt.Dimension(400, 70));
+        username_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        fullname_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        address_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        birthdate_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        gender_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        email_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        num_of_friend_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
 
-        profile_title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        profile_title.setForeground(new java.awt.Color(255, 255, 255));
-        profile_title.setText("Personal Profile");
+        JButton manage_button = new JButton("Manage");
+        manage_button.setBackground(new java.awt.Color(153, 204, 255));
+        manage_button.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        manage_button.setForeground(new java.awt.Color(255, 255, 255));
+        
+        main_panel.setBackground(new java.awt.Color(255, 255, 255));
+        main_panel.setRequestFocusEnabled(false);
 
-        GroupLayout profile_navigatorLayout = new GroupLayout(profile_navigator);
-        profile_navigator.setLayout(profile_navigatorLayout);
-        profile_navigatorLayout.setHorizontalGroup(
-            profile_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(profile_navigatorLayout.createSequentialGroup()
+        content_side.setBackground(new java.awt.Color(255, 255, 255));
+        JLabel password_label = new JLabel("Change password:");
+        password_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+
+        JButton change_password_button = new JButton("Change");
+        change_password_button.setBackground(new java.awt.Color(153, 204, 255));
+        change_password_button.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        change_password_button.setForeground(new java.awt.Color(255, 255, 255));
+
+        GroupLayout content_sideLayout = new GroupLayout(content_side);
+        content_side.setLayout(content_sideLayout);
+        content_sideLayout.setHorizontalGroup(
+                content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(content_sideLayout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(content_sideLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, content_sideLayout.createSequentialGroup()
+                                                .addGap(0, 16, Short.MAX_VALUE)
+                                                .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                        .addComponent(username_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(fullname_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(address_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(birthdate_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(gender_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(email_label, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(num_friend_label, GroupLayout.PREFERRED_SIZE, 150, GroupLayout.PREFERRED_SIZE))
+                                                .addGap(18, 18, 18)
+                                                .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                        .addComponent(gender_value_label, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(birthdate_value_label, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(address_value_label, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(fullname_value_label, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(username_value_label, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(email_value_label, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(num_of_friend_value_label, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE))
+                                                .addGap(28, 28, 28))))
+                        .addGroup(GroupLayout.Alignment.TRAILING, content_sideLayout.createSequentialGroup()
+                                .addComponent(manage_button)
+                                .addGap(201, 201, 201))
+                        .addGroup(GroupLayout.Alignment.TRAILING, content_sideLayout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(password_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(change_password_button)
+                                .addGap(90, 90, 90))
+        );
+        content_sideLayout.setVerticalGroup(
+                content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(content_sideLayout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addGroup(content_sideLayout.createSequentialGroup()
+                                                .addComponent(username_value_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(fullname_value_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(address_value_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(birthdate_value_label)
+                                                .addGap(17, 17, 17)
+                                                .addComponent(gender_value_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(email_value_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(num_of_friend_value_label))
+                                        .addGroup(content_sideLayout.createSequentialGroup()
+                                                .addComponent(username_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(fullname_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(address_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(birthdate_label)
+                                                .addGap(17, 17, 17)
+                                                .addComponent(gender_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(email_label)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(num_friend_label)))
+                                .addGap(18, 18, 18)
+                                .addComponent(manage_button)
+                                .addGap(23, 23, 23)
+                                .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(password_label)
+                                        .addComponent(change_password_button))
+                                .addGap(30, 30, 30))
+        );
+
+        main_scroll = new JScrollPane(content_side);
+        main_scroll.setBorder(null);
+
+        GroupLayout main_panelLayout = new GroupLayout(main_panel);
+        main_panel.setLayout(main_panelLayout);
+        main_panelLayout.setHorizontalGroup(
+            main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(main_scroll)
+        );
+        main_panelLayout.setVerticalGroup(
+            main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(main_panelLayout.createSequentialGroup()
+                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
+                .addComponent(main_scroll, GroupLayout.PREFERRED_SIZE, 410, GroupLayout.PREFERRED_SIZE))
+        );
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        Dimension panelSize = main_panel.getPreferredSize();
+        add(main_panel);
+        setResizable(false);
+        setLocation(600, 180);
+        setSize(panelSize);
+    }
+
+    private void setupNavigatorLayout() {
+        navigator = new JPanel();
+        navigator.setBackground(new java.awt.Color(153, 204, 255));
+        navigator.setPreferredSize(new java.awt.Dimension(400, 70));
+
+        JLabel title = new JLabel("Personal Profile");
+        title.setFont(new java.awt.Font("Segoe UI", 1, 24));
+        title.setForeground(new java.awt.Color(255, 255, 255));
+
+        GroupLayout navigatorLayout = new GroupLayout(navigator);
+        navigator.setLayout(navigatorLayout);
+        navigatorLayout.setHorizontalGroup(
+            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(navigatorLayout.createSequentialGroup()
                 .addGap(110, 110, 110)
-                .addComponent(profile_title)
+                .addComponent(title)
                 .addContainerGap(112, Short.MAX_VALUE))
         );
-        profile_navigatorLayout.setVerticalGroup(
-            profile_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(profile_navigatorLayout.createSequentialGroup()
+        navigatorLayout.setVerticalGroup(
+            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(navigatorLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(profile_title)
+                .addComponent(title)
                 .addContainerGap(8, Short.MAX_VALUE))
         );
 
-        profile_name_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        profile_name_label.setText("Name: " + name);
-
-        profile_email_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        profile_email_label.setText("Email:" + email);
-
-        profile_num_friend_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        profile_num_friend_label.setText("No. Friends:" + noOfFriend);
-
-        profile_manage_name_button.setText("Manage");
-        profile_manage_name_button.addActionListener(e -> changeName());
-
-        profile_password_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        profile_password_label.setText("Change password:");
-
-        profile_change_password_button.setText("Change");
-        profile_manage_email_button.addActionListener(e -> changePassword());
-
-        profile_manage_email_button.setText("Manage");
-        profile_manage_email_button.addActionListener(e -> changeEmail());
-
-        GroupLayout profile_panelLayout = new GroupLayout(profile_panel);
-        profile_panel.setLayout(profile_panelLayout);
-        profile_panelLayout.setHorizontalGroup(
-            profile_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(profile_navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(profile_panelLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addGroup(profile_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addGroup(profile_panelLayout.createSequentialGroup()
-                        .addComponent(profile_email_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(profile_manage_email_button))
-                    .addComponent(profile_num_friend_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(profile_panelLayout.createSequentialGroup()
-                        .addComponent(profile_name_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(profile_manage_name_button))
-                    .addGroup(profile_panelLayout.createSequentialGroup()
-                        .addComponent(profile_password_label)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                        .addComponent(profile_change_password_button)))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        profile_panelLayout.setVerticalGroup(
-            profile_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(profile_panelLayout.createSequentialGroup()
-                .addComponent(profile_navigator, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addGroup(profile_panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(profile_name_label)
-                    .addComponent(profile_manage_name_button))
-                .addGap(31, 31, 31)
-                .addGroup(profile_panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(profile_email_label)
-                    .addComponent(profile_manage_email_button))
-                .addGap(30, 30, 30)
-                .addComponent(profile_num_friend_label)
-                .addGap(30, 30, 30)
-                .addGroup(profile_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(profile_password_label)
-                    .addComponent(profile_change_password_button))
-                .addContainerGap(66, Short.MAX_VALUE))
-        );
     }
 
     private void changeEmail() {}
@@ -126,4 +202,8 @@ public class profileWindow extends JPanel {
     private void changeName() {}
     
     private void changePassword() {}
+
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> new profileWindow("abc", "abcdef" ,"213 ac", "12/12/1200", true, "abc@gmail", 12).setVisible(true));
+    }
 }

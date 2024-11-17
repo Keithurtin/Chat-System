@@ -3,31 +3,25 @@ package component;
 import javax.swing.*;
 
 public class friendRequest extends JPanel{
-    
-    private JPanel main_panel;
-    private JButton approve_button;
-    private JButton reject_button;
-    private JLabel name_label;
-    private JLabel status_label; 
 
-    public friendRequest(String username, String status) {
-        main_panel.setPreferredSize(new java.awt.Dimension(0, 85));
-
+    public friendRequest(String username, boolean status) {
+        setPreferredSize(new java.awt.Dimension(0, 85));
+        JLabel name_label = new JLabel(username);
         name_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         name_label.setText(username);
 
-        status_label.setText("status:" + status);
+        JLabel status_label = new JLabel("<html> Status:" + (status ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
 
+        JButton approve_button = new JButton("Approve");
         approve_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        approve_button.setText("Approve");
         approve_button.addActionListener(e -> approveFriendRequest());
 
+        JButton reject_button = new JButton("Reject");
         reject_button.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        reject_button.setText("Reject");
         reject_button.addActionListener(e -> rejectFriendRequest());
 
-        GroupLayout panelLayout = new GroupLayout(main_panel);
-        main_panel.setLayout(panelLayout);
+        GroupLayout panelLayout = new GroupLayout(this);
+        this.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(panelLayout.createSequentialGroup()
@@ -36,11 +30,11 @@ public class friendRequest extends JPanel{
                     .addGroup(panelLayout.createSequentialGroup()
                         .addComponent(status_label, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(reject_button))
+                        .addComponent(reject_button, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelLayout.createSequentialGroup()
                         .addComponent(name_label, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(approve_button)))
+                        .addComponent(approve_button, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18))
         );
         panelLayout.setVerticalGroup(
@@ -50,7 +44,6 @@ public class friendRequest extends JPanel{
                 .addGroup(panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(name_label, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
                     .addComponent(approve_button))
-                .addGap(18, 18, 18)
                 .addGroup(panelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(status_label, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
                     .addComponent(reject_button))

@@ -38,7 +38,6 @@ public class user_management_demo extends JPanel {
     }
 
     private void initComponents(String name, String birthdate, String username, String address, boolean gender, String email) {
-
         main_panel = new JPanel();
         navigator = new JPanel();
         title = new JLabel();

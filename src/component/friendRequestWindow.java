@@ -1,47 +1,65 @@
 package component;
 
+import java.awt.*;
 import javax.swing.*;
 
-public class friendRequestWindow extends JPanel {
-
-    private final JPanel main_panel;
-
-    private final JPanel navigator;
-    private final JLabel title;
-    private final JButton search_button;
-    private final JTextField search_input;
-    private final JButton sort_button;
+public class friendRequestWindow extends JFrame {
+    private JPanel navigator;
     
-    private JScrollPane friend_scroll;
-    private JPanel friend_side;
+    private JScrollPane list_scroll;
+    private JPanel list_side;
+    private GroupLayout.ParallelGroup horizontalGroup;
+    private GroupLayout.SequentialGroup verticalGroup;
 
     public friendRequestWindow() {
-        main_panel = new JPanel();
-        navigator = new JPanel();
-        search_input = new JTextField();
-        search_button = new JButton();
-        title = new JLabel();
-        sort_button = new JButton();
-        friend_side = new JPanel();
-
+        JPanel main_panel = new JPanel();
         main_panel.setBackground(new java.awt.Color(255, 255, 255));
         main_panel.setPreferredSize(new java.awt.Dimension(620, 500));
 
+        setupNavigatorLayout();
+
+        createListSide();
+
+        GroupLayout main_panelLayout = new GroupLayout(main_panel);
+        main_panel.setLayout(main_panelLayout);
+        main_panelLayout.setHorizontalGroup(
+            main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(list_scroll)
+        );
+        main_panelLayout.setVerticalGroup(
+            main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(main_panelLayout.createSequentialGroup()
+                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(list_scroll, GroupLayout.PREFERRED_SIZE, 410, GroupLayout.PREFERRED_SIZE))
+        );
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        Dimension panelSize = main_panel.getPreferredSize();
+        add(main_panel);
+        setResizable(false);
+        setLocation(600, 180);
+        setSize(panelSize);
+    }
+
+    private void setupNavigatorLayout() {
+        navigator = new JPanel();
         navigator.setBackground(new java.awt.Color(153, 204, 255));
 
-        search_input.setText("Search...");
+        JTextField search_input = new JTextField("Search...");
         search_input.addActionListener(e -> inputSearch());
 
+        JButton search_button = new JButton("Search");
         search_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        search_button.setText("Search");
         search_button.addActionListener(e -> searchFriendRequest());
 
+        JLabel title = new JLabel("Friend Request");
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setForeground(new java.awt.Color(255, 255, 255));
-        title.setText("Friend Request");
 
+        JButton sort_button = new JButton("Sort");
         sort_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        sort_button.setText("Sort ");
         sort_button.addActionListener(e -> sortFriendRequest());
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
@@ -74,29 +92,45 @@ public class friendRequestWindow extends JPanel {
                     .addComponent(sort_button, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+    }
 
-        friend_side.setLayout(new BoxLayout(friend_side, BoxLayout.Y_AXIS));
+    private void createListSide() {
+        list_side = new JPanel();
+        list_side.setBackground(new java.awt.Color(255, 255, 255));
 
-        friend_scroll = new JScrollPane(friend_side);
-        friend_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);   
-        friend_scroll.getVerticalScrollBar().setValue(friend_scroll.getVerticalScrollBar().getMaximum());
+        GroupLayout list_sideLayout = new GroupLayout(list_side);
+        list_side.setLayout(list_sideLayout);
 
-        friend_scroll.setViewportView(friend_side);
+        horizontalGroup = list_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        verticalGroup = list_sideLayout.createSequentialGroup();
 
-        GroupLayout main_panelLayout = new GroupLayout(main_panel);
-        main_panel.setLayout(main_panelLayout);
-        main_panelLayout.setHorizontalGroup(
-            main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(friend_scroll)
+        list_sideLayout.setHorizontalGroup(
+            list_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(horizontalGroup)
         );
-        main_panelLayout.setVerticalGroup(
-            main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(main_panelLayout.createSequentialGroup()
-                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(friend_scroll, GroupLayout.PREFERRED_SIZE, 410, GroupLayout.PREFERRED_SIZE))
+
+        list_sideLayout.setVerticalGroup(
+            list_sideLayout.createSequentialGroup()
+                .addGroup(verticalGroup)
         );
+
+        list_scroll = new JScrollPane(list_side);
+        list_scroll.setBorder(null);
+        
+        addFriendRequest("ABC", false);
+        addFriendRequest("XYC", true);
+        addFriendRequest("XYV", false);
+    }
+
+    private void addFriendRequest(String name, boolean status) {
+        JPanel newRequest = new friendRequest(name, status);
+        horizontalGroup.addComponent(newRequest, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE);
+        verticalGroup.addComponent(newRequest, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED);
+
+        list_side.add(newRequest);
+        list_side.revalidate();
+        list_side.repaint();
     }
 
     private void sortFriendRequest() {} 
@@ -105,7 +139,7 @@ public class friendRequestWindow extends JPanel {
 
     private void searchFriendRequest() {}
 
-    private void createFriendRequest(String name, String status) {
-
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> new friendRequestWindow().setVisible(true));
     }
 }

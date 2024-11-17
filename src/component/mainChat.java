@@ -46,9 +46,6 @@ public final class mainChat extends JFrame {
         setResizable(false); 
         setLocation(400, 150);
         pack();
-        // chatPanel.add(group_chat_panel, "groupChat");
-        // chatPanel.add(friend_chat_panel, "friendChat");
-        
     }
 
     private void setupSideLayout() {
@@ -250,9 +247,15 @@ public final class mainChat extends JFrame {
 
     private void sortGroup() {}
 
-    private void openProfile() {}
+    private void openProfile() {
+        JFrame newWindow = new profileWindow("abc", "abcdef" ,"213 ac", "12/12/1200", true, "abc@gmail", 12);
+        newWindow.setVisible(true);
+    }
 
-    private void openFriendRequest() {}
+    private void openFriendRequest() {
+        Frame newWindow = new friendRequestWindow();
+        newWindow.setVisible(true);
+    }
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> new mainChat().setVisible(true));

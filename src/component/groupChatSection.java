@@ -1,4 +1,5 @@
 package component;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -50,20 +51,20 @@ public class groupChatSection extends JPanel {
         report_button.addActionListener(e -> reportGroup());
 
         JLabel name_label = new JLabel( name);
-        name_label.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        name_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        name_label.setForeground(Color.WHITE);
 
-        JButton manage_button = new JButton("...");
-        manage_button.setBackground(new java.awt.Color(153, 204, 255));
-        manage_button.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        manage_button.setForeground(new java.awt.Color(255, 255, 255));
-        manage_button.setBorder(null);
+        JButton manage_button = new JButton("Manage");
+        manage_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
         manage_button.addActionListener(e -> manageGroup());
 
         JButton change_name_button = new JButton("Change");
         change_name_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
         change_name_button.addActionListener(e -> changeGroupName());
 
-        JLabel number_member_label = new JLabel("Member: " + member);
+        JLabel number_member_label = new JLabel("<html> Member: <span style='color: black'>" + member +"</span></html>");
+        number_member_label.setFont(new java.awt.Font("Segoe UI", 1, 16));
+        number_member_label.setForeground(Color.WHITE);
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -183,7 +184,9 @@ public class groupChatSection extends JPanel {
 
     private void reportGroup() {}                                                        
 
-    private void manageGroup() {}                                                 
+    private void manageGroup() {
+        java.awt.EventQueue.invokeLater(() -> new groupManageWindow().setVisible(true));
+    }                                                 
 
     private void changeGroupName() {}                                                             
 
