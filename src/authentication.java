@@ -85,9 +85,7 @@ public class authentication extends JFrame {
 
         signup_password_label.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         signup_password_label.setText("Password:");
-
-        signup_password_input.setText("jPasswordField1");
-
+        
         signup_title.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
         signup_title.setForeground(new java.awt.Color(102, 153, 255));
         signup_title.setText("Sign Up");
