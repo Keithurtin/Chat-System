@@ -1,5 +1,4 @@
 package component;
-
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,14 +6,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class active_user_demo extends JFrame {
+public class newUsersManage extends JFrame {
     DefaultTableModel tableModel;
     JTable table;
     JScrollPane table_scroll;
     JPanel navigator;
 
-    public active_user_demo() {
-        setTitle("Active Users List");
+    public newUsersManage() {
+        setTitle("User Registration List");
         setSize(600, 400);
         setLocation(450, 170);
         setResizable(false);
@@ -30,7 +29,7 @@ public class active_user_demo extends JFrame {
 private void setupNavigatorLayout() {
     navigator = new JPanel();
     navigator.setBackground(new Color(153, 204, 255));
-    JLabel title = new JLabel("Active Users Menu");
+    JLabel title = new JLabel("New Register Menu");
     title.setFont(new Font("Segoe UI", 1, 24));
     title.setForeground(Color.WHITE);
 
@@ -119,7 +118,7 @@ private void setupNavigatorLayout() {
 }
 
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Open App", "Friend", "Group"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Register Date"});
         table = new JTable(tableModel);
 
         table.setRowHeight(30);
@@ -127,25 +126,20 @@ private void setupNavigatorLayout() {
         table.getColumnModel().getColumn(0).setPreferredWidth(90);
         table.getColumnModel().getColumn(1).setPreferredWidth(200);
         table.getColumnModel().getColumn(2).setPreferredWidth(90);
-        table.getColumnModel().getColumn(3).setPreferredWidth(90);
-        table.getColumnModel().getColumn(4).setPreferredWidth(90);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
-        table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
         table_scroll = new JScrollPane(table);
 
-        addRowToTable("1", "Username1", 12, 100, 12);
-        addRowToTable("2", "Username2", 15, 45, 5);
+        addRowToTable("1", "Username1", "11/02/2004");
+        addRowToTable("2", "Username2", "12/04/2004");
     }
 
-    private void addRowToTable(String index, String username, int open_app, int chat_friend, int chat_group) {
-        tableModel.addRow(new Object[]{index, username, open_app, chat_friend, chat_group});
+    private void addRowToTable(String stt, String username, String date) {
+        tableModel.addRow(new Object[]{stt, username, date});
     }
 
     private Map<String, Integer> generateExampleData() {
@@ -172,14 +166,14 @@ private void setupNavigatorLayout() {
         if(data == null){
             data = generateExampleData();
         }
-        chart_panel_demo chartPanel = new chart_panel_demo(year, data, false);
+        chartDisplay chartPanel = new chartDisplay(year, data, true);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            active_user_demo frame = new active_user_demo();
+            newUsersManage frame = new newUsersManage();
             frame.setVisible(true);
         });
     }

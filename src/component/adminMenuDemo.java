@@ -1,9 +1,5 @@
-import component.active_user_demo;
-import component.add_user_demo;
-import component.group_list_demo;
-import component.new_register_demo;
-import component.spam_menu_demo;
-import component.user_management_demo;
+package component;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,7 +7,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class admin_menu_demo extends JFrame {
+public class adminMenuDemo extends JFrame {
 
     private JPanel admin_menu;
     private JPanel navigator;
@@ -19,7 +15,7 @@ public class admin_menu_demo extends JFrame {
     private JTable user_table;
     private DefaultTableModel tableModel;
 
-    public admin_menu_demo() {
+    public adminMenuDemo() {
         initComponents();
     }
 
@@ -215,7 +211,7 @@ public class admin_menu_demo extends JFrame {
 
     private void openUserWindow(){
         JFrame newWindow = new JFrame("User Management");
-        JPanel userManage = new user_management_demo("Abc", "Nguyen Van A", "1/1/2001", "123 NVC", false, "abc123@mail.com");
+        JPanel userManage = new userManage("Abc", "Nguyen Van A", "1/1/2001", "123 NVC", false, "abc123@mail.com");
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);
@@ -226,35 +222,35 @@ public class admin_menu_demo extends JFrame {
     }
 
     private void openGroupList() {
-        JFrame newWindow = new group_list_demo();
+        JFrame newWindow = new groupListManage();
         newWindow.setResizable(false);
         newWindow.setLocation(640, 200);
         newWindow.setVisible(true);
     }
 
     private void openSpamSection() {
-        JFrame newWindow = new spam_menu_demo();
+        JFrame newWindow = new spamManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
     }
 
     private void openNewRegister() {
-        JFrame newWindow = new new_register_demo();
+        JFrame newWindow = new newUsersManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
     }
 
     private void openActiveUser() {
-        JFrame newWindow = new active_user_demo();
+        JFrame newWindow = new activeUserManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
     }
 
     private void openChatBox() {
-        JFrame newWindow = new chat_box_demo();
+        JFrame newWindow = new chatBoxDemo();
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
@@ -265,7 +261,7 @@ public class admin_menu_demo extends JFrame {
         JFrame newWindow = new JFrame("Add New User");
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        add_user_demo newPanel = new add_user_demo();
+        addNewUser newPanel = new addNewUser();
         Dimension panelSize = newPanel.getPreferredSize();
         newWindow.add(newPanel);
         newWindow.setResizable(false);
@@ -275,6 +271,6 @@ public class admin_menu_demo extends JFrame {
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new admin_menu_demo().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new adminMenuDemo().setVisible(true));
     }
 }

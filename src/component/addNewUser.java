@@ -3,7 +3,7 @@ package component;
 import java.awt.*;
 import javax.swing.*;
 
-public class add_user_demo extends JPanel {
+public class addNewUser extends JPanel {
 
     private JPanel main_panel;
     private JPanel navigator;
@@ -11,7 +11,7 @@ public class add_user_demo extends JPanel {
     private JScrollPane main_scroll;
     private JPanel content_side;
 
-    public add_user_demo() {
+    public addNewUser() {
         initComponents();
     }
 
@@ -19,7 +19,7 @@ public class add_user_demo extends JPanel {
 
         main_panel = new JPanel();
         navigator = new JPanel();
-        JLabel title = new JLabel("User Management");
+        JLabel title = new JLabel("Add New User");
         main_scroll = new JScrollPane();
         content_side = new JPanel();
 
@@ -201,7 +201,7 @@ public class add_user_demo extends JPanel {
 
     public static void main(String[] args) {
         JFrame newWindow = new JFrame("User Management");
-        JPanel userManage = new add_user_demo();
+        JPanel userManage = new addNewUser();
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);

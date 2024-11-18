@@ -4,12 +4,12 @@ import java.awt.*;
 import java.util.Map;
 import javax.swing.*;
 
-public class chart_panel_demo extends JPanel {
+public class chartDisplay extends JPanel {
     private final Map<String, Integer> data;
     private final String year;
     private final String label;
 
-    public chart_panel_demo(String year, Map<String, Integer> input_data, boolean isRegister) {
+    public chartDisplay(String year, Map<String, Integer> input_data, boolean isRegister) {
         this.year = year;
         data = input_data;
         label = isRegister?"Registrations": "Active Users";

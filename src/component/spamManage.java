@@ -5,7 +5,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class spam_menu_demo extends JFrame {
+public class spamManage extends JFrame {
 
     private JPanel menu;
     private JPanel navigator;
@@ -13,7 +13,7 @@ public class spam_menu_demo extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
 
-    public spam_menu_demo() {
+    public spamManage() {
         initComponents();
     }
 
@@ -204,7 +204,7 @@ public class spam_menu_demo extends JFrame {
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            spam_menu_demo frame = new spam_menu_demo();
+            spamManage frame = new spamManage();
             frame.setVisible(true);
         });
     }

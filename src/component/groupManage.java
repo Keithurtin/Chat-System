@@ -3,14 +3,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class group_manage_demo extends JFrame {
+public class groupManage extends JFrame {
 
     JPanel navigator;
     JScrollPane table_scroll;
     JTable table;
     private DefaultTableModel tableModel;
 
-    public group_manage_demo(String name) {
+    public groupManage(String name) {
         initComponents(name);
     }   
     private void initComponents(String name) {

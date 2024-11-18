@@ -4,12 +4,11 @@ import javax.swing.*;
 
 public class profileWindow extends JFrame {
     private JPanel navigator;
-    private JPanel content_side;
-    private JScrollPane main_scroll;
+    private final JScrollPane main_scroll;
 
     public profileWindow(String name, String fullname, String address, String birthday, boolean gender, String email, int noOfFriend) {
         JPanel main_panel = new JPanel();
-        JPanel content_side= new JPanel();
+        JPanel content_side = new JPanel();
         JLabel username_label = new JLabel("Name: ");
         JLabel fullname_label = new JLabel("Fullname: ");
         JLabel gender_label = new JLabel("Gender: ");
@@ -26,7 +25,6 @@ public class profileWindow extends JFrame {
         JLabel num_of_friend_value_label = new JLabel(String.valueOf(noOfFriend));
 
         setupNavigatorLayout();
-
 
         username_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
         fullname_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
@@ -60,6 +58,8 @@ public class profileWindow extends JFrame {
         change_password_button.setBackground(new java.awt.Color(153, 204, 255));
         change_password_button.setFont(new java.awt.Font("Segoe UI", 1, 18));
         change_password_button.setForeground(new java.awt.Color(255, 255, 255));
+
+        change_password_button.addActionListener(e -> changePassword());
 
         GroupLayout content_sideLayout = new GroupLayout(content_side);
         content_side.setLayout(content_sideLayout);
@@ -196,10 +196,6 @@ public class profileWindow extends JFrame {
         );
 
     }
-
-    private void changeEmail() {}
-
-    private void changeName() {}
     
     private void changePassword() {}
 

@@ -5,7 +5,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class user_management_demo extends JPanel {
+public class userManage extends JPanel {
 
     private JPanel main_panel;
     private JPanel navigator;
@@ -33,7 +33,7 @@ public class user_management_demo extends JPanel {
     private JTable friend_list_table;
     DefaultTableModel tableModel;
 
-    public user_management_demo(String username, String name, String address, String birthdate, boolean  gender, String email) {
+    public userManage(String username, String name, String address, String birthdate, boolean  gender, String email) {
         initComponents(name, birthdate, username, address, gender, email);
     }
 
@@ -310,7 +310,7 @@ public class user_management_demo extends JPanel {
 
     public static void main(String[] args) {
         JFrame newWindow = new JFrame("User Management");
-        JPanel userManage = new user_management_demo("Abc", "Nguyen Van A", "1/1/2001", "123 NVC", false, "abc123@mail.com");
+        JPanel userManage = new userManage("Abc", "Nguyen Van A", "1/1/2001", "123 NVC", false, "abc123@mail.com");
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);

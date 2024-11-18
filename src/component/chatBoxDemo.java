@@ -1,12 +1,10 @@
-import component.friendChatSection;
-import component.friendRequestWindow;
-import component.groupChatSection;
-import component.profileWindow;
+package component;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class chat_box_demo extends JFrame {
+public class chatBoxDemo extends JFrame {
  
     private JPanel chatPanel;
     private CardLayout cardLayout;
@@ -52,7 +50,7 @@ public class chat_box_demo extends JFrame {
     private final JPanel group_list_side;
     private final JScrollPane group_list_scroll;
 
-    public chat_box_demo() {
+    public chatBoxDemo() {
 
         group_list_panel = new JPanel();
         member1_panel = new JPanel();
@@ -573,11 +571,11 @@ public class chat_box_demo extends JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(chat_box_demo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(chatBoxDemo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
 
         java.awt.EventQueue.invokeLater(() -> {
-            new chat_box_demo().setVisible(true);
+            new chatBoxDemo().setVisible(true);
         });
     }       
 }

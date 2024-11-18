@@ -2,14 +2,14 @@ package component;
 import java.awt.*;
 import javax.swing.*;
 
-public class group_list_demo extends JFrame {
+public class groupListManage extends JFrame {
     private JPanel navigator;
     private JScrollPane list_scroll;
     private JPanel list_side;
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
-    public group_list_demo() {
+    public groupListManage() {
         initComponents();
     }
 
@@ -49,7 +49,7 @@ public class group_list_demo extends JFrame {
     private void setupNavigatorLayout() {
         navigator = new JPanel();
         navigator.setBackground(new Color(153, 204, 255));
-        JLabel title = new JLabel("Spam Report Management");
+        JLabel title = new JLabel("Group List Management");
         title.setFont(new Font("Segoe UI", 1, 24));
         title.setForeground(Color.WHITE);
 
@@ -189,13 +189,13 @@ public class group_list_demo extends JFrame {
     }
 
     private void openGroupInformation(String name) {
-        group_manage_demo newWindow = new group_manage_demo(name);
+        groupManage newWindow = new groupManage(name);
         newWindow.setVisible(true);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            group_list_demo frame = new group_list_demo();
+            groupListManage frame = new groupListManage();
             frame.setVisible(true);
         });
     }
