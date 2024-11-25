@@ -33,11 +33,11 @@ public class userManage extends JPanel {
     private JTable friend_list_table;
     DefaultTableModel tableModel;
 
-    public userManage(String username, String name, String address, String birthdate, boolean  gender, String email) {
+    public userManage(String username, String name, String address, String birthdate, String gender, String email) {
         initComponents(name, birthdate, username, address, gender, email);
     }
 
-    private void initComponents(String name, String birthdate, String username, String address, boolean gender, String email) {
+    private void initComponents(String name, String birthdate, String username, String address, String gender, String email) {
         main_panel = new JPanel();
         navigator = new JPanel();
         title = new JLabel();
@@ -129,7 +129,7 @@ public class userManage extends JPanel {
         birthdate_value_label.setText(birthdate);
 
         gender_value_label.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        gender_value_label.setText(gender ? "Female" : "Male");
+        gender_value_label.setText(gender);
 
         email_value_label.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         email_value_label.setText(email);
@@ -310,7 +310,7 @@ public class userManage extends JPanel {
 
     public static void main(String[] args) {
         JFrame newWindow = new JFrame("User Management");
-        JPanel userManage = new userManage("Abc", "Nguyen Van A", "1/1/2001", "123 NVC", false, "abc123@mail.com");
+        JPanel userManage = new userManage("Abc", "Nguyen Van A", "1/1/2001", "123 NVC", "male", "abc123@mail.com");
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);

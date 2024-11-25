@@ -1,11 +1,19 @@
 package component;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import bus.*;
+import dto.*;
+
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.List;
 
 public class adminMenuDemo extends JFrame {
 
@@ -112,9 +120,29 @@ public class adminMenuDemo extends JFrame {
 
         sort_button.addActionListener(e -> sort_menu.show(sort_button, 0, sort_button.getHeight()));
 
-        JButton search_button = new JButton("Search");
+        by_fullname.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.sortByName();
+                addTable(usersList);
+            }
+        });
+
+        by_created_date.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.sortByCreatedDate();
+                addTable(usersList);
+            }
+        });
+
+        JButton search_button = new JButton("Filter");
         search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        JTextField search_input = new JTextField("search");
+        JTextField search_input = new JTextField("");
 
         JPopupMenu search_menu = new JPopupMenu();
 
@@ -129,6 +157,39 @@ public class adminMenuDemo extends JFrame {
         search_menu.add(by_friend);
 
         search_button.addActionListener(e -> search_menu.show(search_button, 0, search_button.getHeight()));
+
+        by_name.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = search_input.getText();
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.getByName(name);
+                addTable(usersList);
+            }
+        });
+
+        by_username.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String username = search_input.getText();
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.getByUserName(username);
+                addTable(usersList);
+            }
+        });
+
+        by_status.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String status = search_input.getText();
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.getByStatus(status);
+                addTable(usersList);
+            }
+        });
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -168,29 +229,29 @@ public class adminMenuDemo extends JFrame {
     }
 
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Status", "Fullname", "No. F", "No. F2"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Fullname", "Status", "Created Date"});
         user_table = new JTable(tableModel);
 
         user_table.setRowHeight(30);
         user_table.getColumnModel().getColumn(0).setPreferredWidth(50);
         user_table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        user_table.getColumnModel().getColumn(2).setPreferredWidth(60);
-        user_table.getColumnModel().getColumn(3).setPreferredWidth(250); 
+        user_table.getColumnModel().getColumn(2).setPreferredWidth(250);
+        user_table.getColumnModel().getColumn(3).setPreferredWidth(60);
         user_table.getColumnModel().getColumn(4).setPreferredWidth(100);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 
         user_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        user_table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        user_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         user_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
-        user_table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
         user_table_scroll.setViewportView(user_table);
 
-        // Add sample data
-        addRowToTable("1", "Username1", "On", "ABC XYZ", 1, 2);
-        addRowToTable("2", "Username2", "Off", "DEF UVW", 4, 11);
+        // Add data
+        UsersBUS userBUS = new UsersBUS();
+        List<UsersDTO> userList = userBUS.getAll();
+        addTable(userList);
 
         user_table.addMouseListener(new MouseAdapter() {
             @Override
@@ -198,20 +259,29 @@ public class adminMenuDemo extends JFrame {
                 int row = user_table.rowAtPoint(e.getPoint());
                 if (row >= 0) {
                     String selectedUsername = user_table.getValueAt(row, 1).toString();
+                    int id = (int) user_table.getValueAt(row, 0);
                     System.out.println("clicked at " + selectedUsername);
-                    openUserWindow();
+                    openUserWindow(id);
                 }
             }
         });
     }
 
-    private void addRowToTable(String stt, String username, String status, String fullname, int numF, int numF2) {
-        tableModel.addRow(new Object[]{stt, username, status, fullname, numF, numF2});
+    private void addRowToTable(int ID, String username, String fullname, String status, String createDate) {
+        tableModel.addRow(new Object[]{ID, username, fullname, status, createDate});
     }
 
-    private void openUserWindow(){
+    private void addTable(List<UsersDTO> userList) {
+        for (UsersDTO user : userList) {
+            addRowToTable(user.getuID(), user.getuName(), user.getFullname(), user.getStatus(), user.getCreateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        }
+    }
+
+    private void openUserWindow(int id){
         JFrame newWindow = new JFrame("User Management");
-        JPanel userManage = new userManage("Abc", "Nguyen Van A", "1/1/2001", "123 NVC", false, "abc123@mail.com");
+        UsersBUS userBUS = new UsersBUS();
+        UsersDTO user = userBUS.getById(id);
+        JPanel userManage = new userManage(user.getuName(), user.getFullname(), user.getBirthDate().toString(), user.getAddress(), user.getGender(), user.getEmail());
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);

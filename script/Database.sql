@@ -7,6 +7,7 @@ GO
 CREATE TABLE Users (
     user_id INT PRIMARY KEY IDENTITY(1, 1),
     username NVARCHAR(50) NOT NULL,
+	is_admin BIT DEFAULT 0,
     full_name NVARCHAR(100) NOT NULL,
     address NVARCHAR(100),
     birth_date DATE,
@@ -94,3 +95,9 @@ VALUES ('user1', 'Anonymous User 1', '123 Stret ABC', '2004-01-01', 'Male', 'use
 
 INSERT INTO Users (username, full_name, address, birth_date, gender, email, password)
 VALUES ('user2', 'Anonymous User 2', '456 Street DEF', '2004-02-02', 'Female', 'user2@gmail.com', 'password456');
+
+INSERT INTO Users (username, full_name, address, birth_date, gender, email, password)
+VALUES ('user3', 'Anonymous User 3', '789 Street GHI', '2004-03-03', 'Male', 'user3@gmail.com', 'password789');
+
+INSERT INTO Users (username, full_name, address, birth_date, gender, email, password)
+VALUES ('user0', 'Anonymous User 0', '000 Street 000', '2000-10-10', 'Female', 'user0@gmail.com', 'password000');
