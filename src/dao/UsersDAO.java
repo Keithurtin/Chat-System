@@ -89,4 +89,23 @@ public class UsersDAO {
         }
         return true;
     }
+
+    public boolean delete(int uID) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "delete from Users where user_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, uID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

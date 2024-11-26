@@ -8,6 +8,7 @@ CREATE TABLE Users (
     user_id INT PRIMARY KEY IDENTITY(1, 1),
     username NVARCHAR(50) NOT NULL,
 	is_admin BIT DEFAULT 0,
+	is_locked BIT DEFAULT 0,
     full_name NVARCHAR(100) NOT NULL,
     address NVARCHAR(100),
     birth_date DATE,
@@ -101,3 +102,13 @@ VALUES ('user3', 'Anonymous User 3', '789 Street GHI', '2004-03-03', 'Male', 'us
 
 INSERT INTO Users (username, full_name, address, birth_date, gender, email, password)
 VALUES ('user0', 'Anonymous User 0', '000 Street 000', '2000-10-10', 'Female', 'user0@gmail.com', 'password000');
+
+INSERT INTO LoginHistory (user_id) values (1)
+
+INSERT INTO FriendList (user_id, friend_id) values (1, 2)
+
+--select * from Users
+
+--select * from FriendList
+
+--select * from FriendList where user_id = 1 and requested = 0 and requesting = 0

@@ -1,0 +1,54 @@
+package dao;
+
+import dto.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.time.LocalDateTime;
+
+public class LoginHistoryDAO {
+    public void addLoginHistory(int uID) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return;
+        }
+
+        String query = "insert into LoginHistory (user_id) values (?)";
+
+        try(PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, uID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+    }
+
+    public List<LoginHistoryDTO> getLoginHistory(int uID) {
+        List<LoginHistoryDTO> list = new ArrayList<>();
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return list;
+        }
+
+        String query = "select * from LoginHistory where user_id = ?";
+
+        try(PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, uID);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("user_id");
+                LocalDateTime loginTime = rs.getObject("login_time", LocalDateTime.class);
+                LoginHistoryDTO dto = new LoginHistoryDTO(id, loginTime);
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return list;
+        }
+        return list;
+    }
+}

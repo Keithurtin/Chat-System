@@ -80,4 +80,9 @@ public class UsersBUS {
         UsersDAO userDAO = new UsersDAO();
         return userDAO.update(user);
     }
+
+    public boolean deleteUser(int id) {
+        UsersDAO userDAO = new UsersDAO();
+        return userDAO.delete(id);
+    }
 }

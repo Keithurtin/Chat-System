@@ -3,16 +3,18 @@ package component;
 import com.toedter.calendar.JDateChooser;
 import dto.UsersDTO;
 
-import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.time.format.DateTimeFormatter;
 import bus.*;
 import dto.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import static component.adminMenuDemo.reloadAdminTable;
 
 public class userManage extends JPanel {
@@ -175,7 +177,7 @@ public class userManage extends JPanel {
                     user.setIsLocked(lock);
                     UsersBUS usersBUS = new UsersBUS();
                     if (usersBUS.updateUser(user) == true) {
-                        JOptionPane.showMessageDialog(null, "User updated successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "User deleted successfully", "Success", JOptionPane.PLAIN_MESSAGE);
                         reloadAdminTable();
                     } else {
                         JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
@@ -188,6 +190,21 @@ public class userManage extends JPanel {
         delete_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         delete_button.setForeground(new java.awt.Color(255, 255, 255));
         delete_button.setText("Delete");
+        delete_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int res = JOptionPane.showConfirmDialog(null, "Do you want to change this user?", "Change User", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    UsersBUS usersBUS = new UsersBUS();
+                    if (usersBUS.deleteUser(user.getuID()) == true) {
+                        JOptionPane.showMessageDialog(null, "User updated successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                        reloadAdminTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            }
+        });
 
 
         history_login_label.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -196,8 +213,8 @@ public class userManage extends JPanel {
         friend_list_label.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         friend_list_label.setText("List of friend:");
 
-        createFriendTableLayout();
-        createLoginTableLayout();
+        createFriendTableLayout(user.getuID());
+        createLoginTableLayout(user.getuID());
 
         GroupLayout content_sideLayout = new GroupLayout(content_side);
         content_side.setLayout(content_sideLayout);
@@ -328,7 +345,7 @@ public class userManage extends JPanel {
         );
     }
 
-    private void createFriendTableLayout() {
+    private void createFriendTableLayout(int uID) {
         tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Status", "Fullname", "No. F"});
         friend_list_table = new JTable(tableModel);
 
@@ -345,18 +362,34 @@ public class userManage extends JPanel {
         friend_list_table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         friend_list_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
-        addRowToTableFriend("1", "Username1", "On", "ABC XYZ", 20);
-        addRowToTableFriend("2", "Username2", "Off", "DEF UVW", 1);
+        FriendListBUS friendListBUS = new FriendListBUS();
+        UsersBUS usersBUS = new UsersBUS();
+        List<Integer> friendListID = friendListBUS.getFriends(uID);
+        List<UsersDTO> friendList = new ArrayList<>();
+        for (int id : friendListID) {
+            UsersDTO user = usersBUS.getById(id);
+            friendList.add(user);
+        }
+        addFriendTable(friendList);
 
         friend_list_scroll = new JScrollPane(friend_list_table);
     }
 
-    private void addRowToTableFriend(String stt, String username, String status, String fullname, int number) {
-        tableModel.addRow(new Object[]{stt, username, status, fullname, number});
+    private void addRowToTableFriend(int uId, String username, String status, String fullname, int NoF) {
+        tableModel.addRow(new Object[]{uId, username, status, fullname, NoF});
+    }
+
+    private void addFriendTable(List<UsersDTO> friendList) {
+        for (UsersDTO friend : friendList) {
+            FriendListBUS friendListBUS = new FriendListBUS();
+            List<Integer> FoF = friendListBUS.getFriends(friend.getuID());
+            int NoF = FoF.size();
+            addRowToTableFriend(friend.getuID(), friend.getuName(), friend.getStatus(), friend.getFullname(), NoF);
+        }
     }
     
-    private void createLoginTableLayout() {
-        tableModel2 = new DefaultTableModel(new Object[][]{}, new String[]{"STT", "Time"});
+    private void createLoginTableLayout(int uID) {
+        tableModel2 = new DefaultTableModel(new Object[][]{}, new String[]{"UserID", "Time"});
         login_table = new JTable(tableModel2);
 
         login_table.setRowHeight(30);
@@ -367,14 +400,21 @@ public class userManage extends JPanel {
         login_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         login_table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
 
-        addRowToTableLogin("1", "12/12/2024, 11:12 PM");
-        addRowToTableLogin("2", "23/12/2024, 8:12 PM");
+        LoginHistoryBUS loginHistoryBUS = new LoginHistoryBUS();
+        List<LoginHistoryDTO> loginList = loginHistoryBUS.getLoginHistory(uID);
+        addLoginTable(loginList);
 
         login_scroll = new JScrollPane(login_table);
     }
 
-    private void addRowToTableLogin(String stt, String time) {
-        tableModel2.addRow(new Object[]{stt, time});
+    private void addRowToTableLogin(int id, String time) {
+        tableModel2.addRow(new Object[]{id, time});
+    }
+
+    private void addLoginTable(List<LoginHistoryDTO> loginHistory) {
+        for (LoginHistoryDTO login : loginHistory) {
+            addRowToTableLogin(login.getUId(), login.getLoginTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        }
     }
 
 }
