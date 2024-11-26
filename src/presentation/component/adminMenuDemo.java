@@ -288,7 +288,7 @@ public class adminMenuDemo extends JFrame {
         JFrame newWindow = new JFrame("User Management");
         UsersBUS userBUS = new UsersBUS();
         UsersDTO user = userBUS.getById(id);
-        JPanel userManage = new userManage(user.getuName(), user.getPassword(), user.getFullname(), user.getAddress(), user.getBirthDate(), user.getGender(), user.getEmail(), user.getIsLocked());
+        JPanel userManage = new userManage(user);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);

@@ -62,4 +62,31 @@ public class UsersDAO {
         }
         return true;
     }
+
+    public boolean update(UsersDTO user) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "update Users set username = ?, is_locked = ?, full_name = ?, address = ?, birth_date = ?, gender = ?, email = ?, password = ? where user_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, user.getuName());
+            pstmt.setBoolean(2, user.getIsLocked());
+            pstmt.setString(3, user.getFullname());
+            pstmt.setString(4, user.getAddress());
+            pstmt.setDate(5, user.getBirthDate());
+            pstmt.setString(6, user.getGender());
+            pstmt.setString(7, user.getEmail());
+            pstmt.setString(8, user.getPassword());
+            pstmt.setInt(9, user.getuID());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

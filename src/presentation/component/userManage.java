@@ -1,6 +1,8 @@
 package component;
 
 import com.toedter.calendar.JDateChooser;
+import dto.UsersDTO;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -8,6 +10,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import bus.*;
+import dto.*;
+
+import static component.adminMenuDemo.reloadAdminTable;
 
 public class userManage extends JPanel {
 
@@ -40,11 +46,11 @@ public class userManage extends JPanel {
     private JTable friend_list_table;
     DefaultTableModel tableModel;
 
-    public userManage(String username, String password, String name, String address, Date birthdate, String gender, String email, boolean lock) {
-        initComponents(name, birthdate, username, address, gender, email, lock, password);
+    public userManage(UsersDTO user) {
+        initComponents(user);
     }
 
-    private void initComponents(String name, Date birthdate, String username, String address, String gender, String email, boolean lock, String password) {
+    private void initComponents(UsersDTO user) {
         main_panel = new JPanel();
         navigator = new JPanel();
         title = new JLabel();
@@ -58,19 +64,19 @@ public class userManage extends JPanel {
         JLabel email_label = new JLabel();
         JLabel lock_label = new JLabel();
         JLabel password_label = new JLabel();
-        username_value_label = new JTextField(username);
-        fullname_value_label = new JTextField(name);
-        address_value_label = new JTextField(address);
-        birthdate_value_label = new JDateChooser(birthdate);
-        gender_value_label = new JTextField(gender);
-        email_value_label = new JTextField(email);
+        username_value_label = new JTextField(user.getuName());
+        fullname_value_label = new JTextField(user.getFullname());
+        address_value_label = new JTextField(user.getAddress());
+        birthdate_value_label = new JDateChooser(user.getBirthDate());
+        gender_value_label = new JTextField(user.getGender());
+        email_value_label = new JTextField(user.getEmail());
         lock_value_label = new JComboBox<>(new String[]{"Lock", "Unlock"});
-        if (lock) {
+        if (user.getIsLocked()) {
             lock_value_label.setSelectedItem("Lock");
         } else {
             lock_value_label.setSelectedItem("Unlock");
         }
-        password_value_label = new JPasswordField(password);
+        password_value_label = new JPasswordField(user.getPassword());
         manage_button = new JButton();
         delete_button = new JButton();
         history_login_label = new JLabel();
@@ -143,6 +149,40 @@ public class userManage extends JPanel {
         manage_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         manage_button.setForeground(new java.awt.Color(255, 255, 255));
         manage_button.setText("Change");
+        manage_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int res = JOptionPane.showConfirmDialog(null, "Do you want to change this user?", "Change User", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    String username = username_value_label.getText();
+                    String password = password_value_label.getText();
+                    String fullname = fullname_value_label.getText();
+                    String address = address_value_label.getText();
+                    Date birthday = new java.sql.Date(birthdate_value_label.getDate().getTime());
+                    String gender = gender_value_label.getText();
+                    String email = email_value_label.getText();
+                    boolean lock = false;
+                    if (lock_value_label.getSelectedItem().equals("Lock")) {
+                        lock = true;
+                    }
+                    user.setuName(username);
+                    user.setPassword(password);
+                    user.setFullname(fullname);
+                    user.setAddress(address);
+                    user.setBirthDate(birthday);
+                    user.setGender(gender);
+                    user.setEmail(email);
+                    user.setIsLocked(lock);
+                    UsersBUS usersBUS = new UsersBUS();
+                    if (usersBUS.updateUser(user) == true) {
+                        JOptionPane.showMessageDialog(null, "User updated successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                        reloadAdminTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            }
+        });
 
         delete_button.setBackground(new java.awt.Color(255, 0, 0));
         delete_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -154,7 +194,7 @@ public class userManage extends JPanel {
         history_login_label.setText("History of login:");
 
         friend_list_label.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        friend_list_label.setText("List of firiend:");
+        friend_list_label.setText("List of friend:");
 
         createFriendTableLayout();
         createLoginTableLayout();

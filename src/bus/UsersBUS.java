@@ -75,4 +75,9 @@ public class UsersBUS {
         UsersDAO userDAO = new UsersDAO();
         return userDAO.insert(user);
     }
+
+    public boolean updateUser(UsersDTO user) {
+        UsersDAO userDAO = new UsersDAO();
+        return userDAO.update(user);
+    }
 }
