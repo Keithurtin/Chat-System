@@ -7,6 +7,7 @@ public class UsersDTO {
     int uID;
     String uName;
     boolean isAdmin;
+    boolean isLocked;
     String fullname;
     String address;
     Date birthDate;
@@ -24,6 +25,7 @@ public class UsersDTO {
         this.fullname = "";
         this.gender = "";
         this.isAdmin = false;
+        this.isLocked = false;
         this.password = "";
         this.status = "";
         this.uID = 0;
@@ -44,6 +46,17 @@ public class UsersDTO {
         this.uName = uName;
     }
 
+    public UsersDTO(String uName, String fullname, String address, Date birthDate, String gender, String email, String password) {
+        this.address = address;
+        this.birthDate = birthDate;
+        this.email = email;
+        this.fullname = fullname;
+        this.gender = gender;
+        this.isAdmin = false;
+        this.password = password;
+        this.uName = uName;
+    }
+
     public int getuID() {
         return uID;
     }
@@ -52,8 +65,12 @@ public class UsersDTO {
         return uName;
     }
 
-    public boolean isIsAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin;
+    }
+
+    public boolean getIsLocked() {
+        return isLocked;
     }
 
     public String getFullname() {
@@ -98,6 +115,10 @@ public class UsersDTO {
 
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public void setIsLocked(boolean isLocked) {
+        this.isLocked = isLocked;
     }
 
     public void setFullname(String fullname) {

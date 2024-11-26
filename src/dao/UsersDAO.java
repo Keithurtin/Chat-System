@@ -37,4 +37,29 @@ public class UsersDAO {
         }
         return list;
     }
+
+    public boolean insert(UsersDTO user) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "insert into Users (username, full_name, address, birth_date, gender, email, password) values (?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, user.getuName());
+            pstmt.setString(2, user.getFullname());
+            pstmt.setString(3, user.getAddress());
+            pstmt.setDate(4, user.getBirthDate());
+            pstmt.setString(5, user.getGender());
+            pstmt.setString(6, user.getEmail());
+            pstmt.setString(7, user.getPassword());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

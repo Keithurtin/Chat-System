@@ -2,6 +2,16 @@ package component;
 
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.util.List;
+
+import bus.UsersBUS;
+import com.toedter.calendar.JDateChooser;
+import dto.UsersDTO;
+
+import static component.adminMenuDemo.reloadAdminTable;
 
 public class addNewUser extends JPanel {
 
@@ -34,13 +44,36 @@ public class addNewUser extends JPanel {
         JTextField username_input = new JTextField();
         JTextField fullname_input = new JTextField();
         JTextField address_input = new JTextField();
-        JTextField birthdate_input = new JTextField("dd/mm/yyyy");
+        JDateChooser birthdate_input = new JDateChooser();
         JPasswordField password_input = new JPasswordField();
-        JComboBox<String> gender_input = new JComboBox<>(new String[]{"Male", "Femail"});
-
+        JComboBox<String> gender_input = new JComboBox<>(new String[]{"Male", "Female"});
         JTextField email_input = new JTextField();
 
         JButton submit_button = new JButton("Add");
+
+        submit_button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                UsersBUS usersBUS = new UsersBUS();
+                String username = username_input.getText();
+                String fullname = fullname_input.getText();
+                String address = address_input.getText();
+                String password = password_input.getText();
+                String gender = (String) gender_input.getSelectedItem();
+                String email = email_input.getText();
+                Date birthday = new java.sql.Date(birthdate_input.getDate().getTime());
+                UsersDTO newUser = new UsersDTO(username, fullname, address, birthday, gender, email, password);
+
+                int res = JOptionPane.showConfirmDialog(null, "Do you want to add this user?", "Add New User", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    if (usersBUS.addUser(newUser) == true) {
+                        JOptionPane.showMessageDialog(null, "User added successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                        reloadAdminTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
+                    }
+                }
+            }
+        });
 
         GroupLayout main_panelLayout = new GroupLayout(main_panel);
         main_panel.setLayout(main_panelLayout);
@@ -143,7 +176,7 @@ public class addNewUser extends JPanel {
         content_sideLayout.setVerticalGroup(
                 content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(content_sideLayout.createSequentialGroup()
-                                .addGap(28, 28, 28)
+                                .addGap(38, 38, 38)
                                 .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(username_label)
                                         .addComponent(username_input))
@@ -190,7 +223,7 @@ public class addNewUser extends JPanel {
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGap(0, 446, Short.MAX_VALUE)
+                        .addGap(0, 525, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
                                         .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)

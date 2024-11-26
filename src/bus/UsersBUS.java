@@ -70,4 +70,9 @@ public class UsersBUS {
         list.sort((o1, o2) -> o1.getCreateTime().compareTo(o2.getCreateTime()));
         return list;
     }
+
+    public boolean addUser(UsersDTO user) {
+        UsersDAO userDAO = new UsersDAO();
+        return userDAO.insert(user);
+    }
 }

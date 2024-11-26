@@ -21,7 +21,7 @@ public class adminMenuDemo extends JFrame {
     private JPanel navigator;
     private JScrollPane user_table_scroll;
     private JTable user_table;
-    private DefaultTableModel tableModel;
+    static DefaultTableModel tableModel;
 
     public adminMenuDemo() {
         initComponents();
@@ -229,7 +229,7 @@ public class adminMenuDemo extends JFrame {
     }
 
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Fullname", "Status", "Created Date"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Fullname", "Status", "Created Date"});
         user_table = new JTable(tableModel);
 
         user_table.setRowHeight(30);
@@ -267,21 +267,28 @@ public class adminMenuDemo extends JFrame {
         });
     }
 
-    private void addRowToTable(int ID, String username, String fullname, String status, String createDate) {
+    private static void addRowToTable(int ID, String username, String fullname, String status, String createDate) {
         tableModel.addRow(new Object[]{ID, username, fullname, status, createDate});
     }
 
-    private void addTable(List<UsersDTO> userList) {
+    private static void addTable(List<UsersDTO> userList) {
         for (UsersDTO user : userList) {
             addRowToTable(user.getuID(), user.getuName(), user.getFullname(), user.getStatus(), user.getCreateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         }
+    }
+
+    public static void reloadAdminTable() {
+        tableModel.setRowCount(0);
+        UsersBUS usersBUS = new UsersBUS();
+        List<UsersDTO> usersList = usersBUS.getAll();
+        addTable(usersList);
     }
 
     private void openUserWindow(int id){
         JFrame newWindow = new JFrame("User Management");
         UsersBUS userBUS = new UsersBUS();
         UsersDTO user = userBUS.getById(id);
-        JPanel userManage = new userManage(user.getuName(), user.getFullname(), user.getBirthDate().toString(), user.getAddress(), user.getGender(), user.getEmail());
+        JPanel userManage = new userManage(user.getuName(), user.getPassword(), user.getFullname(), user.getAddress(), user.getBirthDate(), user.getGender(), user.getEmail(), user.getIsLocked());
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);
