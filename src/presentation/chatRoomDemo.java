@@ -1,4 +1,3 @@
-import component.adminMenuDemo;
 import component.chatBoxDemo;
 import java.awt.*;
 import javax.swing.*;
@@ -467,7 +466,7 @@ public class chatRoomDemo extends JFrame {
         boolean adminStatus = isAdmin.isSelected();
         JFrame newWindow;
         if(adminStatus) {
-                newWindow = new adminMenuDemo();
+                newWindow = new component.adminMenu();
         } else {
                 newWindow = new chatBoxDemo();
         }

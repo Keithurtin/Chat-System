@@ -172,7 +172,7 @@ private void setupNavigatorLayout() {
         if(data == null){
             data = generateExampleData();
         }
-        chartDisplay chartPanel = new chartDisplay(year, data, false);
+        JPanel chartPanel = new component.chartDisplay(year, data, false);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);
     }

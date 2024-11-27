@@ -15,7 +15,7 @@ import dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import static component.adminMenuDemo.reloadAdminTable;
+import static component.adminMenu.reloadAdminTable;
 
 public class userManage extends JPanel {
 

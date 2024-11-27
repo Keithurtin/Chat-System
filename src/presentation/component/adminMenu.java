@@ -10,12 +10,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import bus.*;
 import dto.*;
+import presentation.component.loginTimeHistory;
 
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 import java.util.List;
 
-public class adminMenuDemo extends JFrame {
+public class adminMenu extends JFrame {
 
     private JPanel admin_menu;
     private JPanel navigator;
@@ -23,7 +23,7 @@ public class adminMenuDemo extends JFrame {
     private JTable user_table;
     static DefaultTableModel tableModel;
 
-    public adminMenuDemo() {
+    public adminMenu() {
         initComponents();
     }
 
@@ -43,7 +43,7 @@ public class adminMenuDemo extends JFrame {
         admin_menuLayout.setHorizontalGroup(
             admin_menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(user_table_scroll, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+                .addComponent(user_table_scroll, GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         admin_menuLayout.setVerticalGroup(
             admin_menuLayout.createSequentialGroup()
@@ -56,7 +56,7 @@ public class adminMenuDemo extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(admin_menu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(admin_menu, GroupLayout.PREFERRED_SIZE, 800, GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -88,6 +88,7 @@ public class adminMenuDemo extends JFrame {
         JMenuItem spam_section = new JMenuItem("Spam Report");
         JMenuItem new_register_section = new JMenuItem("New Registers");
         JMenuItem active_user_button = new JMenuItem("Active Users");
+        JMenuItem login_history = new JMenuItem("Users Login");
         JMenuItem chat_button = new JMenuItem("Chat Box");
         JMenuItem add_new_user = new JMenuItem("Add User");
 
@@ -95,6 +96,7 @@ public class adminMenuDemo extends JFrame {
         spam_section.addActionListener(e -> openSpamSection());
         new_register_section.addActionListener(e -> openNewRegister());
         active_user_button.addActionListener(e -> openActiveUser());
+        login_history.addActionListener(e -> openLoginHistory());
         add_new_user.addActionListener(e -> openAddUserMenu());
         chat_button.addActionListener(e -> openChatBox());
 
@@ -103,6 +105,7 @@ public class adminMenuDemo extends JFrame {
         more_menu.add(new_register_section);
         more_menu.add(active_user_button);
         more_menu.add(add_new_user);
+        more_menu.add(login_history);
         more_menu.add(chat_button);
 
         more_button.addActionListener(e -> more_menu.show(more_button, 0, more_button.getHeight()));
@@ -204,9 +207,9 @@ public class adminMenuDemo extends JFrame {
                     .addGroup(navigatorLayout.createSequentialGroup()
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(title, GroupLayout.PREFERRED_SIZE, 244, GroupLayout.PREFERRED_SIZE)
-                        .addGap(136, 136, 136))
+                        .addGap(200, 240, 240))
                     .addGroup(navigatorLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
+                        .addGap(130, 130, 130)
                         .addComponent(search_input, GroupLayout.PREFERRED_SIZE, 240, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(search_button, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
@@ -229,7 +232,7 @@ public class adminMenuDemo extends JFrame {
     }
 
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Fullname", "Status", "Created Date"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Fullname", "Status", "Created Date", "No.Friend", "No.Friend2"});
         user_table = new JTable(tableModel);
 
         user_table.setRowHeight(30);
@@ -326,6 +329,14 @@ public class adminMenuDemo extends JFrame {
         newWindow.setVisible(true);
     }
 
+    private void openLoginHistory() {
+        JFrame newWindow = new loginTimeHistory();
+        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        newWindow.setResizable(false);
+        newWindow.setLocation(470, 200);
+        newWindow.setVisible(true);
+    }
+
     private void openChatBox() {
         JFrame newWindow = new chatBoxDemo();
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -348,6 +359,6 @@ public class adminMenuDemo extends JFrame {
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new adminMenuDemo().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new component.adminMenu().setVisible(true));
     }
 }

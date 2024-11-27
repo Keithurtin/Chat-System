@@ -5,13 +5,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
-import java.util.List;
 
 import bus.UsersBUS;
 import com.toedter.calendar.JDateChooser;
 import dto.UsersDTO;
 
-import static component.adminMenuDemo.reloadAdminTable;
+import static component.adminMenu.reloadAdminTable;
 
 public class addNewUser extends JPanel {
 
