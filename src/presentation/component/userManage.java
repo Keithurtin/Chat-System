@@ -177,7 +177,7 @@ public class userManage extends JPanel {
                     user.setIsLocked(lock);
                     UsersBUS usersBUS = new UsersBUS();
                     if (usersBUS.updateUser(user) == true) {
-                        JOptionPane.showMessageDialog(null, "User deleted successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "User changed successfully", "Success", JOptionPane.PLAIN_MESSAGE);
                         reloadAdminTable();
                     } else {
                         JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
@@ -193,11 +193,11 @@ public class userManage extends JPanel {
         delete_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int res = JOptionPane.showConfirmDialog(null, "Do you want to change this user?", "Change User", JOptionPane.YES_NO_OPTION);
+                int res = JOptionPane.showConfirmDialog(null, "Do you want to delete this user?", "Change User", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
                     UsersBUS usersBUS = new UsersBUS();
                     if (usersBUS.deleteUser(user.getuID()) == true) {
-                        JOptionPane.showMessageDialog(null, "User updated successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "User deleted successfully", "Success", JOptionPane.PLAIN_MESSAGE);
                         reloadAdminTable();
                     } else {
                         JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
