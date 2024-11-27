@@ -112,3 +112,5 @@ INSERT INTO FriendList (user_id, friend_id) values (1, 2)
 --select * from FriendList
 
 --select * from FriendList where user_id = 1 and requested = 0 and requesting = 0
+
+update Users set is_admin = 1 where user_id = 1
