@@ -1,17 +1,30 @@
-import component.chatBoxDemo;
+package presentation;
+
+import com.toedter.calendar.JDateChooser;
+
 import java.awt.*;
 import javax.swing.*;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
-public class chatRoomDemo extends JFrame {
+import bus.UsersBUS;
+
+import dto.UsersDTO;
+
+public class Authentication extends JFrame {
 
     private final JPanel main_panel;
     private final CardLayout card_layout;
     private JPanel reset_password_panel;
     private JPanel login_panel;
     private JPanel signup_panel;
-    JCheckBox isAdmin;
+    JLabel signup_notification;
+    JLabel login_notification;
+    JLabel forgetPassword_notification;
 
-    public chatRoomDemo() {
+
+    public Authentication() {
         setUpLogin();
         setUpSignUp();
         setUpResetPassword();
@@ -31,7 +44,8 @@ public class chatRoomDemo extends JFrame {
         card_layout.show(main_panel, "login_panel");
     }
 
-    private void signupButton() {
+    private void completeSignup(UsersDTO newUser) {
+        dispose();
         JFrame newWindow = new JFrame();
         JPanel navigator = new JPanel();
         JLabel title = new JLabel();
@@ -42,9 +56,49 @@ public class chatRoomDemo extends JFrame {
         JLabel gender_label = new JLabel("Gender: ");
         JTextField fullname_input = new JTextField();
         JTextField address_input = new JTextField();
-        JTextField birthdate_input = new JTextField("dd/mm/yyyy");
+        JDateChooser birthdate_input = new JDateChooser();
         JComboBox<String> gender_input = new JComboBox<>(new String[]{"Male", "Female"});
+
+        JLabel notification = new JLabel();
+        notification.setForeground(Color.red);
+        notification.setFont(new java.awt.Font("Segoe UI", 0, 16));
+
         JButton submit_button = new JButton("Submit");
+
+        submit_button.addActionListener(e -> {
+            if (!(ValidateData.isValidName(fullname_input.getText()))) {
+                notification.setText("Your name is invalid");
+                return;
+            }
+
+            if (!(ValidateData.isValidAddress(address_input.getText()))) {
+                notification.setText("Your name is invalid");
+                return;
+            }
+
+            Date tmpB = new java.sql.Date(birthdate_input.getDate().getTime());
+            String tmpBString = new SimpleDateFormat("dd/MM/yyyy").format(tmpB);
+            if (!(ValidateData.isValidBirthday(tmpBString))) {
+                notification.setText("Your Birthdate is invalid (Must from 16-59 years old");
+                return;
+            }
+
+            newUser.setFullname(fullname_input.getText());
+            newUser.setAddress(address_input.getText());
+            newUser.setBirthDate(tmpB);
+            newUser.setGender((String) gender_input.getSelectedItem());
+
+            UsersBUS usersBUS = new UsersBUS();
+
+            if (usersBUS.updateUser(newUser)) {
+                notification.setText("Done!");
+            } else {
+                notification.setText("Error");
+                return;
+            }
+
+            goToLogin();
+        });
 
         newWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -77,6 +131,8 @@ public class chatRoomDemo extends JFrame {
         address_label.setFont(new java.awt.Font("Segoe UI", 3, 18));
         gender_label.setFont(new java.awt.Font("Segoe UI", 3, 18));
 
+        gender_input.setFont(new java.awt.Font("Segoe UI", 0, 16));
+
         submit_button.setBackground(new java.awt.Color(153, 204, 255));
         submit_button.setFont(new java.awt.Font("Segoe UI", 1, 18));
         submit_button.setForeground(new java.awt.Color(255, 255, 255));
@@ -88,20 +144,22 @@ public class chatRoomDemo extends JFrame {
                 content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(content_sideLayout.createSequentialGroup()
                                 .addGap(37, 37, 37)
-                                .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(birthdate_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(gender_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(address_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(fullname_label, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addComponent(fullname_input, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(address_input, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(birthdate_input, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                .addComponent(submit_button)
-                                                .addComponent(gender_input, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
-                                .addContainerGap(42, Short.MAX_VALUE))
+                                    .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(birthdate_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(gender_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(address_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(fullname_label, GroupLayout.PREFERRED_SIZE, 110, GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                            .addComponent(fullname_input, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(address_input, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(birthdate_input, GroupLayout.PREFERRED_SIZE, 239, GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(submit_button)
+                                                    .addComponent(gender_input, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
+                                .addContainerGap(42, Short.MAX_VALUE)
+                        )
+                        .addComponent(notification, GroupLayout.Alignment.CENTER)
         );
         content_sideLayout.setVerticalGroup(
                 content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -130,6 +188,8 @@ public class chatRoomDemo extends JFrame {
                                                 .addGap(1, 1, 1)))
                                 .addGap(39, 39, 39)
                                 .addComponent(submit_button)
+                                .addGap(39, 39, 39)
+                                .addComponent(notification)
                                 .addGap(69, 69, 69))
         );
 
@@ -178,11 +238,26 @@ public class chatRoomDemo extends JFrame {
         signup_title.setForeground(new java.awt.Color(102, 153, 255));
         signup_title.setIconTextGap(10);
 
+        JTextField signup_email_input = new JTextField();
+        JTextField signup_username_input = new JTextField();
+        JPasswordField signup_password_input = new JPasswordField();
+
         JButton signup_button = new JButton("Sign Up");
         signup_button.setBackground(new java.awt.Color(153, 204, 255));
         signup_button.setFont(new java.awt.Font("Segoe UI", 1, 16));
         signup_button.setForeground(Color.white);
-        signup_button.addActionListener(e -> signupButton());
+        signup_button.addActionListener(e -> {
+            String username = signup_username_input.getText().trim();
+            String email = signup_email_input.getText().trim();
+            char[] passwordArray = signup_password_input.getPassword();
+            String password = new String(passwordArray);
+
+            signupButton(username, email, password);
+        });
+
+        signup_notification = new JLabel();
+        signup_notification.setForeground(Color.RED);
+        signup_notification.setFont(new java.awt.Font("Segoe UI", 0, 16));
 
         JButton go_to_login_button = new JButton("Log In");
         go_to_login_button.setBackground(new java.awt.Color(153, 204, 255));
@@ -190,14 +265,11 @@ public class chatRoomDemo extends JFrame {
         go_to_login_button.setForeground(Color.white);
         go_to_login_button.addActionListener(e -> goToLogin());
 
+
         JLabel go_to_login_label = new JLabel("Already had account?");
         go_to_login_label.setFont(new java.awt.Font("Segoe UI", 0, 16));
 
         JSeparator signup_separator = new JSeparator();
-
-        JTextField signup_email_input = new JTextField();
-        JTextField signup_username_input = new JTextField();
-        JPasswordField signup_password_input = new JPasswordField();
 
         GroupLayout signup_panelLayout = new GroupLayout(signup_panel);
         signup_panel.setLayout(signup_panelLayout);
@@ -208,6 +280,7 @@ public class chatRoomDemo extends JFrame {
                                 .addGroup(signup_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(signup_panelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
                                                 .addComponent(signup_separator, GroupLayout.Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(signup_notification, GroupLayout.Alignment.CENTER, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
                                                 .addGroup(signup_panelLayout.createSequentialGroup()
                                                         .addComponent(signup_password_label)
                                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -253,6 +326,8 @@ public class chatRoomDemo extends JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(signup_button)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(signup_notification)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(signup_separator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(signup_panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -288,14 +363,19 @@ public class chatRoomDemo extends JFrame {
         login_title.setForeground(new java.awt.Color(102, 153, 255));
         login_title.setIconTextGap(10);
 
-        isAdmin = new JCheckBox("Are you Admin?");
-        isAdmin.setFont(new java.awt.Font("Segoe UI", 0, 16));
+        JTextField login_username_input = new JTextField();
+        JPasswordField login_password_input = new JPasswordField();
 
         JButton login_button = new JButton("Submit");
         login_button.setBackground(new java.awt.Color(153, 204, 255));
         login_button.setFont(new java.awt.Font("Segoe UI", 1, 16));
         login_button.setForeground(Color.white);
-        login_button.addActionListener(e -> loginButton());
+        login_button.addActionListener(e -> {
+            String username = login_username_input.getText();
+            char[] passwordArray = login_password_input.getPassword();
+            String password = new String(passwordArray);
+            loginButton(username, password);
+        });
 
         JButton go_to_signup_button = new JButton("Sign Up");
         go_to_signup_button.setBackground(new java.awt.Color(153, 204, 255));
@@ -308,8 +388,6 @@ public class chatRoomDemo extends JFrame {
 
         JSeparator login_separator = new JSeparator();
 
-        JTextField login_username_input = new JTextField();
-        JPasswordField login_password_input = new JPasswordField();
 
         GroupLayout login_panelLayout = new GroupLayout(login_panel);
         login_panel.setLayout(login_panelLayout);
@@ -327,8 +405,7 @@ public class chatRoomDemo extends JFrame {
                                                                 .addGap(26, 26, 26)
                                                                 .addGroup(login_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                         .addComponent(login_password_input, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(login_username_input, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)
-                                                                        .addComponent(isAdmin)))
+                                                                        .addComponent(login_username_input, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)))
                                                         .addGroup(login_panelLayout.createSequentialGroup()
                                                                 .addComponent(go_to_signup_label)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -359,8 +436,6 @@ public class chatRoomDemo extends JFrame {
                                 .addGroup(login_panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(login_password_label)
                                         .addComponent(login_password_input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addGap(12, 12, 12)
-                                .addComponent(isAdmin)
                                 .addGap(18, 18, 18)
                                 .addComponent(login_button)
                                 .addGap(12, 12, 12)
@@ -462,13 +537,58 @@ public class chatRoomDemo extends JFrame {
         card_layout.show(main_panel, "reset_password_panel");
     }
 
-    private void loginButton() {
-        boolean adminStatus = isAdmin.isSelected();
+
+    private void signupButton(String username, String email, String password) {
+        //check valid input
+        if(username.isEmpty()) {
+            signup_notification.setText("Your Username must be filled");
+            return;
+        }
+        if(!(ValidateData.isValidEmail(email))) {
+            signup_notification.setText("Your Email is Invalid");
+            return;
+        }
+        if(password.length() < 8) {
+            signup_notification.setText("Your Password must contains at least 8 character");
+            return;
+        }
+        //check used account
+        UsersBUS usersBUS = new UsersBUS();
+        List<UsersDTO> existingUser = usersBUS.getByUserName(username);
+        if (existingUser != null && !existingUser.isEmpty()) {
+            System.out.println(existingUser);
+            signup_notification.setText("Your username has been used!");
+            return;
+        }
+        String fullname = "New User";
+        String address = "Unknown Address";
+        String gender = "Male";
+        Date birthday = new java.sql.Date(System.currentTimeMillis());
+
+        UsersDTO newUser = new UsersDTO(username, fullname, address, birthday, gender, email, password);
+
+        if (usersBUS.addUser(newUser)) {
+            signup_notification.setText("Done!");
+        } else {
+            signup_notification.setText("Error");
+        }
+
+        completeSignup(newUser);
+    }
+
+    private void loginButton(String username, String password) {
+        UsersBUS usersBUS = new UsersBUS();
+        List<UsersDTO> existingUser = usersBUS.getByUserName(username);
+        if (existingUser == null || existingUser.isEmpty() || !existingUser.getFirst().getPassword().equals(password)) {
+            login_notification.setText("Your username/password is wrong");
+            return;
+        }
+        UsersDTO user = existingUser.getFirst();
         JFrame newWindow;
-        if(adminStatus) {
+        if(user.getIsAdmin()) {
                 newWindow = new component.adminMenu();
         } else {
-                newWindow = new chatBoxDemo();
+                newWindow = new component.chatBoxDemo();
         }
         dispose();
         newWindow.setVisible(true);
@@ -487,10 +607,10 @@ public class chatRoomDemo extends JFrame {
                 }
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(chatRoomDemo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Authentication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         java.awt.EventQueue.invokeLater(() -> {
-            new chatRoomDemo().setVisible(true);
+            new Authentication().setVisible(true);
         });
     }
 }
