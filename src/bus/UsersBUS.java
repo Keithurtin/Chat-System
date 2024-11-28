@@ -46,6 +46,33 @@ public class UsersBUS {
         return ans;
     }
 
+    public List<UsersDTO> getByFriend(int friend, int comp) {
+        UsersDAO userDAO = new UsersDAO();
+        FriendListBUS friendListBUS = new FriendListBUS();
+        List<UsersDTO> list = userDAO.getAll();
+        List<UsersDTO> ans = new ArrayList<>();
+        if (comp == 0) {
+            for (UsersDTO user : list) {
+                if (friendListBUS.countFriends(user.getuID()) == friend) {
+                    ans.add(user);
+                }
+            }
+        } else if (comp == 1) {
+            for (UsersDTO user : list) {
+                if (friendListBUS.countFriends(user.getuID()) > friend) {
+                    ans.add(user);
+                }
+            }
+        } else if (comp == -1) {
+            for (UsersDTO user : list) {
+                if (friendListBUS.countFriends(user.getuID()) < friend) {
+                    ans.add(user);
+                }
+            }
+        }
+        return ans;
+    }
+
     public UsersDTO getById(int id) {
         UsersDAO userDAO = new UsersDAO();
         List<UsersDTO> list = userDAO.getAll();

@@ -363,13 +363,7 @@ public class userManage extends JPanel {
         friend_list_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
 
         FriendListBUS friendListBUS = new FriendListBUS();
-        UsersBUS usersBUS = new UsersBUS();
-        List<Integer> friendListID = friendListBUS.getFriends(uID);
-        List<UsersDTO> friendList = new ArrayList<>();
-        for (int id : friendListID) {
-            UsersDTO user = usersBUS.getById(id);
-            friendList.add(user);
-        }
+        List<UsersDTO> friendList = friendListBUS.getFriends(uID);
         addFriendTable(friendList);
 
         friend_list_scroll = new JScrollPane(friend_list_table);
@@ -382,9 +376,7 @@ public class userManage extends JPanel {
     private void addFriendTable(List<UsersDTO> friendList) {
         for (UsersDTO friend : friendList) {
             FriendListBUS friendListBUS = new FriendListBUS();
-            List<Integer> FoF = friendListBUS.getFriends(friend.getuID());
-            int NoF = FoF.size();
-            addRowToTableFriend(friend.getuID(), friend.getuName(), friend.getStatus(), friend.getFullname(), NoF);
+            addRowToTableFriend(friend.getuID(), friend.getuName(), friend.getStatus(), friend.getFullname(), friendListBUS.countFriends(friend.getuID()));
         }
     }
     

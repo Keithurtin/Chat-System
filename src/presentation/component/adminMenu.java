@@ -152,12 +152,16 @@ public class adminMenu extends JFrame {
         JMenuItem by_name = new JMenuItem("By Name");
         JMenuItem by_username = new JMenuItem("By Username");
         JMenuItem by_status = new JMenuItem("By Status");
-        JMenuItem by_friend = new JMenuItem("By Friend");
+        JMenuItem by_friend = new JMenuItem("By Friend (equal)");
+        JMenuItem by_friend_less = new JMenuItem(("By Friend (less)"));
+        JMenuItem by_friend_more = new JMenuItem(("By Friend (more)"));
 
         search_menu.add(by_name);
         search_menu.add(by_username);
         search_menu.add(by_status);
         search_menu.add(by_friend);
+        search_menu.add(by_friend_less);
+        search_menu.add(by_friend_more);
 
         search_button.addActionListener(e -> search_menu.show(search_button, 0, search_button.getHeight()));
 
@@ -190,6 +194,39 @@ public class adminMenu extends JFrame {
                 tableModel.setRowCount(0);
                 UsersBUS usersBUS = new UsersBUS();
                 List<UsersDTO> usersList = usersBUS.getByStatus(status);
+                addTable(usersList);
+            }
+        });
+
+        by_friend.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int friend = Integer.parseInt(search_input.getText());
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.getByFriend(friend, 0);
+                addTable(usersList);
+            }
+        });
+
+        by_friend_less.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int friend = Integer.parseInt(search_input.getText());
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.getByFriend(friend, -1);
+                addTable(usersList);
+            }
+        });
+
+        by_friend_more.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int friend = Integer.parseInt(search_input.getText());
+                tableModel.setRowCount(0);
+                UsersBUS usersBUS = new UsersBUS();
+                List<UsersDTO> usersList = usersBUS.getByFriend(friend, 1);
                 addTable(usersList);
             }
         });
@@ -232,7 +269,7 @@ public class adminMenu extends JFrame {
     }
 
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Fullname", "Status", "Created Date", "No.Friend", "No.Friend2"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Fullname", "Status", "Created Date", "No.Friend", "Frs.Friends"});
         user_table = new JTable(tableModel);
 
         user_table.setRowHeight(30);
@@ -270,13 +307,14 @@ public class adminMenu extends JFrame {
         });
     }
 
-    private static void addRowToTable(int ID, String username, String fullname, String status, String createDate) {
-        tableModel.addRow(new Object[]{ID, username, fullname, status, createDate});
+    private static void addRowToTable(int ID, String username, String fullname, String status, String createDate, int noFriend, int noFriend2) {
+        tableModel.addRow(new Object[]{ID, username, fullname, status, createDate, noFriend, noFriend2});
     }
 
     private static void addTable(List<UsersDTO> userList) {
+        FriendListBUS friendListBUS = new FriendListBUS();
         for (UsersDTO user : userList) {
-            addRowToTable(user.getuID(), user.getuName(), user.getFullname(), user.getStatus(), user.getCreateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            addRowToTable(user.getuID(), user.getuName(), user.getFullname(), user.getStatus(), user.getCreateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")), friendListBUS.countFriends(user.getuID()), friendListBUS.countFriendsOfFriend(user.getuID()));
         }
     }
 
