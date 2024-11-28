@@ -7,11 +7,11 @@ import java.util.List;
 import java.time.LocalDateTime;
 
 public class LoginHistoryDAO {
-    public void addLoginHistory(int uID) {
+    public boolean addLoginHistory(int uID) {
         UtilityDAO utilityDAO = new UtilityDAO();
         Connection conn = utilityDAO.getConnection();
         if (conn == null) {
-            return;
+            return false;
         }
 
         String query = "insert into LoginHistory (user_id) values (?)";
@@ -21,8 +21,9 @@ public class LoginHistoryDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return;
+            return false;
         }
+        return true;
     }
 
     public List<LoginHistoryDTO> getLoginHistory(int uID) {

@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendListDAO {
-    public void addFriend(int userID, int friendID) {
+    public boolean addFriend(int userID, int friendID) {
         UtilityDAO utilityDAO = new UtilityDAO();
         Connection conn = utilityDAO.getConnection();
         if (conn == null) {
-            return;
+            return false;
         }
 
         String query = "INSERT INTO friend_list (user_id, friend_id, requesting) VALUES (?, ?, 1)";
@@ -22,7 +22,7 @@ public class FriendListDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return;
+            return false;
         }
 
         query = "INSERT INTO friend_list (user_id, friend_id, requested) VALUES (?, ?, 1)";
@@ -32,15 +32,16 @@ public class FriendListDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return;
+            return false;
         }
+        return true;
     }
 
-    public void acceptFriend(int userID, int friendID) {
+    public boolean acceptFriend(int userID, int friendID) {
         UtilityDAO utilityDAO = new UtilityDAO();
         Connection conn = utilityDAO.getConnection();
         if (conn == null) {
-            return;
+            return false;
         }
 
         String query = "update friend_list set requested = 0 where user_id = ? and friend_id = ?";
@@ -50,7 +51,7 @@ public class FriendListDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return;
+            return false;
         }
 
         query = "update friend_list set requesting = 0 where user_id = ? and friend_id = ?";
@@ -60,8 +61,9 @@ public class FriendListDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return;
+            return false;
         }
+        return true;
     }
 
     public List<Integer> getFriends(int userID) {

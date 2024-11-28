@@ -1,6 +1,15 @@
 package component;
+import bus.GroupChatBUS;
+
 import java.awt.*;
 import javax.swing.*;
+import bus.*;
+import dto.*;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class groupListManage extends JFrame {
     private JPanel navigator;
@@ -58,6 +67,22 @@ public class groupListManage extends JFrame {
         sortLabel.setForeground(new java.awt.Color(255, 255, 255));
         JComboBox<String> sort_options = new JComboBox<>(new String[]{"Name", "Created Date"});
 
+        sort_options.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String comp = (String) sort_options.getSelectedItem();
+                if (comp == "Name") {
+                    list_side.removeAll();
+                    GroupChatBUS groupChatBUS = new GroupChatBUS();
+                    loadGroupList(groupChatBUS.sortByName());
+                } else if (comp == "Created Date") {
+                    list_side.removeAll();
+                    GroupChatBUS groupChatBUS = new GroupChatBUS();
+                    loadGroupList(groupChatBUS.sortByCreateTime());
+                }
+            }
+        });
+
         sort_options.addActionListener(e -> {
             String selectedOption = (String) sort_options.getSelectedItem();
             System.out.println("Sorting by: " + selectedOption);
@@ -65,11 +90,21 @@ public class groupListManage extends JFrame {
 
         sort_options.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
-        JButton search_button = new JButton("Search");
+        JButton search_button = new JButton("Filter");
         search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
 
-        JTextField search_input = new JTextField("Search");
+        JTextField search_input = new JTextField("");
         search_input.setFont(new java.awt.Font("Segoe UI", 0, 14));
+
+        search_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                list_side.removeAll();
+                String name = search_input.getText();
+                GroupChatBUS groupChatBUS = new GroupChatBUS();
+                loadGroupList(groupChatBUS.getByName(name));
+            }
+        });
 
         search_button.addActionListener(e -> {
             String filterText = search_input.getText();
@@ -134,12 +169,19 @@ public class groupListManage extends JFrame {
         list_scroll = new JScrollPane(list_side);
         list_scroll.setBorder(null);
 
-        addGroupToList("Group 1", "12/12/2004");
-        addGroupToList("Group 2", "14/12/2004");
-        addGroupToList("Group 3", "14/12/2004");
+        GroupChatBUS groupChatBUS = new GroupChatBUS();
+        List<GroupChatDTO> groupList = groupChatBUS.getAll();
+        loadGroupList(groupList);
+
     }
 
-    private void addGroupToList(String name, String createdDate) {
+    private void loadGroupList(List<GroupChatDTO> groupList) {
+        for (GroupChatDTO group : groupList) {
+            addGroupToList(group.getGID(), group.getName(), group.getCreateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
+        }
+    }
+
+    private void addGroupToList(int gID, String name, String createdDate) {
         JPanel group_panel = new JPanel();
         group_panel.setPreferredSize(new java.awt.Dimension(0, 85));
 
@@ -150,7 +192,7 @@ public class groupListManage extends JFrame {
 
         JButton group_information_button = new JButton("Information");
         group_information_button.setFont(new java.awt.Font("Segoe UI", 1, 12));
-        group_information_button.addActionListener(e -> openGroupInformation(name));
+        group_information_button.addActionListener(e -> openGroupInformation(gID, name));
 
         GroupLayout group_panelLayout = new GroupLayout(group_panel);
         group_panel.setLayout(group_panelLayout);
@@ -159,7 +201,7 @@ public class groupListManage extends JFrame {
             .addGroup(group_panelLayout.createSequentialGroup()
                 .addGap(58, 58, 58)
                 .addGroup(group_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(group_created_date, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(group_created_date, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE)
                     .addComponent(group_name, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 220, Short.MAX_VALUE)
                 .addComponent(group_information_button)
@@ -188,8 +230,8 @@ public class groupListManage extends JFrame {
         list_side.repaint();
     }
 
-    private void openGroupInformation(String name) {
-        groupManage newWindow = new groupManage(name);
+    private void openGroupInformation(int gID, String name) {
+        groupManage newWindow = new groupManage(gID, name);
         newWindow.setVisible(true);
     }
 

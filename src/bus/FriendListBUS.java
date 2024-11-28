@@ -6,14 +6,14 @@ import dao.*;
 import dto.*;
 
 public class FriendListBUS {
-    public void addFriend(int user, int friend) {
+    public boolean addFriend(int user, int friend) {
         FriendListDAO dao = new FriendListDAO();
-        dao.addFriend(user, friend);
+        return dao.addFriend(user, friend);
     }
 
-    public void acceptFriend(int user, int friend) {
+    public boolean acceptFriend(int user, int friend) {
         FriendListDAO dao = new FriendListDAO();
-        dao.acceptFriend(user, friend);
+        return dao.acceptFriend(user, friend);
     }
 
     public List<UsersDTO> getFriends(int user) {

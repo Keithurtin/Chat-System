@@ -12,9 +12,9 @@ public class LoginHistoryBUS {
         return dao.getLoginHistory(uID);
     }
 
-    public void addLoginHistory(int uID) {
+    public boolean addLoginHistory(int uID) {
         LoginHistoryDAO dao = new LoginHistoryDAO();
-        dao.addLoginHistory(uID);
+        return dao.addLoginHistory(uID);
     }
 
     public List<LoginHistoryDTO> getAll() {

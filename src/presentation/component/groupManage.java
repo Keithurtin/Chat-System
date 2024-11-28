@@ -1,7 +1,14 @@
 package component;
+
+import dao.GroupMembersDAO;
+import dto.*;
+import bus.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 public class groupManage extends JFrame {
 
@@ -10,18 +17,18 @@ public class groupManage extends JFrame {
     JTable table;
     private DefaultTableModel tableModel;
 
-    public groupManage(String name) {
-        initComponents(name);
+    public groupManage(int gID, String name) {
+        initComponents(gID, name);
     }   
-    private void initComponents(String name) {
+    private void initComponents(int gID, String name) {
         JPanel menu = new JPanel();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         menu.setBackground(new java.awt.Color(255, 255, 255));
         menu.setPreferredSize(new java.awt.Dimension(620, 500));
 
-        setupNavigatorLayout(name);
-        createTableLayout();
+        setupNavigatorLayout(gID, name);
+        createTableLayout(gID);
 
         GroupLayout admin_menuLayout = new GroupLayout(menu);
         menu.setLayout(admin_menuLayout);
@@ -53,10 +60,25 @@ public class groupManage extends JFrame {
         pack();
     }
 
-    private void setupNavigatorLayout(String name) {
+    private void setupNavigatorLayout(int gID, String name) {
         navigator = new JPanel();
         JLabel title = new JLabel("Group " + name);
         JComboBox<String> choose_type = new JComboBox<>(new String[]{"Member", "Admin"});
+
+        choose_type.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tableModel.setRowCount(0);
+                String comp = (String) choose_type.getSelectedItem();
+                if (comp == "Member") {
+                    GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+                    addTable(groupMembersBUS.getAll(gID));
+                } else if (comp == "Admin") {
+                    GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+                    addTable(groupMembersBUS.getAdmin(gID));
+                }
+            }
+        });
 
         navigator.setBackground(new java.awt.Color(153, 204, 255));
 
@@ -85,7 +107,7 @@ public class groupManage extends JFrame {
         );
     }
 
-    private void createTableLayout() {
+    private void createTableLayout(int gID) {
         tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Status", "Admin"});
         table = new JTable(tableModel);
 
@@ -102,11 +124,19 @@ public class groupManage extends JFrame {
 
         table_scroll = new JScrollPane(table);
 
-        addRowToTable("1", "Username1", true, true);
-        addRowToTable("2", "Username2", false, false);
+        GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+        addTable(groupMembersBUS.getAll(gID));
     }
 
-    private void addRowToTable(String index, String username, boolean status, boolean isAdmin) {
-        tableModel.addRow(new Object[]{index, username, status? "On" : "Off", isAdmin? "Yes" : ""});
+    private void addTable(List<GroupMembersDTO> members) {
+        UsersBUS usersBUS = new UsersBUS();
+        for (GroupMembersDTO member : members) {
+            UsersDTO info = usersBUS.getById(member.getUID());
+            addRowToTable(info.getuID(), info.getuName(), info.getStatus(), member.isAdmin());
+        }
+    }
+
+    private void addRowToTable(int uID, String username, String status, boolean isAdmin) {
+        tableModel.addRow(new Object[]{uID, username, status, isAdmin? "Yes" : ""});
     }
 }
