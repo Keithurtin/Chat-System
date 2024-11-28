@@ -405,7 +405,7 @@ public class userManage extends JPanel {
 
     private void addLoginTable(List<LoginHistoryDTO> loginHistory) {
         for (LoginHistoryDTO login : loginHistory) {
-            addRowToTableLogin(login.getUId(), login.getLoginTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            addRowToTableLogin(login.getUId(), login.getLoginTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
         }
     }
 

@@ -51,4 +51,30 @@ public class LoginHistoryDAO {
         }
         return list;
     }
+
+    public List<LoginHistoryDTO> getAll() {
+        List<LoginHistoryDTO> list = new ArrayList<>();
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return list;
+        }
+
+        String query = "select * from LoginHistory";
+
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                int id = rs.getInt("user_id");
+                LocalDateTime loginTime = rs.getObject("login_time", LocalDateTime.class);
+                LoginHistoryDTO dto = new LoginHistoryDTO(id, loginTime);
+                list.add(dto);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return list;
+        }
+        list.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
+        return list;
+    }
 }

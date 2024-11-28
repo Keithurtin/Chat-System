@@ -1,6 +1,8 @@
 package presentation.component;
 
+import bus.LoginHistoryBUS;
 import bus.UsersBUS;
+import dto.LoginHistoryDTO;
 import dto.UsersDTO;
 
 import javax.swing.*;
@@ -97,39 +99,33 @@ public class loginTimeHistory extends JFrame {
         user_table.setRowHeight(30);
         user_table.getColumnModel().getColumn(0).setPreferredWidth(50);
         user_table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        user_table.getColumnModel().getColumn(2).setPreferredWidth(250);
-        user_table.getColumnModel().getColumn(3).setPreferredWidth(60);
+        user_table.getColumnModel().getColumn(2).setPreferredWidth(210);
+        user_table.getColumnModel().getColumn(3).setPreferredWidth(100);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 
         user_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-        user_table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         user_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
 
         user_table_scroll.setViewportView(user_table);
 
         // Add data
-        UsersBUS userBUS = new UsersBUS();
-        List<UsersDTO> userList = userBUS.getAll();
-        addTable(userList);
+        LoginHistoryBUS loginHistoryBUS = new LoginHistoryBUS();
+        List<LoginHistoryDTO> loginHistoryList = loginHistoryBUS.getAll();
+        addTable(loginHistoryList);
     }
 
     private static void addRowToTable(int ID, String username, String fullname, String loginTime) {
         tableModel.addRow(new Object[]{ID, username, fullname, loginTime});
     }
 
-    private static void addTable(List<UsersDTO> userList) {
-        for (UsersDTO user : userList) {
-            addRowToTable(user.getuID(), user.getuName(), user.getFullname(), user.getCreateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+    private static void addTable(List<LoginHistoryDTO> loginHistoryList) {
+        for (LoginHistoryDTO login : loginHistoryList) {
+            UsersBUS usersBUS = new UsersBUS();
+            UsersDTO user = usersBUS.getById(login.getUId());
+            addRowToTable(user.getuID(), user.getuName(), user.getFullname(), login.getLoginTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
         }
-    }
-
-    public static void reloadAdminTable() {
-        tableModel.setRowCount(0);
-        UsersBUS usersBUS = new UsersBUS();
-        List<UsersDTO> usersList = usersBUS.getAll();
-        addTable(usersList);
     }
 
     public static void main(String[] args) {

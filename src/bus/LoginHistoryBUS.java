@@ -16,4 +16,9 @@ public class LoginHistoryBUS {
         LoginHistoryDAO dao = new LoginHistoryDAO();
         dao.addLoginHistory(uID);
     }
+
+    public List<LoginHistoryDTO> getAll() {
+        LoginHistoryDAO dao = new LoginHistoryDAO();
+        return dao.getAll();
+    }
 }
