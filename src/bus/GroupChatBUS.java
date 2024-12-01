@@ -3,6 +3,9 @@ package bus;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import dto.*;
 import dao.*;
 
@@ -32,8 +35,11 @@ public class GroupChatBUS {
         GroupChatDAO dao = new GroupChatDAO();
         List<GroupChatDTO> list = dao.getAll();
         List<GroupChatDTO> ans = new ArrayList<>();
+        String regex = ".*" + Pattern.quote(name) + ".*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         for (GroupChatDTO group : list) {
-            if (group.getName().equals(name)) {
+            Matcher matcher = pattern.matcher(group.getName());
+            if (matcher.matches()) {
                 ans.add(group);
             }
         }

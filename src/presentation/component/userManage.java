@@ -193,7 +193,7 @@ public class userManage extends JPanel {
         delete_button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int res = JOptionPane.showConfirmDialog(null, "Do you want to delete this user?", "Change User", JOptionPane.YES_NO_OPTION);
+                int res = JOptionPane.showConfirmDialog(null, "Do you want to delete this user?", "Delete User", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
                     UsersBUS usersBUS = new UsersBUS();
                     if (usersBUS.deleteUser(user.getuID()) == true) {

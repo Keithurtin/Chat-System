@@ -1,9 +1,20 @@
 package component;
 
+import dto.SpamDTO;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import dto.*;
+import bus.*;
+
+import static component.adminMenu.reloadAdminTable;
 
 public class spamManage extends JFrame {
 
@@ -69,7 +80,21 @@ public class spamManage extends JFrame {
         JLabel sortLabel = new JLabel("Sort by:");
         sortLabel.setFont(new java.awt.Font("Segoe UI", 1, 16));
         sortLabel.setForeground(new java.awt.Color(255, 255, 255));
-        JComboBox<String> sort_options = new JComboBox<>(new String[]{"Name", "Registration Date"});
+        JComboBox<String> sort_options = new JComboBox<>(new String[]{"Name", "Time"});
+
+        sort_options.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tableModel.setRowCount(0);
+                List<SpamDTO> list = null;
+                SpamBUS spamBUS = new SpamBUS();
+                String comp = (String) sort_options.getSelectedItem();
+                if (comp == "Name") {
+                    list = spamBUS.sortByName();
+                } else list = spamBUS.sortReportTime();
+                loadTable(list);
+            }
+        });
 
         sort_options.addActionListener(e -> {
             String selectedOption = (String) sort_options.getSelectedItem();
@@ -78,16 +103,41 @@ public class spamManage extends JFrame {
 
         sort_options.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
-        JButton search_button = new JButton("Search");
+        JButton search_button = new JButton("Filter");
         search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
 
-        JTextField search_input = new JTextField("Search");
+        JTextField search_input = new JTextField("");
         search_input.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
-        search_button.addActionListener(e -> {
-            String filterText = search_input.getText();
-            System.out.println("Filtering by name: " + filterText);
+        JPopupMenu search_menu = new JPopupMenu();
+
+        JMenuItem by_username = new JMenuItem("By Username");
+        JMenuItem by_time = new JMenuItem("By Time");
+
+        search_menu.add(by_username);
+        search_menu.add(by_time);
+
+        by_username.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = search_input.getText();
+                tableModel.setRowCount(0);
+                SpamBUS spamBUS = new SpamBUS();
+                loadTable(spamBUS.getByName(name));
+            }
         });
+
+        by_time.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String time = search_input.getText();
+                tableModel.setRowCount(0);
+                SpamBUS spamBUS = new SpamBUS();
+                loadTable(spamBUS.getByDate(time));
+            }
+        });
+
+        search_button.addActionListener(e -> search_menu.show(search_button, 0, search_button.getHeight()));
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -125,38 +175,39 @@ public class spamManage extends JFrame {
     }
 
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"STT", "Username", "Status", "Ban", "Reject"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Report Time", "Ban"});
         table = new JTable(tableModel);
 
         table.setRowHeight(30);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(90);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.getColumnModel().getColumn(2).setPreferredWidth(90);
-        table.getColumnModel().getColumn(3).setPreferredWidth(100);
-        table.getColumnModel().getColumn(4).setPreferredWidth(100);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table.getColumnModel().getColumn(3).setPreferredWidth(50);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
 
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-
+        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(3).setCellRenderer(new ButtonRenderer());
-        table.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-
         table.getColumnModel().getColumn(3).setCellEditor(new ButtonEditor(new JButton("Ban")));
-        table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JButton("Reject")));
 
         table_scroll.setViewportView(table);
 
-        // Add sample data
-        addRowToTable("1", "Username1", true);
-        addRowToTable("2", "Username2", false);
+        SpamBUS spamBUS = new SpamBUS();
+        loadTable(spamBUS.getAll());
     }
 
-    private void addRowToTable(String stt, String username, boolean  isOn) {
-        tableModel.addRow(new Object[]{stt, username, ("<html>" + (isOn ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>"), "Ban", "Reject"});
+    private void loadTable(List<SpamDTO> list) {
+        for (SpamDTO spam : list) {
+            addRowToTable(spam.getuID(), spam.getuName(), spam.getReportTime());
+        }
+    }
+
+    private void addRowToTable(int uID, String username, LocalDateTime reportTime) {
+        tableModel.addRow(new Object[]{uID, username, reportTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")), "Ban"});
     }
 
     class ButtonRenderer extends JButton implements javax.swing.table.TableCellRenderer {
@@ -181,11 +232,17 @@ public class spamManage extends JFrame {
             this.button = button;
             button.addActionListener(e -> {
                 fireEditingStopped();
-                System.out.println("Button clicked in row " + table.getSelectedRow() + ", column " + table.getSelectedColumn());
-                if (table.getSelectedColumn() == 3) {
-                    System.out.println("Ban button clicked.");
-                } else if (table.getSelectedColumn() == 4) {
-                    System.out.println("Reject button clicked.");
+                int row = table.getSelectedRow();
+                int id = (Integer) table.getValueAt(row, 0);
+                int res = JOptionPane.showConfirmDialog(null, "Do you want to ban this user?", "Ban User", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    UsersBUS usersBUS = new UsersBUS();
+                    if (usersBUS.banUser(id) == true) {
+                        JOptionPane.showMessageDialog(null, "User banned successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                        reloadAdminTable();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
+                    }
                 }
             });
         }

@@ -3,6 +3,8 @@ package bus;
 import dao.*;
 import dto.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UsersBUS {
     public List<UsersDTO> getAll() {
@@ -14,8 +16,11 @@ public class UsersBUS {
         UsersDAO userDAO = new UsersDAO();
         List<UsersDTO> list = userDAO.getAll();
         List<UsersDTO> ans = new ArrayList<>();
+        String regex = ".*" + Pattern.quote(userName) + ".*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         for (UsersDTO user : list) {
-            if (user.getuName().equals(userName)) {
+            Matcher matcher = pattern.matcher(user.getuName());
+            if (matcher.matches()) {
                 ans.add(user);
             }
         }
@@ -26,8 +31,11 @@ public class UsersBUS {
         UsersDAO userDAO = new UsersDAO();
         List<UsersDTO> list = userDAO.getAll();
         List<UsersDTO> ans = new ArrayList<>();
+        String regex = ".*" + Pattern.quote(name) + ".*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         for (UsersDTO user : list) {
-            if (user.getFullname().equals(name)) {
+            Matcher matcher = pattern.matcher(user.getFullname());
+            if (matcher.matches()) {
                 ans.add(user);
             }
         }
@@ -38,8 +46,11 @@ public class UsersBUS {
         UsersDAO userDAO = new UsersDAO();
         List<UsersDTO> list = userDAO.getAll();
         List<UsersDTO> ans = new ArrayList<>();
+        String regex = ".*" + Pattern.quote(status) + ".*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         for (UsersDTO user : list) {
-            if (user.getStatus().equals(status)) {
+            Matcher matcher = pattern.matcher(user.getStatus());
+            if (matcher.matches()) {
                 ans.add(user);
             }
         }
@@ -111,5 +122,10 @@ public class UsersBUS {
     public boolean deleteUser(int id) {
         UsersDAO userDAO = new UsersDAO();
         return userDAO.delete(id);
+    }
+
+    public boolean banUser(int id) {
+        UsersDAO userDAO = new UsersDAO();
+        return userDAO.banUser(id);
     }
 }

@@ -86,6 +86,7 @@ CREATE TABLE ChatGroup (
 
 CREATE TABLE Spam (
     reported_user_id INT,
+	username NVARCHAR(50) NOT NULL,
     report_time DATETIME DEFAULT GETDATE(),
 	PRIMARY KEY (reported_user_id, report_time),
     FOREIGN KEY (reported_user_id) REFERENCES Users(user_id)
@@ -106,13 +107,3 @@ VALUES ('user0', 'Anonymous User 0', '000 Street 000', '2000-10-10', 'Female', '
 INSERT INTO LoginHistory (user_id) values (1)
 
 INSERT INTO FriendList (user_id, friend_id) values (1, 2)
-
---select * from Users
-
---select * from FriendList
-
---select * from FriendList where user_id = 1 and requested = 0 and requesting = 0
-
---insert into GroupChat(group_name, initial_member) values ('Group foo', 1)
-
---update Users set is_admin = 1 where user_id = 1

@@ -14,13 +14,14 @@ public class UsersDAO {
             return list;
         }
 
-        String query = "select user_id, username, is_admin, full_name, address, birth_date, gender, email, password, user_status, create_time from Users";
+        String query = "select * from Users";
         try (Statement stmt = conn.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 int uID = rs.getInt("user_id");
                 String uName = rs.getString("username");
                 Boolean isAdmin = rs.getBoolean("is_admin");
+                Boolean isLocked = rs.getBoolean("is_locked");
                 String fullname = rs.getString("full_name");
                 String address = rs.getString("address");
                 java.sql.Date birthDate = rs.getDate("birth_date");
@@ -29,7 +30,7 @@ public class UsersDAO {
                 String password = rs.getString("password");
                 String uStatus = rs.getString("user_status");
                 LocalDateTime createTime = rs.getObject("create_time", LocalDateTime.class);
-                UsersDTO user = new UsersDTO(uID, uName, isAdmin, fullname, address, birthDate, gender, email, password, uStatus, createTime);
+                UsersDTO user = new UsersDTO(uID, uName, isAdmin, isLocked, fullname, address, birthDate, gender, email, password, uStatus, createTime);
                 list.add(user);
             }
         } catch (SQLException e) {
@@ -98,6 +99,25 @@ public class UsersDAO {
         }
 
         String query = "delete from Users where user_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, uID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean banUser(int uID) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "update Users set is_locked = 1 where user_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, uID);

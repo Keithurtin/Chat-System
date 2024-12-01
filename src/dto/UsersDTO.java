@@ -32,7 +32,7 @@ public class UsersDTO {
         this.uName = "";
     }
 
-    public UsersDTO(int uID, String uName, Boolean isAdmin, String fullname, String address, Date birthDate, String gender, String email, String password, String status, LocalDateTime createTime) {
+    public UsersDTO(int uID, String uName, Boolean isAdmin, Boolean isLocked, String fullname, String address, Date birthDate, String gender, String email, String password, String status, LocalDateTime createTime) {
         this.address = address;
         this.birthDate = birthDate;
         this.createTime = createTime;
@@ -40,6 +40,7 @@ public class UsersDTO {
         this.fullname = fullname;
         this.gender = gender;
         this.isAdmin = isAdmin;
+        this.isLocked = isLocked;
         this.password = password;
         this.status = status;
         this.uID = uID;
