@@ -66,6 +66,32 @@ public class FriendListDAO {
         return true;
     }
 
+    public static int getRelationship(int userID, int friendID) {
+        int relationship = -1;
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return relationship;
+        }
+
+        String query = "select * from FriendList where user_id = ? and friend_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userID);
+            pstmt.setInt(2, friendID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int requesting = rs.getInt("requesting");
+                int requested = rs.getInt("requested");
+                relationship = requesting == requested ? 2 : requesting;
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return relationship;
+        }
+        return relationship;
+    }
+
     public List<Integer> getFriends(int userID) {
         List<Integer> friends = new ArrayList<>();
         UtilityDAO utilityDAO = new UtilityDAO();
@@ -75,6 +101,54 @@ public class FriendListDAO {
         }
 
         String query = "select * from FriendList where user_id = ? and requested = 0 and requesting = 0";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int uID = rs.getInt("friend_id");
+                friends.add(uID);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return friends;
+        }
+        return friends;
+    }
+
+    public List<Integer> getFriendsRequested(int userID) {
+        List<Integer> friends = new ArrayList<>();
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return friends;
+        }
+
+        String query = "select * from FriendList where user_id = ? and requested = 1 and requesting = 0";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int uID = rs.getInt("friend_id");
+                friends.add(uID);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return friends;
+        }
+        return friends;
+    }
+
+    public List<Integer> getFriendsRequesting(int userID) {
+        List<Integer> friends = new ArrayList<>();
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return friends;
+        }
+
+        String query = "select * from FriendList where user_id = ? and requested = 0 and requesting = 1";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userID);

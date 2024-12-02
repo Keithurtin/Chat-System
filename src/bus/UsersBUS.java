@@ -44,6 +44,17 @@ public class UsersBUS {
         return ans;
     }
 
+    public UsersDTO getByIDAndStatus(int id, String status) {
+        UsersDAO userDAO = new UsersDAO();
+        List<UsersDTO> list = userDAO.getAll();
+        for (UsersDTO user : list) {
+            if (user.getuID() == id && (user.getStatus()).equals(status)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public List<UsersDTO> getByStatus(String status) {
         UsersDAO userDAO = new UsersDAO();
         List<UsersDTO> list = userDAO.getAll();

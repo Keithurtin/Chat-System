@@ -1,6 +1,7 @@
 package dto;
 
 import java.time.LocalDateTime;
+import dao.GroupMembersDAO;
 
 public class GroupChatDTO {
     int gID;
@@ -33,6 +34,10 @@ public class GroupChatDTO {
     }
     public LocalDateTime getCreateTime() {
         return createTime;
+    }
+    public int getNumMember() {
+        GroupMembersDAO dao = new GroupMembersDAO();
+        return dao.getNumMember(gID);
     }
 
     public void setName(String name) {

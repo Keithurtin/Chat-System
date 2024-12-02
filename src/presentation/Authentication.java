@@ -588,7 +588,7 @@ public class Authentication extends JFrame {
         if(user.getIsAdmin()) {
                 newWindow = new component.adminMenu();
         } else {
-                newWindow = new component.chatBoxDemo();
+                newWindow = new component.mainChat(12);
         }
         dispose();
         newWindow.setVisible(true);

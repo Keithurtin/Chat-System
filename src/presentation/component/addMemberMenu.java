@@ -1,5 +1,7 @@
 package component;
 
+import presentation.component.PlaceHolder;
+
 import java.awt.*;
 import javax.swing.*;
 
@@ -7,10 +9,14 @@ public class addMemberMenu extends JFrame {
     private JPanel navigator;
     private JScrollPane list_scroll;
     private JPanel list_side;
+    private static int uid;
+    private static int gid;
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
-    public addMemberMenu() {
+    public addMemberMenu(int gID, int uID) {
+        uid = uID;
+        gid = gID;
         initComponents();
     }
 
@@ -50,7 +56,7 @@ public class addMemberMenu extends JFrame {
     private void setupNavigatorLayout() {
         navigator = new JPanel();
 
-        JTextField search_input = new JTextField();
+        PlaceHolder search_input = new PlaceHolder();
         JButton search_button = new JButton("Search");
         JLabel title = new JLabel("Add Member Menu");
 
@@ -111,6 +117,10 @@ public class addMemberMenu extends JFrame {
         addGroupToList("ABD", true);
         addGroupToList("XYC", false);
         addGroupToList("ASC", true);
+    }
+
+    private void loadUsers() {
+
     }
 
     private void addGroupToList(String name, boolean isOn) {

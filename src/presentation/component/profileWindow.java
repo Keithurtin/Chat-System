@@ -1,12 +1,23 @@
 package component;
 import java.awt.*;
 import javax.swing.*;
+import bus.*;
+import dto.*;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class profileWindow extends JFrame {
     private JPanel navigator;
-    private final JScrollPane main_scroll;
 
-    public profileWindow(String name, String fullname, String address, String birthday, boolean gender, String email, int noOfFriend) {
+    public profileWindow(int uid) {
+        UsersBUS usersBUS = new UsersBUS();
+        UsersDTO user = usersBUS.getById(uid);
+        FriendListBUS friendListBUS = new FriendListBUS();
+        List<UsersDTO> friendList = friendListBUS.getFriends(uid);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"); // You can change the pattern as needed
+        String birthDateString = formatter.format(user.getBirthDate());
+
         JPanel main_panel = new JPanel();
         JPanel content_side = new JPanel();
         JLabel username_label = new JLabel("Name: ");
@@ -16,48 +27,48 @@ public class profileWindow extends JFrame {
         JLabel birthdate_label = new JLabel("Birthday: ");
         JLabel email_label = new JLabel("Email: ");
         JLabel num_friend_label = new JLabel("No. Friends: ");
-        JLabel username_value_label = new JLabel(name);
-        JLabel fullname_value_label = new JLabel(fullname);
-        JLabel address_value_label = new JLabel(address);
-        JLabel birthdate_value_label = new JLabel(birthday);
-        JLabel gender_value_label = new JLabel(gender?"Male":"Female");
-        JLabel email_value_label = new JLabel(email);
-        JLabel num_of_friend_value_label = new JLabel(String.valueOf(noOfFriend));
+        JLabel username_value_label = new JLabel(user.getuName());
+        JLabel fullname_value_label = new JLabel(user.getFullname());
+        JLabel address_value_label = new JLabel(user.getAddress());
+        JLabel birthdate_value_label = new JLabel(birthDateString);
+        JLabel gender_value_label = new JLabel(user.getGender());
+        JLabel email_value_label = new JLabel(user.getEmail());
+        JLabel num_of_friend_value_label = new JLabel(String.valueOf(friendList.size()));
 
         setupNavigatorLayout();
 
-        username_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        fullname_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        address_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        birthdate_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        gender_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        email_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        num_friend_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        username_label.setFont(new Font("Segoe UI", 1, 18));
+        fullname_label.setFont(new Font("Segoe UI", 1, 18));
+        address_label.setFont(new Font("Segoe UI", 1, 18));
+        birthdate_label.setFont(new Font("Segoe UI", 1, 18));
+        gender_label.setFont(new Font("Segoe UI", 1, 18));
+        email_label.setFont(new Font("Segoe UI", 1, 18));
+        num_friend_label.setFont(new Font("Segoe UI", 1, 18));
 
-        username_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
-        fullname_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
-        address_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
-        birthdate_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
-        gender_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
-        email_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
-        num_of_friend_value_label.setFont(new java.awt.Font("Segoe UI", 0, 18));
+        username_value_label.setFont(new Font("Segoe UI", 0, 18));
+        fullname_value_label.setFont(new Font("Segoe UI", 0, 18));
+        address_value_label.setFont(new Font("Segoe UI", 0, 18));
+        birthdate_value_label.setFont(new Font("Segoe UI", 0, 18));
+        gender_value_label.setFont(new Font("Segoe UI", 0, 18));
+        email_value_label.setFont(new Font("Segoe UI", 0, 18));
+        num_of_friend_value_label.setFont(new Font("Segoe UI", 0, 18));
 
         JButton manage_button = new JButton("Manage");
-        manage_button.setBackground(new java.awt.Color(153, 204, 255));
-        manage_button.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        manage_button.setForeground(new java.awt.Color(255, 255, 255));
+        manage_button.setBackground(new Color(153, 204, 255));
+        manage_button.setFont(new Font("Segoe UI", 1, 18));
+        manage_button.setForeground(new Color(255, 255, 255));
         
-        main_panel.setBackground(new java.awt.Color(255, 255, 255));
+        main_panel.setBackground(new Color(255, 255, 255));
         main_panel.setRequestFocusEnabled(false);
 
-        content_side.setBackground(new java.awt.Color(255, 255, 255));
+        content_side.setBackground(new Color(255, 255, 255));
         JLabel password_label = new JLabel("Change password:");
-        password_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
+        password_label.setFont(new Font("Segoe UI", 1, 18));
 
         JButton change_password_button = new JButton("Change");
-        change_password_button.setBackground(new java.awt.Color(153, 204, 255));
-        change_password_button.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        change_password_button.setForeground(new java.awt.Color(255, 255, 255));
+        change_password_button.setBackground(new Color(153, 204, 255));
+        change_password_button.setFont(new Font("Segoe UI", 1, 18));
+        change_password_button.setForeground(new Color(255, 255, 255));
 
         change_password_button.addActionListener(e -> changePassword());
 
@@ -143,7 +154,7 @@ public class profileWindow extends JFrame {
                                 .addGap(30, 30, 30))
         );
 
-        main_scroll = new JScrollPane(content_side);
+        JScrollPane main_scroll = new JScrollPane(content_side);
         main_scroll.setBorder(null);
 
         GroupLayout main_panelLayout = new GroupLayout(main_panel);
@@ -171,12 +182,12 @@ public class profileWindow extends JFrame {
 
     private void setupNavigatorLayout() {
         navigator = new JPanel();
-        navigator.setBackground(new java.awt.Color(153, 204, 255));
-        navigator.setPreferredSize(new java.awt.Dimension(400, 70));
+        navigator.setBackground(new Color(153, 204, 255));
+        navigator.setPreferredSize(new Dimension(400, 70));
 
         JLabel title = new JLabel("Personal Profile");
-        title.setFont(new java.awt.Font("Segoe UI", 1, 24));
-        title.setForeground(new java.awt.Color(255, 255, 255));
+        title.setFont(new Font("Segoe UI", 1, 24));
+        title.setForeground(new Color(255, 255, 255));
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -200,6 +211,6 @@ public class profileWindow extends JFrame {
     private void changePassword() {}
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new profileWindow("abc", "abcdef" ,"213 ac", "12/12/1200", true, "abc@gmail", 12).setVisible(true));
+        EventQueue.invokeLater(() -> new profileWindow(1).setVisible(true));
     }
 }

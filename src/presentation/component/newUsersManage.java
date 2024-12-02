@@ -41,7 +41,7 @@ private void setupNavigatorLayout() {
     title.setForeground(Color.WHITE);
 
     JButton chart_button = new JButton("Chart");
-    chart_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
+    chart_button.setFont(new Font("Segoe UI", 1, 14));
 
     JPopupMenu year_menu = new JPopupMenu();
 
@@ -51,21 +51,21 @@ private void setupNavigatorLayout() {
     chart_button.addActionListener(e -> year_menu.show(chart_button, 0, chart_button.getHeight()));
 
     JLabel fromLabel = new JLabel("From:");
-    fromLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+    fromLabel.setFont(new Font("Segoe UI", 1, 14));
     fromLabel.setForeground(Color.WHITE);
 
     JLabel toLabel = new JLabel("To:");
-    toLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
+    toLabel.setFont(new Font("Segoe UI", 1, 14));
     toLabel.setForeground(Color.WHITE);
 
     JDateChooser fromDateChooser = new JDateChooser();
     JDateChooser toDateChooser = new JDateChooser();
 
     JButton search_button = new JButton("Filter");
-    search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
+    search_button.setFont(new Font("Segoe UI", 1, 14));
 
     JTextField search_input = new JTextField("");
-    search_input.setFont(new java.awt.Font("Segoe UI", 0, 14));
+    search_input.setFont(new Font("Segoe UI", 0, 14));
 
     search_button.addActionListener(e -> {
         String username = search_input.getText();
@@ -79,18 +79,35 @@ private void setupNavigatorLayout() {
         tableModel.setRowCount(0);
         loadTable(usersBUS.filterByUsername(usersBUS.getByRegisterTime(from, to), username));
     });
+    
+    JButton sort_button = new JButton("Sort");
+    sort_button.setFont(new Font("Segoe UI", 1, 14));
+
+    JPopupMenu sort_menu = new JPopupMenu();
+
+    JMenuItem ByName = new JMenuItem("By Name");
+    JMenuItem ByTime = new JMenuItem("By Time");
+    ByName.addActionListener(e -> {}); //function
+    ByTime.addActionListener(e -> {});
+
+    sort_menu.add(ByName);
+    sort_menu.add(ByTime);
+
+    sort_button.addActionListener(e -> sort_menu.show(sort_button, 0, sort_button.getHeight()));
 
     GroupLayout navigatorLayout = new GroupLayout(navigator);
     navigator.setLayout(navigatorLayout);
     navigatorLayout.setHorizontalGroup(
         navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(navigatorLayout.createSequentialGroup()
-                .addContainerGap(85, Short.MAX_VALUE)
+                .addContainerGap(80, 80)
                 .addGroup(navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, navigatorLayout.createSequentialGroup()
+                        .addContainerGap(20, 40)
                         .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(170, 170, 170))
+                        .addGap(165, 165, 165))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, navigatorLayout.createSequentialGroup()
+                        .addContainerGap(20, 40)
                         .addComponent(fromLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(fromDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -100,6 +117,8 @@ private void setupNavigatorLayout() {
                         .addComponent(toDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(130, 130, 130))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, navigatorLayout.createSequentialGroup()
+                        .addComponent(sort_button, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(chart_button, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(search_input, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -120,6 +139,7 @@ private void setupNavigatorLayout() {
                     .addComponent(toDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(navigatorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sort_button, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chart_button, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(search_input, javax.swing.GroupLayout.PREFERRED_SIZE, 30, Short.MAX_VALUE)
                     .addComponent(search_button, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE))
@@ -209,5 +229,12 @@ private void setupNavigatorLayout() {
         JPanel chartPanel = new component.chartDisplay(year, data, true);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+            JFrame newWindow = new newUsersManage();
+            newWindow.setResizable(false);
+            newWindow.setLocation(480, 190);
+            newWindow.setVisible(true);
     }
 }

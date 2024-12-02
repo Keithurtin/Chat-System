@@ -1,5 +1,6 @@
 package bus;
 
+import java.util.ArrayList;
 import java.util.List;
 import dao.*;
 import dto.*;
@@ -23,5 +24,17 @@ public class GroupMembersBUS {
     public List<GroupMembersDTO> getAdmin(int gID) {
         GroupMembersDAO dao = new GroupMembersDAO();
         return dao.getAdmin(gID);
+    }
+
+    public List<GroupChatDTO> getGroups(int uID) {
+        GroupMembersDAO dao = new GroupMembersDAO();
+        List<Integer> idList = dao.getGroupID(uID);
+        List<GroupChatDTO> groupList = new ArrayList<>();
+        GroupChatBUS groupsBUS = new GroupChatBUS();
+        for (int id : idList) {
+            GroupChatDTO friend = groupsBUS.getById(id);
+            groupList.add(friend);
+        }
+        return groupList;
     }
 }

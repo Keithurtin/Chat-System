@@ -1,17 +1,25 @@
 package component;
 
 import javax.swing.*;
+import java.awt.*;
+import dto.*;
+import bus.*;
+import java.util.List;
 
 public class groupManageWindow extends JFrame {
 
     private JPanel navigator;
-
+    private int gid;
+    private static int uid;
+    private static boolean isAdmin;
     private JPanel list_side;
     private JScrollPane list_scroll;
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
-    public groupManageWindow() {
+    public groupManageWindow(int gID, int uID) {
+        gid = gID;
+        uid = uID;
         JPanel menu = new JPanel();
 
         menu.setBackground(new java.awt.Color(255, 255, 255));
@@ -37,8 +45,8 @@ public class groupManageWindow extends JFrame {
         );
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-        java.awt.Dimension panelSize = menu.getPreferredSize();
+        loadMember();
+        Dimension panelSize = menu.getPreferredSize();
         add(menu);
         setResizable(false);
         setLocation(600, 180);
@@ -50,11 +58,11 @@ public class groupManageWindow extends JFrame {
         JButton add_button = new JButton("Add Member");
 
         navigator = new JPanel();
-        navigator.setBackground(new java.awt.Color(153, 204, 255));
+        navigator.setBackground(new Color(153, 204, 255));
 
-        title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        title.setForeground(new java.awt.Color(255, 255, 255));
-        add_button.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        title.setFont(new Font("Segoe UI", 1, 24)); // NOI18N
+        title.setForeground(new Color(255, 255, 255));
+        add_button.setFont(new Font("Segoe UI", 1, 12));
         add_button.addActionListener(e -> openAddMemberWindow());
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
@@ -82,7 +90,7 @@ public class groupManageWindow extends JFrame {
 
     private void createMemberList() {
         list_side = new JPanel();
-        list_side.setBackground(new java.awt.Color(255, 255, 255));
+        list_side.setBackground(new Color(255, 255, 255));
 
         GroupLayout list_sideLayout = new GroupLayout(list_side);
         list_side.setLayout(list_sideLayout);
@@ -102,33 +110,51 @@ public class groupManageWindow extends JFrame {
 
         list_scroll = new JScrollPane(list_side);
         list_scroll.setBorder(null);
-
-        addMemberToList("ABC", true, true);
-        addMemberToList("XYZ", true, false);
-        addMemberToList("LMN", false, false);
     }
 
-    private void addMemberToList(String name, boolean isOn, boolean isAdmin) {
+    private void loadMember() {
+        list_side.removeAll();
+        GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+        List<GroupMembersDTO> memberList = groupMembersBUS.getAll(gid);
+        for(GroupMembersDTO member : memberList) {
+            if(uid == member.getUID()) {
+                isAdmin = member.isAdmin();
+            }
+        }
+        for(GroupMembersDTO member : memberList) {
+            addMemberToList(member);
+        }
+        list_side.revalidate();
+        list_side.repaint();
+    }
+
+    private void addMemberToList(GroupMembersDTO member) {
+        UsersBUS usersBUS = new UsersBUS();
+        UsersDTO user = usersBUS.getById(member.getUID());
+
         JPanel member_panel = new JPanel();
-        member_panel.setPreferredSize(new java.awt.Dimension(0, 85));
+        member_panel.setPreferredSize(new Dimension(0, 85));
 
-        JLabel member_name = new JLabel("<html>" + name + (isAdmin ? " <span style='color: red; font-weight: bold;'>ADMIN</span></html>" : "</html>"));
-        member_name.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        JLabel member_name = new JLabel("<html>" + user.getuName() + (member.isAdmin() ? " <span style='color: red; font-weight: bold;'>ADMIN</span></html>" : "</html>"));
+        member_name.setFont(new Font("Segoe UI", 1, 14));
 
-        JLabel member_status = new JLabel("Status: " + (isOn ? "Online" : "Offline"));
+        JLabel member_status = new JLabel("<html> Status:" + ((user.getStatus()).equals("online") ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
 
         JButton more_button = new JButton("More");
-        more_button.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        more_button.setFont(new Font("Segoe UI", 1, 12));
 
         JPopupMenu more_menu = new JPopupMenu();
 
         JMenuItem chat_button = new JMenuItem("Chat");
-        JMenuItem kick_button = new JMenuItem("Kick");
-        JMenuItem asign_button = new JMenuItem("Asign Admin");
-
         more_menu.add(chat_button);
-        more_menu.add(kick_button);
-        more_menu.add(asign_button);
+
+        if(isAdmin){
+            JMenuItem kick_button = new JMenuItem("Kick");
+            JMenuItem assign_button = new JMenuItem("Assign Admin");
+
+            more_menu.add(kick_button);
+            more_menu.add(assign_button);
+        }
 
         more_button.addActionListener(e -> more_menu.show(more_button, 0, more_button.getHeight()));
 
@@ -163,19 +189,16 @@ public class groupManageWindow extends JFrame {
         horizontalGroup.addComponent(member_panel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE);
         verticalGroup.addComponent(member_panel, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED);
-
-        list_side.revalidate();
-        list_side.repaint();
     }
 
     private void openAddMemberWindow() {
-        addMemberMenu newWindow = new addMemberMenu();
+        component.addMemberMenu newWindow = new component.addMemberMenu(gid, uid);
         newWindow.setVisible(true);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            groupManageWindow frame = new groupManageWindow();
+            groupManageWindow frame = new groupManageWindow(1, 1);
             frame.setVisible(true);
         });
     }

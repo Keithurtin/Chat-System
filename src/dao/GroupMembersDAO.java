@@ -97,4 +97,51 @@ public class GroupMembersDAO {
         }
         return list;
     }
+
+    public int getNumMember(int gID) {
+        int numMembers = 0;
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return numMembers;
+        }
+
+        String query = "SELECT COUNT(*) AS member_count FROM GroupMembers WHERE group_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, gID);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                numMembers = rs.getInt("member_count");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return numMembers;
+        }
+        return numMembers;
+    }
+
+    public List<Integer> getGroupID(int uID) {
+        List<Integer> groups = new ArrayList<>();
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return groups;
+        }
+
+        String query = "select * from GroupMembers where user_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, uID);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                int gID = rs.getInt("group_id");
+                groups.add(gID);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return groups;
+        }
+        return groups;
+    }
 }

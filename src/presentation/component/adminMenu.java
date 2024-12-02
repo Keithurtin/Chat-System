@@ -276,7 +276,7 @@ public class adminMenu extends JFrame {
         user_table.getColumnModel().getColumn(0).setPreferredWidth(50);
         user_table.getColumnModel().getColumn(1).setPreferredWidth(100);
         user_table.getColumnModel().getColumn(2).setPreferredWidth(250);
-        user_table.getColumnModel().getColumn(3).setPreferredWidth(60);
+        user_table.getColumnModel().getColumn(3).setPreferredWidth(50);
         user_table.getColumnModel().getColumn(4).setPreferredWidth(100);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -285,6 +285,8 @@ public class adminMenu extends JFrame {
         user_table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         user_table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         user_table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        user_table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        user_table.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
 
         user_table_scroll.setViewportView(user_table);
 
@@ -376,7 +378,7 @@ public class adminMenu extends JFrame {
     }
 
     private void openChatBox() {
-        JFrame newWindow = new chatBoxDemo();
+        JFrame newWindow = new component.mainChat(12);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);

@@ -1,5 +1,7 @@
 package component;
 
+import presentation.component.PlaceHolder;
+
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +60,7 @@ private void setupNavigatorLayout() {
     JButton search_button = new JButton("Search");
     search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
 
-    JTextField search_input = new JTextField("Search");
+    PlaceHolder search_input = new PlaceHolder("Search");
     search_input.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
     search_button.addActionListener(e -> {

@@ -1,22 +1,28 @@
 package component;
 
+import presentation.component.PlaceHolder;
+import dto.*;
+import bus.*;
 import java.awt.*;
 import javax.swing.*;
 
 public class groupChatSection extends JPanel {
     private JPanel navigator;
-
+    private final int gid;
     private JPanel send_message_panel;
-
+    private static int uid;
+    private static boolean isAdmin;
     private JScrollPane chat_scroll;
     private JPanel chat_side;
 
-    public groupChatSection(String name, int member) {
+    public groupChatSection(GroupChatDTO group, int id) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
+        gid = group.getGID();
+        uid = id;
 
-        setupNavigatorLayout(name, member);
+        setupNavigatorLayout(group.getName(), group.getNumMember());
         setupSendMessageLayout();
         createChatSide();
 
@@ -104,7 +110,7 @@ public class groupChatSection extends JPanel {
         send_message_panel = new JPanel();
         send_message_panel.setBackground(new java.awt.Color(204, 204, 204));
 
-        JTextField input_message = new JTextField("Text....");
+        PlaceHolder input_message = new PlaceHolder("Text....");
         input_message.addActionListener(e -> inputMessage());
 
         JButton send_button = new JButton("Send");
@@ -185,7 +191,8 @@ public class groupChatSection extends JPanel {
     private void reportGroup() {}                                                        
 
     private void manageGroup() {
-        java.awt.EventQueue.invokeLater(() -> new groupManageWindow().setVisible(true));
+        System.out.println(gid);
+        java.awt.EventQueue.invokeLater(() -> new component.groupManageWindow(gid, uid).setVisible(true));
     }                                                 
 
     private void changeGroupName() {}                                                             
@@ -194,15 +201,4 @@ public class groupChatSection extends JPanel {
 
     private void sendMessage() {}
 
-    public static void main(String[] args) {
-        JFrame newWindow = new JFrame("User Management");
-        JPanel userManage = new groupChatSection("group 1", 12);
-        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        Dimension panelSize = userManage.getPreferredSize();
-        newWindow.add(userManage);
-        newWindow.setResizable(false);
-        newWindow.setLocation(600, 180);
-        newWindow.setSize(panelSize);
-        newWindow.setVisible(true);
-    }
 }

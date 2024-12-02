@@ -1,21 +1,29 @@
 package component;
+import dto.*;
+import bus.*;
+import presentation.component.PlaceHolder;
+
 import java.awt.*;
 import javax.swing.*;
 
 public class friendChatSection extends JPanel {
     private JPanel navigator;
+    private static int uid;
+    private int uid2;
 
     private JPanel send_message_panel;
 
     private JScrollPane chat_scroll;
     private JPanel chat_side;
 
-    public friendChatSection(String name, boolean isOn) {
+    public friendChatSection(UsersDTO user, int id) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
+        uid = id;
+        uid2 = user.getuID();
 
-        setupNavigatorLayout(name, isOn);
+        setupNavigatorLayout(user.getuName(), (user.getStatus()).equals("online"));
         setupSendMessageLayout();
         createChatSide();
 
@@ -129,7 +137,7 @@ public class friendChatSection extends JPanel {
         send_message_panel = new JPanel();
         send_message_panel.setBackground(new java.awt.Color(204, 204, 204));
 
-        JTextField input_message = new JTextField("Text....");
+        PlaceHolder input_message = new PlaceHolder("Text....");
 
         JButton send_button = new JButton("Send");
         send_button.setBackground(new java.awt.Color(153, 204, 255));
