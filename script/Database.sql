@@ -107,3 +107,21 @@ VALUES ('user0', 'Anonymous User 0', '000 Street 000', '2000-10-10', 'Female', '
 INSERT INTO LoginHistory (user_id) values (1)
 
 INSERT INTO FriendList (user_id, friend_id) values (1, 2)
+
+INSERT INTO	Spam(reported_user_id, username) values (1009, 'user100')
+
+--select * from Users
+
+--select * from FriendList
+
+--select * from FriendList where user_id = 1 and requested = 0 and requesting = 0
+
+--insert into GroupChat(group_name, initial_member) values ('Group foo', 1)
+
+select * from GroupChat
+
+select * from GroupMembers where group_id = 1 and is_admin = 1
+
+update GroupMembers set is_admin = 0 where group_id = 1 and user_id = 2
+
+--update Users set is_admin = 1 where user_id = 1

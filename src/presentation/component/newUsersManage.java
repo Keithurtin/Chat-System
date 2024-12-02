@@ -1,10 +1,17 @@
 package component;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import com.toedter.calendar.JDateChooser;
+import dto.*;
+import bus.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
 
 public class newUsersManage extends JFrame {
     DefaultTableModel tableModel;
@@ -51,23 +58,26 @@ private void setupNavigatorLayout() {
     toLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
     toLabel.setForeground(Color.WHITE);
 
-    DateChooser fromDateChooser = new DateChooser();
-    DateChooser toDateChooser = new DateChooser();
+    JDateChooser fromDateChooser = new JDateChooser();
+    JDateChooser toDateChooser = new JDateChooser();
 
-    JButton search_button = new JButton("Search");
+    JButton search_button = new JButton("Filter");
     search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
 
-    JTextField search_input = new JTextField("Search");
+    JTextField search_input = new JTextField("");
     search_input.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
     search_button.addActionListener(e -> {
-        String filterText = search_input.getText();
-        String fromDate = fromDateChooser.getSelectedDate();
-        String toDate = toDateChooser.getSelectedDate();
+        String username = search_input.getText();
+        Date fromDate = fromDateChooser.getDate();
+        LocalDateTime from = getStartOfDay(fromDate);
+        Date toDate = toDateChooser.getDate();
+        LocalDateTime to = getEndOfDay(toDate);
 
-        System.out.println("Search input: " + filterText);
-        System.out.println("From Date: " + (fromDate.isEmpty() ? "Not Selected" : fromDate));
-        System.out.println("To Date: " + (toDate.isEmpty() ? "Not Selected" : toDate));
+        System.out.println("Search input: " + username);
+        UsersBUS usersBUS = new UsersBUS();
+        tableModel.setRowCount(0);
+        loadTable(usersBUS.filterByUsername(usersBUS.getByRegisterTime(from, to), username));
     });
 
     GroupLayout navigatorLayout = new GroupLayout(navigator);
@@ -117,8 +127,32 @@ private void setupNavigatorLayout() {
     );
 }
 
+    public static LocalDateTime getStartOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    public static LocalDateTime getEndOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Register Date"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Register Date"});
         table = new JTable(tableModel);
 
         table.setRowHeight(30);
@@ -133,13 +167,19 @@ private void setupNavigatorLayout() {
         table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
         table_scroll = new JScrollPane(table);
-
-        addRowToTable("1", "Username1", "11/02/2004");
-        addRowToTable("2", "Username2", "12/04/2004");
+        UsersBUS usersBUS = new UsersBUS();
+        loadTable(usersBUS.getAll());
     }
 
-    private void addRowToTable(String stt, String username, String date) {
-        tableModel.addRow(new Object[]{stt, username, date});
+    private void loadTable(List<UsersDTO> users) {
+        tableModel.setRowCount(0);
+        for (UsersDTO user : users) {
+            addRowToTable(user.getuID(), user.getuName(), user.getCreateTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
+        }
+    }
+
+    private void addRowToTable(int uID, String username, String date) {
+        tableModel.addRow(new Object[]{uID, username, date});
     }
 
     private Map<String, Integer> generateExampleData() {
@@ -169,12 +209,5 @@ private void setupNavigatorLayout() {
         JPanel chartPanel = new component.chartDisplay(year, data, true);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            newUsersManage frame = new newUsersManage();
-            frame.setVisible(true);
-        });
     }
 }

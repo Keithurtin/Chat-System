@@ -2,6 +2,8 @@ package bus;
 
 import dao.*;
 import dto.*;
+
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -127,5 +129,33 @@ public class UsersBUS {
     public boolean banUser(int id) {
         UsersDAO userDAO = new UsersDAO();
         return userDAO.banUser(id);
+    }
+
+    public List<UsersDTO> getByRegisterTime(LocalDateTime from, LocalDateTime to) {
+        UsersDAO userDAO = new UsersDAO();
+        List<UsersDTO> list = userDAO.getAll();
+        List<UsersDTO> ans = new ArrayList<>();
+        for (UsersDTO user : list) {
+            if (user.getCreateTime().isAfter(from) && user.getCreateTime().isBefore(to)) {
+                ans.add(user);
+            }
+        }
+        return ans;
+    }
+
+    public List<UsersDTO> filterByUsername(List<UsersDTO> list, String uName) {
+        if (uName == null || uName.isEmpty()) {
+            return list;
+        }
+        List<UsersDTO> ans = new ArrayList<>();
+        String regex = ".*" + Pattern.quote(uName) + ".*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        for (UsersDTO user : list) {
+            Matcher matcher = pattern.matcher(user.getuName());
+            if (matcher.matches()) {
+                ans.add(user);
+            }
+        }
+        return ans;
     }
 }
