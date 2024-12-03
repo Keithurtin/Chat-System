@@ -1,9 +1,8 @@
-package component;
+package presentation.User;
 
 import bus.*;
 import dto.*;
 import dto.UsersDTO;
-import presentation.component.PlaceHolder;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -12,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.*;
 
-public class mainChat extends JFrame {
+public class MainUserWindow extends JFrame {
     private static JPanel chatPanel;
     private static CardLayout cardLayout;
     private static int uid;
@@ -28,7 +27,7 @@ public class mainChat extends JFrame {
     private static JButton new_group_button;
     private static JButton side_more_button;
 
-    public mainChat(int id) {
+    public MainUserWindow(int id) {
         uid = id;
         UsersBUS usersBUS = new UsersBUS();
         isAdmin = (usersBUS.getById(uid)).getIsAdmin();
@@ -170,7 +169,7 @@ public class mainChat extends JFrame {
         friend_request_button.addActionListener(e -> friendRequest());
 
         user_profile_button.addActionListener(e -> {
-            JFrame newWindow = new component.profileWindow(uid);
+            JFrame newWindow = new UserProfileWindow(uid);
             newWindow.setVisible(true);
         });
 
@@ -202,9 +201,9 @@ public class mainChat extends JFrame {
     }
 
     private static void addFriendChat(UsersDTO user) {
-        component.tabPanel tab = new component.tabPanel(uid, user);
+        TabPanel tab = new TabPanel(uid, user);
         addToList(tab);
-        component.friendChatSection chat = new component.friendChatSection(user, uid);
+        FriendChatSection chat = new FriendChatSection(user, uid);
         numberOfTab += 1;
         String id = String.valueOf(numberOfTab);
         chatPanel.add(chat, id);
@@ -218,9 +217,9 @@ public class mainChat extends JFrame {
     }
 
     private static void addGroupChat(GroupChatDTO group) {
-        component.tabPanel tab = new component.tabPanel(group);
+        TabPanel tab = new TabPanel(group);
         addToList(tab);
-        component.groupChatSection chat = new component.groupChatSection(group, uid);
+        GroupChatSection chat = new GroupChatSection(group, uid);
         numberOfTab += 1;
         String id = String.valueOf(numberOfTab);
         chatPanel.add(chat, id);
@@ -385,7 +384,7 @@ public class mainChat extends JFrame {
     }
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new mainChat(1).setVisible(true));
+        EventQueue.invokeLater(() -> new MainUserWindow(1).setVisible(true));
     }
 
 }

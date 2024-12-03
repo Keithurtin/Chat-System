@@ -6,19 +6,18 @@ import java.sql.*;
 import dto.*;
 
 public class GroupMembersDAO {
-    public boolean addMember(int gID, int uID, boolean isAdmin) {
+    public boolean addMember(int gID, int uID) {
         UtilityDAO util = new UtilityDAO();
         Connection con = util.getConnection();
         if (con == null) {
             return false;
         }
 
-        String query = "insert into GroupMembers (group_id, user_id, is_admin) values (?, ?, ?)";
+        String query = "insert into GroupMembers (group_id, user_id) values (?, ?)";
 
         try (PreparedStatement pstmt = con.prepareStatement(query)) {
             pstmt.setInt(1, gID);
             pstmt.setInt(2, uID);
-            pstmt.setBoolean(3, isAdmin);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

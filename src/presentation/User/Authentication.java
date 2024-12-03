@@ -1,4 +1,4 @@
-package presentation;
+package presentation.User;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -71,11 +71,6 @@ public class Authentication extends JFrame {
                 return;
             }
 
-            if (!(ValidateData.isValidAddress(address_input.getText()))) {
-                notification.setText("Your name is invalid");
-                return;
-            }
-
             Date tmpB = new java.sql.Date(birthdate_input.getDate().getTime());
             String tmpBString = new SimpleDateFormat("dd/MM/yyyy").format(tmpB);
             if (!(ValidateData.isValidBirthday(tmpBString))) {
@@ -84,7 +79,7 @@ public class Authentication extends JFrame {
             }
 
             newUser.setFullname(fullname_input.getText());
-            newUser.setAddress(address_input.getText());
+            newUser.setAddress(address_input.getText().isEmpty() ? null : address_input.getText().trim());
             newUser.setBirthDate(tmpB);
             newUser.setGender((String) gender_input.getSelectedItem());
 
@@ -387,7 +382,9 @@ public class Authentication extends JFrame {
         go_to_signup_label.setFont(new java.awt.Font("Segoe UI", 0, 16));
 
         JSeparator login_separator = new JSeparator();
-
+        login_notification = new JLabel();
+        login_notification.setFont(new Font("Segoe UI", 1, 16));
+        login_notification.setForeground(Color.red);
 
         GroupLayout login_panelLayout = new GroupLayout(login_panel);
         login_panel.setLayout(login_panelLayout);
@@ -406,11 +403,12 @@ public class Authentication extends JFrame {
                                                                 .addGroup(login_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                                         .addComponent(login_password_input, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)
                                                                         .addComponent(login_username_input, GroupLayout.PREFERRED_SIZE, 193, GroupLayout.PREFERRED_SIZE)))
+                                                        .addComponent(login_notification, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(login_separator, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(login_panelLayout.createSequentialGroup()
                                                                 .addComponent(go_to_signup_label)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(go_to_signup_button))
-                                                        .addComponent(login_separator, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)
                                                         .addGroup(login_panelLayout.createSequentialGroup()
                                                                 .addComponent(go_to_reset_password_label)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
@@ -438,6 +436,8 @@ public class Authentication extends JFrame {
                                         .addComponent(login_password_input, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(login_button)
+                                .addGap(12, 12, 12)
+                                .addComponent(login_notification)
                                 .addGap(12, 12, 12)
                                 .addComponent(login_separator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -526,6 +526,7 @@ public class Authentication extends JFrame {
     }
 
     private void goToLogin() {
+        login_notification.setText("");
         card_layout.show(main_panel, "login_panel");
     }
 
@@ -534,6 +535,7 @@ public class Authentication extends JFrame {
     }
 
     private void goToResetPassword() {
+        forgetPassword_notification.setText("");
         card_layout.show(main_panel, "reset_password_panel");
     }
 
@@ -588,27 +590,18 @@ public class Authentication extends JFrame {
         if(user.getIsAdmin()) {
                 newWindow = new component.adminMenu(user.getuID());
         } else {
-                newWindow = new component.mainChat(user.getuID());
+                newWindow = new MainUserWindow(user.getuID());
         }
         dispose();
         newWindow.setVisible(true);
     }
 
     private void goToSignUp() {
+        signup_notification.setText("");
         card_layout.show(main_panel, "signup_panel");
     }
 
     public static void main(String args[]) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Authentication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
         java.awt.EventQueue.invokeLater(() -> {
             new Authentication().setVisible(true);
         });

@@ -15,7 +15,7 @@ public class BlockDAO {
             return false;
         }
 
-        String query = "INSERT INTO Blocked (user_id, friend_id) VALUES (?, ?)";
+        String query = "INSERT INTO Blocked (user_id, blocked_user_id) VALUES (?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userID);
             pstmt.setInt(2, friendID);
@@ -25,6 +25,15 @@ public class BlockDAO {
             return false;
         }
 
+        query = "DELETE from FriendList where user_id = ? and friend_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userID);
+            pstmt.setInt(2, friendID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
         return true;
     }
 

@@ -1,18 +1,18 @@
-package component;
+package presentation.User;
 import dao.BlockDAO;
+import dao.FriendListDAO;
 import dto.*;
 import bus.*;
-import presentation.component.PlaceHolder;
 
 import java.awt.*;
 import javax.swing.*;
 
-public class friendChatSection extends JPanel {
+public class FriendChatSection extends JPanel {
     private JPanel navigator;
     private static int uid;
     private final int uid2;
     private int block;
-    private BlockBUS blockBUS;
+    private final BlockBUS blockBUS;
     private JPanel send_message_panel;
     private PlaceHolder input_message;
     private JButton send_button;
@@ -20,7 +20,7 @@ public class friendChatSection extends JPanel {
     private JScrollPane chat_scroll;
     private JPanel chat_side;
 
-    public friendChatSection(UsersDTO user, int id) {
+    public FriendChatSection(UsersDTO user, int id) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
@@ -30,8 +30,8 @@ public class friendChatSection extends JPanel {
         BlockDAO dao = new BlockDAO();
         block = dao.getRelationship(uid, uid2);
 
-        setupNavigatorLayout(user.getuName(), (user.getStatus()).equals("online"));
         setupSendMessageLayout();
+        setupNavigatorLayout(user.getuName(), (user.getStatus()).equals("online"));
         loadChatSide();
 
         GroupLayout chat_panelLayout = new GroupLayout(this);
@@ -62,7 +62,10 @@ public class friendChatSection extends JPanel {
         report_user_button.setBackground(new java.awt.Color(255, 102, 102));
         report_user_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
         report_user_button.setForeground(new java.awt.Color(255, 255, 255));
-        report_user_button.addActionListener(e -> reportUser());
+        report_user_button.addActionListener(e -> {
+            SpamBUS spamBUS = new SpamBUS();
+            spamBUS.addSpamReport(uid2);
+        });
 
         JLabel name_label = new JLabel(name);
         name_label.setFont(new java.awt.Font("Segoe UI", 1, 20));
@@ -80,13 +83,26 @@ public class friendChatSection extends JPanel {
         
         JPopupMenu dropdownMenu = new JPopupMenu();
 
-        JMenuItem unfriend_button = new JMenuItem("Unfriend");
+        JMenuItem unfriend_button = new JMenuItem();
         JMenuItem block_button = new JMenuItem(block == 1 ? "Unblock" : "Block");
         JMenuItem add_to_group_button = new JMenuItem("Add Group");
 
-        unfriend_button.addActionListener(e -> unfriend());
+        if(block == 0 && FriendListDAO.getRelationship(uid, uid2) == 2) {
+            unfriend_button.setText("Unfriend");
+            dropdownMenu.add(unfriend_button);
+
+            unfriend_button.addActionListener(e -> {
+                dropdownMenu.remove(unfriend_button);
+                FriendListBUS friendListBUS = new FriendListBUS();
+                if(friendListBUS.rejectFriend(uid, uid2)){
+                    System.out.println("User " + uid + " Unfriend user " + uid2);
+                }
+            });
+        }
+
         block_button.addActionListener(e -> {
             if (block_button.getText().equals("Block")) {
+                dropdownMenu.remove(unfriend_button);
                 blockBUS.blockFriend(uid, uid2);
                 input_message.setEnabled(false);
                 send_button.setEnabled(false);
@@ -104,7 +120,6 @@ public class friendChatSection extends JPanel {
         });
         add_to_group_button.addActionListener(e -> addToGroup());
 
-        dropdownMenu.add(unfriend_button);
         dropdownMenu.add(block_button);
         dropdownMenu.add(add_to_group_button);
 
@@ -169,6 +184,12 @@ public class friendChatSection extends JPanel {
         send_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         send_button.setForeground(new java.awt.Color(255, 255, 255));
 
+        if(block == 1) {
+            input_message.setEnabled(false);
+            send_button.setEnabled(false);
+            input_message.setText("You can't send message due to block!");
+        }
+
         GroupLayout send_message_panelLayout = new GroupLayout(send_message_panel);
         send_message_panel.setLayout(send_message_panelLayout);
         send_message_panelLayout.setHorizontalGroup(
@@ -219,19 +240,13 @@ public class friendChatSection extends JPanel {
     }
 
     private void sendMessage(String message) {
-
+        if(message.isEmpty()){
+            return;
+        }
     }
 
-    private void reportUser() {
-        SpamBUS spamBUS = new SpamBUS();
-        spamBUS.addSpamReport(uid2);
-    }
+    private void addToGroup() {
 
-    private void unfriend() {
-        FriendListBUS friendListBUS = new FriendListBUS();
-        friendListBUS.rejectFriend(uid, uid2);
     }
-
-    private void addToGroup() {}                                                             
 
 }

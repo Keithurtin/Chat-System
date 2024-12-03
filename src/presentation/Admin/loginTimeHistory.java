@@ -1,4 +1,4 @@
-package presentation.component;
+package presentation.Admin;
 
 import bus.LoginHistoryBUS;
 import bus.UsersBUS;

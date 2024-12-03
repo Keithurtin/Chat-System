@@ -1,12 +1,13 @@
-package component;
+package presentation.User;
 
 import javax.swing.*;
 import java.awt.*;
 import dto.*;
 import bus.*;
+
 import java.util.List;
 
-public class groupManageWindow extends JFrame {
+public class GroupManageWindow extends JFrame {
 
     private JPanel navigator;
     private int gid;
@@ -17,7 +18,7 @@ public class groupManageWindow extends JFrame {
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
-    public groupManageWindow(int gID, int uID) {
+    public GroupManageWindow(int gID, int uID) {
         gid = gID;
         uid = uID;
         JPanel menu = new JPanel();
@@ -192,13 +193,13 @@ public class groupManageWindow extends JFrame {
     }
 
     private void openAddMemberWindow() {
-        component.addMemberMenu newWindow = new component.addMemberMenu(gid, uid);
+        AddMemberWindow newWindow = new AddMemberWindow(gid, uid);
         newWindow.setVisible(true);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            groupManageWindow frame = new groupManageWindow(1, 1);
+            GroupManageWindow frame = new GroupManageWindow(1, 1);
             frame.setVisible(true);
         });
     }

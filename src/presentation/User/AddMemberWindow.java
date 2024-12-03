@@ -1,20 +1,29 @@
-package component;
+package presentation.User;
 
-import presentation.component.PlaceHolder;
+import bus.GroupMembersBUS;
+import bus.UsersBUS;
+import dao.FriendListDAO;
+import dao.GroupMembersDAO;
+import dto.GroupMembersDTO;
+import dto.UsersDTO;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import java.awt.*;
+import java.util.stream.Collectors;
 import javax.swing.*;
 
-public class addMemberMenu extends JFrame {
-    private JPanel navigator;
-    private JScrollPane list_scroll;
+
+public class AddMemberWindow extends JFrame {
+
     private JPanel list_side;
     private static int uid;
     private static int gid;
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
-    public addMemberMenu(int gID, int uID) {
+    public AddMemberWindow(int gID, int uID) {
         uid = uID;
         gid = gID;
         initComponents();
@@ -26,8 +35,8 @@ public class addMemberMenu extends JFrame {
         menu.setFocusable(false);
         menu.setPreferredSize(new Dimension(620, 500));
         
-        setupNavigatorLayout();
-        createMemberList();
+        JPanel navigator = setupNavigatorLayout();
+        JScrollPane list_scroll = createMemberList();
 
         GroupLayout menuLayout = new GroupLayout(menu);
         menu.setLayout(menuLayout);
@@ -53,30 +62,23 @@ public class addMemberMenu extends JFrame {
         setSize(panelSize);
     }
     
-    private void setupNavigatorLayout() {
-        navigator = new JPanel();
-
-        PlaceHolder search_input = new PlaceHolder();
-        JButton search_button = new JButton("Search");
+    private JPanel setupNavigatorLayout() {
+        JPanel navigator = new JPanel();
         JLabel title = new JLabel("Add Member Menu");
 
         navigator.setBackground(new Color(153, 204, 255));
         title.setForeground(new Color(255, 255, 255));
         title.setFont(new Font("Segoe UI", 1, 24));
-        search_button.setFont(new Font("Segoe UI", 1, 14));
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
         navigatorLayout.setHorizontalGroup(
             navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(navigatorLayout.createSequentialGroup()
-                .addGap(100, 100, 100)
+                .addGap(190, 190, 190)
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                     .addComponent(title)
-                    .addComponent(search_input, GroupLayout.PREFERRED_SIZE, 302, GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(search_button)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addGap(18, 18, 18)))
         );
         navigatorLayout.setVerticalGroup(
             navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -84,14 +86,12 @@ public class addMemberMenu extends JFrame {
                 .addContainerGap()
                 .addComponent(title, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(14, 14, 14)
-                .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(search_input, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(search_button, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+        return navigator;
     }
 
-    private void createMemberList() {
+    private JScrollPane createMemberList() {
         list_side = new JPanel();
         list_side.setBackground(new Color(255, 255, 255));
 
@@ -111,29 +111,44 @@ public class addMemberMenu extends JFrame {
                 .addGroup(verticalGroup)
         );
 
-        list_scroll = new JScrollPane(list_side);
+        JScrollPane list_scroll = new JScrollPane(list_side);
         list_scroll.setBorder(null);
-
-        addGroupToList("ABD", true);
-        addGroupToList("XYC", false);
-        addGroupToList("ASC", true);
+        loadUsers();
+        return  list_scroll;
     }
 
     private void loadUsers() {
+        GroupMembersDAO groupMembersDAO = new GroupMembersDAO();
+        List<GroupMembersDTO> memberList = groupMembersDAO.getAll(gid);
+        FriendListDAO friendListDAO = new FriendListDAO();
+        List<Integer> idList = friendListDAO.getFriends(uid);
 
+        List<Integer> result = idList.stream()
+                .filter(friendId -> memberList.stream().anyMatch(member -> member.getUID() != friendId))
+                .toList();
+
+        UsersBUS usersBUS = new UsersBUS();
+        for (int id : result) {
+            UsersDTO friend = usersBUS.getById(id);
+            addFriendToList(friend);
+        }
     }
 
-    private void addGroupToList(String name, boolean isOn) {
+    private void addFriendToList(UsersDTO user) {
         JPanel user_panel = new JPanel();
         user_panel.setPreferredSize(new Dimension(0, 85));
 
-        JLabel user_name = new JLabel(name);
+        JLabel user_name = new JLabel(user.getuName());
         user_name.setFont(new Font("Segoe UI", 1, 18));
 
-        JLabel user_status = new JLabel("<html> Status: " + (isOn ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
+        JLabel user_status = new JLabel("<html> Status: " + (user.getStatus().equals("online") ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
 
-        JButton group_information_button = new JButton("Add");
-        group_information_button.setFont(new Font("Segoe UI", 1, 12));
+        JButton add_button = new JButton("Add");
+        add_button.addActionListener(e -> {
+            GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+            groupMembersBUS.addMember(gid, user.getuID());
+        });
+        add_button.setFont(new Font("Segoe UI", 1, 12));
 
         GroupLayout user_panelLayout = new GroupLayout(user_panel);
         user_panel.setLayout(user_panelLayout);
@@ -144,8 +159,8 @@ public class addMemberMenu extends JFrame {
                 .addGroup(user_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(user_status, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
                     .addComponent(user_name, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 220, Short.MAX_VALUE)
-                .addComponent(group_information_button)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 200, Short.MAX_VALUE)
+                .addComponent(add_button)
                 .addGap(45, 45, 45))
         );
         user_panelLayout.setVerticalGroup(
@@ -158,16 +173,23 @@ public class addMemberMenu extends JFrame {
                 .addGap(14, 14, 14))
             .addGroup(user_panelLayout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(group_information_button)
+                .addComponent(add_button)
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        horizontalGroup.addComponent(user_panel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE);
+        horizontalGroup.addComponent(user_panel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE);
         verticalGroup.addComponent(user_panel, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED);
 
         list_side.add(user_panel);
         list_side.revalidate();
         list_side.repaint();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            AddMemberWindow frame = new AddMemberWindow(1, 1);
+            frame.setVisible(true);
+        });
     }
 }

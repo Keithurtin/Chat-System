@@ -6,9 +6,9 @@ import dao.*;
 import dto.*;
 
 public class GroupMembersBUS {
-    public boolean addMember(int gID, int uID, boolean isAdmin) {
+    public boolean addMember(int gID, int uID) {
         GroupMembersDAO dao = new GroupMembersDAO();
-        return dao.addMember(gID, uID, isAdmin);
+        return dao.addMember(gID, uID);
     }
 
     public boolean setAdmin(int gID, int uID, boolean isAdmin) {

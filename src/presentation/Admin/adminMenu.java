@@ -10,7 +10,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import bus.*;
 import dto.*;
-import presentation.component.loginTimeHistory;
+import presentation.User.MainUserWindow;
+import presentation.Admin.loginTimeHistory;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -380,7 +381,7 @@ public class adminMenu extends JFrame {
     }
 
     private void openChatBox() {
-        JFrame newWindow = new component.mainChat(uid);
+        JFrame newWindow = new MainUserWindow(uid);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);

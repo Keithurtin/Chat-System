@@ -1,24 +1,22 @@
-package component;
+package presentation.User;
 
-import bus.BlockBUS;
 import bus.FriendListBUS;
 import dao.BlockDAO;
 import dao.FriendListDAO;
-import dto.FriendListDTO;
 import dto.GroupChatDTO;
 import dto.UsersDTO;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class tabPanel extends JPanel{
+public class TabPanel extends JPanel{
     private int ID;
     private int ofID;
     private BlockDAO blockDAO;
     private JLabel name_label;
     private FriendListBUS friendListBUS;
 
-    public tabPanel(int uid, UsersDTO user) {
+    public TabPanel(int uid, UsersDTO user) {
         ID = user.getuID();
         ofID = uid;
 
@@ -38,10 +36,10 @@ public class tabPanel extends JPanel{
 
         switch (friendRelation) {
             case -1:
-                add(notFriend(user, true), BorderLayout.CENTER);
+                add(notFriend(user, false), BorderLayout.CENTER);
                 break;
             case 0:
-                add(notFriend(user, false), BorderLayout.CENTER);
+                add(notFriend(user, true), BorderLayout.CENTER);
                 break;
             case 1:
                 add(requestingFriend(user), BorderLayout.CENTER);
@@ -55,7 +53,7 @@ public class tabPanel extends JPanel{
         repaint();
     }
 
-    public tabPanel(GroupChatDTO group) {
+    public TabPanel(GroupChatDTO group) {
         ID = group.getGID();
         setLayout(new BorderLayout()); // Set layout for `this`
         setPreferredSize(new Dimension(200, 100)); // Set a default size
@@ -107,7 +105,7 @@ public class tabPanel extends JPanel{
         send_request_button.setText(relationship ? "Unsend" : "Send Request" );
         send_request_button.addActionListener(e -> {
             if(send_request_button.getText().equals("Unblock")){
-                
+
                 return;
             }
             
@@ -199,21 +197,22 @@ public class tabPanel extends JPanel{
         JButton approve_button = new JButton("Approve");
         approve_button.setFont(new Font("Segoe UI", 1, 12));
         approve_button.addActionListener(e -> {
-            friendListBUS.acceptFriend(ofID, ID);
-            Container parent = tabPanel.this.getParent();
-            if (parent != null) {
-                parent.remove(tabPanel.this);
-                parent.revalidate();
-                parent.repaint();
+            if(friendListBUS.acceptFriend(ofID, ID)) {
+                Container parent = TabPanel.this.getParent();
+                if (parent != null) {
+                    parent.remove(TabPanel.this);
+                    parent.revalidate();
+                    parent.repaint();
+                }
             }
         });
 
         JButton reject_button = new JButton("Reject");
         reject_button.setFont(new Font("Segoe UI", 1, 12));
         reject_button.addActionListener(e -> {
-            Container parent = tabPanel.this.getParent();
+            Container parent = TabPanel.this.getParent();
             if (parent != null) {
-                parent.remove(tabPanel.this);
+                parent.remove(TabPanel.this);
                 parent.revalidate();
                 parent.repaint();
             }

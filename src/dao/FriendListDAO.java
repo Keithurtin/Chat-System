@@ -15,7 +15,7 @@ public class FriendListDAO {
             return false;
         }
 
-        String query = "INSERT INTO friend_list (user_id, friend_id, requesting) VALUES (?, ?, 1)";
+        String query = "INSERT INTO FriendList (user_id, friend_id, requested) VALUES (?, ?, 1)";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userID);
             pstmt.setInt(2, friendID);
@@ -25,7 +25,7 @@ public class FriendListDAO {
             return false;
         }
 
-        query = "INSERT INTO friend_list (user_id, friend_id, requested) VALUES (?, ?, 1)";
+        query = "INSERT INTO FriendList (user_id, friend_id, requesting) VALUES (?, ?, 1)";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, friendID);
             pstmt.setInt(2, userID);
@@ -44,7 +44,7 @@ public class FriendListDAO {
             return false;
         }
 
-        String query = "update friend_list set requested = 0 where user_id = ? and friend_id = ?";
+        String query = "update FriendList set requested = 0, requesting = 0 where user_id = ? and friend_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userID);
             pstmt.setInt(2, friendID);
@@ -54,15 +54,6 @@ public class FriendListDAO {
             return false;
         }
 
-        query = "update friend_list set requesting = 0 where user_id = ? and friend_id = ?";
-        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
-            pstmt.setInt(1, friendID);
-            pstmt.setInt(2, userID);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
         return true;
     }
 
@@ -73,7 +64,7 @@ public class FriendListDAO {
             return false;
         }
 
-        String query = "delete * from FriendList where user_id = ? and friend_id = ?";
+        String query = "delete from FriendList where user_id = ? and friend_id = ?";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userID);
             pstmt.setInt(2, friendID);
@@ -87,7 +78,7 @@ public class FriendListDAO {
     }
 
     public static int getRelationship(int userID, int friendID) {
-        int relationship = -1;
+        int relationship = -1; //no relation
         UtilityDAO utilityDAO = new UtilityDAO();
         Connection conn = utilityDAO.getConnection();
         if (conn == null) {
@@ -103,7 +94,7 @@ public class FriendListDAO {
             if (rs.next()) {
                 int requesting = rs.getInt("requesting");
                 int requested = rs.getInt("requested");
-                relationship = requesting == requested ? 2 : requesting;
+                relationship = requesting == requested ? 2 : requesting; //1 is requesting (no requested), 2 is friend
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

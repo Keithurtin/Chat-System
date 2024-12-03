@@ -1,4 +1,4 @@
-package presentation.component;
+package presentation.User;
 import java.awt.*;
 
 import javax.swing.*;

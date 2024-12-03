@@ -28,7 +28,9 @@ public class FriendListBUS {
         UsersBUS usersBUS = new UsersBUS();
         for (int id : idList) {
             UsersDTO friend = usersBUS.getByIDAndStatus(id, "online");
-            friendList.add(friend);
+            if(friend != null){
+                friendList.add(friend);
+            }
         }
         return friendList;
     }
@@ -36,18 +38,6 @@ public class FriendListBUS {
     public List<UsersDTO> getFriends(int user) {
         FriendListDAO dao = new FriendListDAO();
         List<Integer> idList = dao.getFriends(user);
-        List<UsersDTO> friendList = new ArrayList<>();
-        UsersBUS usersBUS = new UsersBUS();
-        for (int id : idList) {
-            UsersDTO friend = usersBUS.getById(id);
-            friendList.add(friend);
-        }
-        return friendList;
-    }
-
-    public List<UsersDTO> getFriendsRequested(int user) {
-        FriendListDAO dao = new FriendListDAO();
-        List<Integer> idList = dao.getFriendsRequested(user);
         List<UsersDTO> friendList = new ArrayList<>();
         UsersBUS usersBUS = new UsersBUS();
         for (int id : idList) {

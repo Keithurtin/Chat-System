@@ -1,12 +1,11 @@
-package component;
+package presentation.User;
 
-import presentation.component.PlaceHolder;
 import dto.*;
-import bus.*;
+
 import java.awt.*;
 import javax.swing.*;
 
-public class groupChatSection extends JPanel {
+public class GroupChatSection extends JPanel {
     private JPanel navigator;
     private final int gid;
     private JPanel send_message_panel;
@@ -15,7 +14,7 @@ public class groupChatSection extends JPanel {
     private JScrollPane chat_scroll;
     private JPanel chat_side;
 
-    public groupChatSection(GroupChatDTO group, int id) {
+    public GroupChatSection(GroupChatDTO group, int id) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
@@ -191,8 +190,7 @@ public class groupChatSection extends JPanel {
     private void reportGroup() {}                                                        
 
     private void manageGroup() {
-        System.out.println(gid);
-        java.awt.EventQueue.invokeLater(() -> new component.groupManageWindow(gid, uid).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new GroupManageWindow(gid, uid).setVisible(true));
     }                                                 
 
     private void changeGroupName() {}                                                             
