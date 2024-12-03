@@ -1,5 +1,7 @@
 package component;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.swing.*;
@@ -18,6 +20,7 @@ public class newUsersManage extends JFrame {
     JTable table;
     JScrollPane table_scroll;
     JPanel navigator;
+    List<UsersDTO> currentList;
 
     public newUsersManage() {
         setTitle("User Registration List");
@@ -76,8 +79,9 @@ private void setupNavigatorLayout() {
 
         System.out.println("Search input: " + username);
         UsersBUS usersBUS = new UsersBUS();
+        currentList = usersBUS.filterByUsername(usersBUS.getByRegisterTime(from, to), username);
         tableModel.setRowCount(0);
-        loadTable(usersBUS.filterByUsername(usersBUS.getByRegisterTime(from, to), username));
+        loadTable(currentList);
     });
     
     JButton sort_button = new JButton("Sort");
@@ -87,8 +91,23 @@ private void setupNavigatorLayout() {
 
     JMenuItem ByName = new JMenuItem("By Name");
     JMenuItem ByTime = new JMenuItem("By Time");
-    ByName.addActionListener(e -> {}); //function
-    ByTime.addActionListener(e -> {});
+    ByName.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tableModel.setRowCount(0);
+            currentList.sort((o1, o2) -> o1.getuName().compareTo(o2.getuName()));
+            loadTable(currentList);
+        }
+    }); //function
+    ByTime.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            tableModel.setRowCount(0);
+            currentList.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
+            loadTable(currentList);
+        }
+    });
+
 
     sort_menu.add(ByName);
     sort_menu.add(ByTime);
