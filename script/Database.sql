@@ -63,7 +63,7 @@ CREATE TABLE GroupMembers (
 
 -- Bảng tin nhắn (Messages)
 CREATE TABLE ChatDM (
-    message_id INT,
+    message_id INT IDENTITY(1, 1),
     sender_id INT,
     receiver_id INT,
     message_content NVARCHAR(MAX),
@@ -74,7 +74,7 @@ CREATE TABLE ChatDM (
 );
 
 CREATE TABLE ChatGroup (
-    message_id INT,
+    message_id INT IDENTITY(1, 1),
     sender_id INT,
     receiver_id INT, --group_id
     message_content NVARCHAR(MAX),
@@ -118,10 +118,14 @@ INSERT INTO	Spam(reported_user_id, username) values (1009, 'user100')
 
 --insert into GroupChat(group_name, initial_member) values ('Group foo', 1)
 
-select * from GroupChat
+--select * from GroupChat
 
-select * from GroupMembers where group_id = 1 and is_admin = 1
+--select * from GroupMembers where group_id = 1 and is_admin = 1
 
-update GroupMembers set is_admin = 0 where group_id = 1 and user_id = 2
+--select create_time from Users where year(create_time) = 2024 
+
+--insert into ChatGroup(sender_id, receiver_id, message_content) values (2, 1, 'Hello')
+
+--select * from Users u join LoginHistory l on u.user_id = l.user_id
 
 --update Users set is_admin = 1 where user_id = 1

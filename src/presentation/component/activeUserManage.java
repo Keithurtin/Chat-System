@@ -1,19 +1,28 @@
 package component;
 
+import com.toedter.calendar.JDateChooser;
 import presentation.component.PlaceHolder;
-
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import dto.*;
+import bus.*;
 
 public class activeUserManage extends JFrame {
     DefaultTableModel tableModel;
     JTable table;
     JScrollPane table_scroll;
     JPanel navigator;
+    List<ActivityDTO> currentList;
 
     public activeUserManage() {
         setTitle("Active Users List");
@@ -54,24 +63,88 @@ private void setupNavigatorLayout() {
     toLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
     toLabel.setForeground(Color.WHITE);
 
-    DateChooser fromDateChooser = new DateChooser();
-    DateChooser toDateChooser = new DateChooser();
+    JDateChooser fromDateChooser = new JDateChooser();
+    JDateChooser toDateChooser = new JDateChooser();
 
-    JButton search_button = new JButton("Search");
+    JButton search_button = new JButton("Filter");
     search_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
 
-    PlaceHolder search_input = new PlaceHolder("Search");
+    PlaceHolder search_input = new PlaceHolder("");
     search_input.setFont(new java.awt.Font("Segoe UI", 0, 14));
 
-    search_button.addActionListener(e -> {
-        String filterText = search_input.getText();
-        String fromDate = fromDateChooser.getSelectedDate();
-        String toDate = toDateChooser.getSelectedDate();
+    JPopupMenu search_menu = new JPopupMenu();
 
-        System.out.println("Search input: " + filterText);
-        System.out.println("From Date: " + (fromDate.isEmpty() ? "Not Selected" : fromDate));
-        System.out.println("To Date: " + (toDate.isEmpty() ? "Not Selected" : toDate));
+    JMenuItem by_username = new JMenuItem("By Username");
+    JMenuItem by_activities = new JMenuItem("By Activities (equal)");
+    JMenuItem by_activities_more = new JMenuItem("By Activities (more)");
+    JMenuItem by_activities_less = new JMenuItem("By Activities (less)");
+
+    search_menu.add(by_username);
+    search_menu.add(by_activities);
+    search_menu.add(by_activities_more);
+    search_menu.add(by_activities_less);
+
+    by_username.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Date fromDate = fromDateChooser.getDate();
+            LocalDateTime from = getStartOfDay(fromDate);
+            Date toDate = toDateChooser.getDate();
+            LocalDateTime to = getEndOfDay(toDate);
+
+            String name = search_input.getText();
+            ActivityBUS activityBUS = new ActivityBUS();
+            currentList = activityBUS.filterByName(activityBUS.getByTime(from, to), name);
+            loadTable(currentList);
+        }
     });
+
+    by_activities.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Date fromDate = fromDateChooser.getDate();
+            LocalDateTime from = getStartOfDay(fromDate);
+            Date toDate = toDateChooser.getDate();
+            LocalDateTime to = getEndOfDay(toDate);
+
+            int activities = Integer.parseInt(search_input.getText());
+            ActivityBUS activityBUS = new ActivityBUS();
+            currentList = activityBUS.filterByActivities(activityBUS.getByTime(from, to), activities, 0);
+            loadTable(currentList);
+        }
+    });
+
+    by_activities_more.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Date fromDate = fromDateChooser.getDate();
+            LocalDateTime from = getStartOfDay(fromDate);
+            Date toDate = toDateChooser.getDate();
+            LocalDateTime to = getEndOfDay(toDate);
+
+            int activities = Integer.parseInt(search_input.getText());
+            ActivityBUS activityBUS = new ActivityBUS();
+            currentList = activityBUS.filterByActivities(activityBUS.getByTime(from, to), activities, 1);
+            loadTable(currentList);
+        }
+    });
+
+    by_activities_less.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Date fromDate = fromDateChooser.getDate();
+            LocalDateTime from = getStartOfDay(fromDate);
+            Date toDate = toDateChooser.getDate();
+            LocalDateTime to = getEndOfDay(toDate);
+
+            int activities = Integer.parseInt(search_input.getText());
+            ActivityBUS activityBUS = new ActivityBUS();
+            currentList = activityBUS.filterByActivities(activityBUS.getByTime(from, to), activities, -1);
+            loadTable(currentList);
+        }
+    });
+
+    search_button.addActionListener(e -> search_menu.show(search_button, 0, search_button.getHeight()));
 
     GroupLayout navigatorLayout = new GroupLayout(navigator);
     navigator.setLayout(navigatorLayout);
@@ -121,16 +194,17 @@ private void setupNavigatorLayout() {
 }
 
     private void createTableLayout() {
-        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"Index", "Username", "Open App", "Friend", "Group"});
+        tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Open App", "Chat Friend", "Chat Group", "Last Active"});
         table = new JTable(tableModel);
 
         table.setRowHeight(30);
 
-        table.getColumnModel().getColumn(0).setPreferredWidth(90);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
+        table.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table.getColumnModel().getColumn(1).setPreferredWidth(150);
         table.getColumnModel().getColumn(2).setPreferredWidth(90);
         table.getColumnModel().getColumn(3).setPreferredWidth(90);
         table.getColumnModel().getColumn(4).setPreferredWidth(90);
+        table.getColumnModel().getColumn(5).setPreferredWidth(150);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -139,15 +213,50 @@ private void setupNavigatorLayout() {
         table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         table.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
 
         table_scroll = new JScrollPane(table);
 
-        addRowToTable("1", "Username1", 12, 100, 12);
-        addRowToTable("2", "Username2", 15, 45, 5);
+        ActivityBUS activityBUS = new ActivityBUS();
+        currentList = activityBUS.getAll();
+        loadTable(currentList);
     }
 
-    private void addRowToTable(String index, String username, int open_app, int chat_friend, int chat_group) {
-        tableModel.addRow(new Object[]{index, username, open_app, chat_friend, chat_group});
+    public static LocalDateTime getStartOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    public static LocalDateTime getEndOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+        return calendar.getTime().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+    }
+
+    private void loadTable(List<ActivityDTO> list) {
+        tableModel.setRowCount(0);
+        for (ActivityDTO activity : list) {
+            if (activity.getLastActive() != null) {
+                addRowToTable(activity.getuID(), activity.getUsername(), activity.getOpenApp(), activity.getChatDM(), activity.getChatGroup(), activity.getLastActive().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
+            }
+        }
+    }
+
+    private void addRowToTable(int uID, String username, int open_app, int chat_friend, int chat_group, String last_active) {
+        tableModel.addRow(new Object[]{uID, username, open_app, chat_friend, chat_group, last_active});
     }
 
     private Map<String, Integer> generateExampleData() {
