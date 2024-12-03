@@ -1,4 +1,4 @@
-package component;
+package Admin;
 import bus.GroupChatBUS;
 
 import java.awt.*;

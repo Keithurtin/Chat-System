@@ -1,4 +1,4 @@
-package component;
+package Admin;
 
 import java.awt.*;
 import javax.swing.*;
@@ -10,7 +10,7 @@ import bus.UsersBUS;
 import com.toedter.calendar.JDateChooser;
 import dto.UsersDTO;
 
-import static component.adminMenu.reloadAdminTable;
+import static Admin.adminMenu.reloadAdminTable;
 
 public class addNewUser extends JPanel {
 

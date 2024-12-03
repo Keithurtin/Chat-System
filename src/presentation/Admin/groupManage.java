@@ -1,4 +1,4 @@
-package component;
+package Admin;
 
 import dao.GroupMembersDAO;
 import dto.*;

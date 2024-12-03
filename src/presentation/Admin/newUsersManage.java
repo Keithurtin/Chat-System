@@ -1,4 +1,4 @@
-package component;
+package Admin;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -246,7 +246,7 @@ private void setupNavigatorLayout() {
         chartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         chartFrame.setSize(800, 600);
         data = generateData(year);
-        JPanel chartPanel = new component.chartDisplay(year, data, true);
+        JPanel chartPanel = new Admin.chartDisplay(year, data, true);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);
     }

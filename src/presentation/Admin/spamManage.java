@@ -1,4 +1,4 @@
-package component;
+package Admin;
 
 import dto.SpamDTO;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import dto.*;
 import bus.*;
 
-import static component.adminMenu.reloadAdminTable;
+import static Admin.adminMenu.reloadAdminTable;
 
 public class spamManage extends JFrame {
 

@@ -162,11 +162,17 @@ public class MainUserWindow extends JFrame {
         JMenuItem online_friend_button = new JMenuItem("Online Friend");
         JMenuItem group_button = new JMenuItem("Group Chat");
         JMenuItem user_profile_button = new JMenuItem("Profile");
+        JMenuItem logout = new JMenuItem("Log Out");
 
         all_button.addActionListener(e -> allChat());
         online_friend_button.addActionListener(e -> onlineFriend());
         group_button.addActionListener(e -> groupChat());
         friend_request_button.addActionListener(e -> friendRequest());
+        logout.addActionListener(e -> {
+            dispose();
+            Authentication newWindow = new Authentication();
+            newWindow.setVisible(true);
+        });
 
         user_profile_button.addActionListener(e -> {
             JFrame newWindow = new UserProfileWindow(uid);
@@ -178,12 +184,13 @@ public class MainUserWindow extends JFrame {
         more_menu.add(group_button);
         more_menu.add(friend_request_button);
         more_menu.add(user_profile_button);
+        more_menu.add(logout);
 
         if(isAdmin) {
             JMenuItem goBackAdmin = new JMenuItem("Go Back");
             goBackAdmin.addActionListener(e -> {
                 dispose();
-                JFrame newWindow = new component.adminMenu(uid);
+                JFrame newWindow = new Admin.adminMenu(uid);
                 newWindow.setVisible(true);
             });
             more_menu.add(goBackAdmin);

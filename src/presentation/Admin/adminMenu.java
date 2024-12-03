@@ -1,4 +1,4 @@
-package component;
+package Admin;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableModel;
 import bus.*;
 import dto.*;
 import presentation.User.MainUserWindow;
-import presentation.Admin.loginTimeHistory;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -359,14 +358,14 @@ public class adminMenu extends JFrame {
     }
 
     private void openNewRegister() {
-        JFrame newWindow = new newUsersManage();
+        JFrame newWindow = new Admin.newUsersManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
     }
 
     private void openActiveUser() {
-        JFrame newWindow = new activeUserManage();
+        JFrame newWindow = new Admin.activeUserManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
@@ -392,7 +391,7 @@ public class adminMenu extends JFrame {
         JFrame newWindow = new JFrame("Add New User");
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        addNewUser newPanel = new addNewUser();
+        Admin.addNewUser newPanel = new Admin.addNewUser();
         Dimension panelSize = newPanel.getPreferredSize();
         newWindow.add(newPanel);
         newWindow.setResizable(false);
@@ -402,6 +401,6 @@ public class adminMenu extends JFrame {
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new component.adminMenu(1).setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Admin.adminMenu(1).setVisible(true));
     }
 }

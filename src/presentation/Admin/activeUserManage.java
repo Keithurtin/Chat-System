@@ -1,4 +1,4 @@
-package component;
+package Admin;
 
 import com.toedter.calendar.JDateChooser;
 import presentation.User.PlaceHolder;
@@ -304,7 +304,7 @@ private void setupNavigatorLayout() {
         chartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         chartFrame.setSize(800, 600);
         data = generateData(year);
-        JPanel chartPanel = new component.chartDisplay(year, data, false);
+        JPanel chartPanel = new Admin.chartDisplay(year, data, false);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);
     }

@@ -1,4 +1,4 @@
-package component;
+package Admin;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;

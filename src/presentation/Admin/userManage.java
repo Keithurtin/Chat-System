@@ -1,4 +1,4 @@
-package component;
+package Admin;
 
 import com.toedter.calendar.JDateChooser;
 import dto.UsersDTO;
@@ -15,7 +15,7 @@ import dto.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import static component.adminMenu.reloadAdminTable;
+import static Admin.adminMenu.reloadAdminTable;
 
 public class userManage extends JPanel {
 
