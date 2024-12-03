@@ -207,7 +207,8 @@ private void setupNavigatorLayout() {
 
         table_scroll = new JScrollPane(table);
         UsersBUS usersBUS = new UsersBUS();
-        loadTable(usersBUS.getAll());
+        currentList = usersBUS.getAll();
+        loadTable(currentList);
     }
 
     private void loadTable(List<UsersDTO> users) {
@@ -221,20 +222,22 @@ private void setupNavigatorLayout() {
         tableModel.addRow(new Object[]{uID, username, date});
     }
 
-    private Map<String, Integer> generateExampleData() {
-        Map<String, Integer> data = new HashMap<>();
-        data.put("Jan", 120);
-        data.put("Feb", 80);
-        data.put("Mar", 150);
-        data.put("Apr", 90);
-        data.put("May", 130);
-        data.put("Jun", 170);
-        data.put("Jul", 160);
-        data.put("Aug", 140);
-        data.put("Sep", 180);
-        data.put("Oct", 110);
-        data.put("Nov", 190);
-        data.put("Dec", 200);
+    private Map<String, Integer> generateData(String year) {
+        UsersBUS usersBUS = new UsersBUS();
+        List<Integer> list = usersBUS.countByRegisterYear(Integer.parseInt(year));
+        Map<String, Integer> data = new LinkedHashMap<>();
+        data.put("Jan", list.get(1));
+        data.put("Feb", list.get(2));
+        data.put("Mar", list.get(3));
+        data.put("Apr", list.get(4));
+        data.put("May", list.get(5));
+        data.put("Jun", list.get(6));
+        data.put("Jul", list.get(7));
+        data.put("Aug", list.get(8));
+        data.put("Sep", list.get(9));
+        data.put("Oct", list.get(10));
+        data.put("Nov", list.get(11));
+        data.put("Dec", list.get(12));
         return data;
     }
 
@@ -242,9 +245,7 @@ private void setupNavigatorLayout() {
         JFrame chartFrame = new JFrame("Registration Chart Year " + year);
         chartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         chartFrame.setSize(800, 600);
-        if(data == null){
-            data = generateExampleData();
-        }
+        data = generateData(year);
         JPanel chartPanel = new component.chartDisplay(year, data, true);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);

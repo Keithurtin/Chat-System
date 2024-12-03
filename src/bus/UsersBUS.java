@@ -185,4 +185,9 @@ public class UsersBUS {
         }
         return ans;
     }
+
+    public List<Integer> countByRegisterYear(int year) {
+        UsersDAO userDAO = new UsersDAO();
+        return userDAO.countByRegisterYear(year);
+    }
 }

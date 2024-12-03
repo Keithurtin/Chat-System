@@ -128,4 +128,32 @@ public class UsersDAO {
         }
         return true;
     }
+
+    public List<Integer> countByRegisterYear(int year) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 13; i++)
+            list.add(0);
+
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return list;
+        }
+
+        String query = "select create_time from Users where year(create_time) = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, year);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                LocalDateTime createTime = rs.getTimestamp("create_time").toLocalDateTime();
+                int month = createTime.getMonthValue();
+                list.set(month, list.get(month) + 1);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return list;
+        }
+        return list;
+    }
 }
