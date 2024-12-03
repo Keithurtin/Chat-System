@@ -3,6 +3,7 @@ package bus;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,6 +44,25 @@ public class ActivityBUS {
             } else if (sum > num && comp == 1) {
                 ans.add(active);
             }
+        }
+        return ans;
+    }
+
+    public List<Integer> countByYear(int year) {
+        ActivityDAO dao = new ActivityDAO();
+        List<Integer> ans = new ArrayList<>();
+        ans.add(0);
+        for (int i = 1; i < 13; i++) {
+            LocalDateTime firstDay = LocalDateTime.of(year, i, 1, 0, 0, 0, 0);
+            LocalDateTime lastDay = LocalDateTime.of(year, i, firstDay.toLocalDate().with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth(), 0, 0, 0, 0);
+            List<ActivityDTO> Activities = dao.getByTime(firstDay, lastDay);
+            int sum = 0;
+            for (ActivityDTO activity : Activities) {
+                if (activity.getOpenApp() > 0) {
+                    sum++;
+                }
+            }
+            ans.add(sum);
         }
         return ans;
     }
