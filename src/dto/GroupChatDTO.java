@@ -44,4 +44,11 @@ public class GroupChatDTO {
         this.name = name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GroupChatDTO myClass = (GroupChatDTO) o;
+        return gID == myClass.gID; // Compare based on 'id' attribute
+    }
 }

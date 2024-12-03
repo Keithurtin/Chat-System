@@ -36,7 +36,7 @@ CREATE TABLE FriendList (
     FOREIGN KEY (friend_id) REFERENCES Users(user_id)
 );
 
-CREATE TABLE Bloked (
+CREATE TABLE Blocked (
 	user_id INT,
 	blocked_user_id INT,
 	PRIMARY KEY (user_id, blocked_user_id),
@@ -76,7 +76,7 @@ CREATE TABLE ChatDM (
 CREATE TABLE ChatGroup (
     message_id INT,
     sender_id INT,
-    receiver_id INT,
+    receiver_id INT, --group_id
     message_content NVARCHAR(MAX),
     send_time DATETIME DEFAULT GETDATE(),
 	PRIMARY KEY (message_id, sender_id, receiver_id),

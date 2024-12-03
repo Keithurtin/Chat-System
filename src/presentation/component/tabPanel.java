@@ -1,6 +1,10 @@
 package component;
 
+import bus.BlockBUS;
+import bus.FriendListBUS;
+import dao.BlockDAO;
 import dao.FriendListDAO;
+import dto.FriendListDTO;
 import dto.GroupChatDTO;
 import dto.UsersDTO;
 
@@ -9,24 +13,35 @@ import java.awt.*;
 
 public class tabPanel extends JPanel{
     private int ID;
-    private boolean isGroup;
+    private int ofID;
+    private BlockDAO blockDAO;
     private JLabel name_label;
-    private JButton send_request_button;
+    private FriendListBUS friendListBUS;
 
     public tabPanel(int uid, UsersDTO user) {
         ID = user.getuID();
-        isGroup = false;
+        ofID = uid;
 
-        int relationship = FriendListDAO.getRelationship(uid, ID);
+        friendListBUS = new FriendListBUS();
+        blockDAO = new BlockDAO();
+        
+        int friendRelation = FriendListDAO.getRelationship(ofID, ID);
+        int blockRelation = blockDAO.getRelationship(ofID, ID);
+        
         setLayout(new BorderLayout()); // Set layout for `this`
         setPreferredSize(new Dimension(200, 100)); // Set a default size
+        
+        if(blockRelation == 1) {
+            add(blockFriend(user), BorderLayout.CENTER);
+            return;
+        }
 
-        switch (relationship) {
+        switch (friendRelation) {
             case -1:
-                add(NotFriend(user, false), BorderLayout.CENTER);
+                add(notFriend(user, true), BorderLayout.CENTER);
                 break;
             case 0:
-                add(NotFriend(user, true), BorderLayout.CENTER);
+                add(notFriend(user, false), BorderLayout.CENTER);
                 break;
             case 1:
                 add(requestingFriend(user), BorderLayout.CENTER);
@@ -41,7 +56,6 @@ public class tabPanel extends JPanel{
     }
 
     public tabPanel(GroupChatDTO group) {
-        isGroup = true;
         ID = group.getGID();
         setLayout(new BorderLayout()); // Set layout for `this`
         setPreferredSize(new Dimension(200, 100)); // Set a default size
@@ -51,14 +65,13 @@ public class tabPanel extends JPanel{
         revalidate();
         repaint();
     }
-
-
+    
     private JPanel friend(UsersDTO user){
         JPanel friendPanel = new JPanel();
         name_label = new JLabel(user.getuName());
         setPreferredSize(new Dimension(162, 50));
 
-        name_label.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
+        name_label.setFont(new Font("Segoe UI", 1, 16));
         JLabel status_label = new JLabel("<html> Status: " + (user.getStatus().equals("online") ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
 
         GroupLayout panelLayout = new GroupLayout(friendPanel);
@@ -84,14 +97,28 @@ public class tabPanel extends JPanel{
         return friendPanel;
     }
 
-    private JPanel NotFriend(UsersDTO user, boolean isRequested){
+    private JPanel notFriend(UsersDTO user, boolean relationship){
         JPanel friendPanel = new JPanel();
         JLabel name_label = new JLabel(user.getuName());
+        name_label.setFont(new Font("Segoe UI", 1, 16));
 
         JButton send_request_button = new JButton();
-        send_request_button.setFont(new Font("Segoe UI", 1, 12)); // NOI18N
-        send_request_button.setText(isRequested ? "Unsend" : "Send Request");
-        send_request_button.addActionListener(e -> sendFriendRequest());
+        send_request_button.setFont(new Font("Segoe UI", 1, 12));
+        send_request_button.setText(relationship ? "Unsend" : "Send Request" );
+        send_request_button.addActionListener(e -> {
+            if(send_request_button.getText().equals("Unblock")){
+                
+                return;
+            }
+            
+            if (send_request_button.getText().equals("Send Request")) {
+                friendListBUS.addFriend(ofID, ID);
+                send_request_button.setText("Unsend");
+            } else{
+                send_request_button.setText("Send Request");
+                friendListBUS.rejectFriend(ofID, ID);
+            }
+        });
 
         GroupLayout panelLayout = new GroupLayout(this);
         this.setLayout(panelLayout);
@@ -116,21 +143,81 @@ public class tabPanel extends JPanel{
         return friendPanel;
     }
 
+    private JPanel blockFriend(UsersDTO user){
+        JPanel friendPanel = new JPanel();
+        JLabel name_label = new JLabel(user.getuName());
+        name_label.setFont(new Font("Segoe UI", 1, 16));
+
+        JButton send_request_button = new JButton();
+        send_request_button.setFont(new Font("Segoe UI", 1, 12));
+        send_request_button.setText("Unblock");
+        send_request_button.addActionListener(e -> {
+            if(send_request_button.getText().equals("Unblock")){
+                blockDAO.unblockFriend(ofID, ID);
+                return;
+            }
+            if (send_request_button.getText().equals("Send Request")) {
+                friendListBUS.addFriend(ofID, ID);
+                send_request_button.setText("Unsend");
+            } else{
+                send_request_button.setText("Send Request");
+                friendListBUS.rejectFriend(ofID, ID);
+            }
+        });
+
+        GroupLayout panelLayout = new GroupLayout(this);
+        this.setLayout(panelLayout);
+        panelLayout.setHorizontalGroup(
+                panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(panelLayout.createSequentialGroup()
+                                .addGap(29, 29, 29)
+                                .addComponent(name_label, GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(send_request_button)
+                                .addContainerGap())
+        );
+        panelLayout.setVerticalGroup(
+                panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(panelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(panelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(name_label)
+                                        .addComponent(send_request_button))
+                                .addContainerGap(21, Short.MAX_VALUE))
+        );
+        return friendPanel;
+    }
+    
     private JPanel requestingFriend(UsersDTO user) {
         JPanel friendPanel = new JPanel();
         setPreferredSize(new Dimension(0, 85));
         JLabel name_label = new JLabel(user.getuName());
-        name_label.setFont(new Font("Segoe UI", 1, 18)); // NOI18N
+        name_label.setFont(new Font("Segoe UI", 1, 16));
 
         JLabel status_label = new JLabel("<html> Status:" + ((user.getStatus()).equals("online") ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
 
         JButton approve_button = new JButton("Approve");
-        approve_button.setFont(new Font("Segoe UI", 1, 12)); // NOI18N
-        approve_button.addActionListener(e -> approveFriendRequest());
+        approve_button.setFont(new Font("Segoe UI", 1, 12));
+        approve_button.addActionListener(e -> {
+            friendListBUS.acceptFriend(ofID, ID);
+            Container parent = tabPanel.this.getParent();
+            if (parent != null) {
+                parent.remove(tabPanel.this);
+                parent.revalidate();
+                parent.repaint();
+            }
+        });
 
         JButton reject_button = new JButton("Reject");
-        reject_button.setFont(new Font("Segoe UI", 1, 12)); // NOI18N
-        reject_button.addActionListener(e -> rejectFriendRequest());
+        reject_button.setFont(new Font("Segoe UI", 1, 12));
+        reject_button.addActionListener(e -> {
+            Container parent = tabPanel.this.getParent();
+            if (parent != null) {
+                parent.remove(tabPanel.this);
+                parent.revalidate();
+                parent.repaint();
+            }
+        });
 
         GroupLayout panelLayout = new GroupLayout(friendPanel);
         friendPanel.setLayout(panelLayout);
@@ -193,24 +280,6 @@ public class tabPanel extends JPanel{
                                 .addContainerGap())
         );
         return groupPanel;
-    }
-
-
-    private void sendFriendRequest() {
-        if (send_request_button.getText().equals("Send Request")) {
-            send_request_button.setText("Unsend");
-        } else{
-            send_request_button.setText("Send Request");
-        }
-    }
-
-
-    private void approveFriendRequest() {
-
-    }
-
-    private void rejectFriendRequest() {
-
     }
 
 }

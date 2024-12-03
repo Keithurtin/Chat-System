@@ -14,6 +14,22 @@ public class UsersBUS {
         return userDAO.getAll();
     }
 
+    public List<UsersDTO> getByNameOrUName(String query) {
+        UsersDAO userDAO = new UsersDAO();
+        List<dto.UsersDTO> list = userDAO.getAll();
+        List<dto.UsersDTO> ans = new ArrayList<>();
+        String regex = ".*" + Pattern.quote(query) + ".*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        for (dto.UsersDTO user : list) {
+            Matcher matcher1 = pattern.matcher(user.getFullname());
+            Matcher matcher2 = pattern.matcher(user.getuName());
+            if (matcher1.matches() || matcher2.matches()) {
+                ans.add(user);
+            }
+        }
+        return ans;
+    }
+
     public List<UsersDTO> getByUserName(String userName) {
         UsersDAO userDAO = new UsersDAO();
         List<UsersDTO> list = userDAO.getAll();

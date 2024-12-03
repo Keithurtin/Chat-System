@@ -50,7 +50,7 @@ public class groupChatSection extends JPanel {
         navigator.setBackground(new java.awt.Color(153, 204, 255));
         navigator.setPreferredSize(new java.awt.Dimension(390, 70));
 
-        JButton report_button = new JButton("Report!");
+        JButton report_button = new JButton("Out Group!");
         report_button.setBackground(new java.awt.Color(255, 102, 102));
         report_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         report_button.setForeground(new java.awt.Color(255, 255, 255));

@@ -66,6 +66,26 @@ public class FriendListDAO {
         return true;
     }
 
+    public boolean rejectFriend(int userID, int friendID) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "delete * from FriendList where user_id = ? and friend_id = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, userID);
+            pstmt.setInt(2, friendID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
     public static int getRelationship(int userID, int friendID) {
         int relationship = -1;
         UtilityDAO utilityDAO = new UtilityDAO();

@@ -17,7 +17,8 @@ public class mainChat extends JFrame {
     private static CardLayout cardLayout;
     private static int uid;
     private static int numberOfTab = 0;
-    private static String mode = "All";
+    private static String mode;
+    private final boolean isAdmin;
 
     private JPanel side_panel;
     private static JPanel friend_side;
@@ -25,9 +26,12 @@ public class mainChat extends JFrame {
     private static GroupLayout.SequentialGroup verticalGroup;
     private static JPanel blank_chat_panel;
     private static JButton new_group_button;
+    private static JButton side_more_button;
 
     public mainChat(int id) {
         uid = id;
+        UsersBUS usersBUS = new UsersBUS();
+        isAdmin = (usersBUS.getById(uid)).getIsAdmin();
 
         cardLayout = new CardLayout();
         chatPanel = new JPanel(cardLayout);
@@ -65,9 +69,9 @@ public class mainChat extends JFrame {
         friend_side = new JPanel();
         PlaceHolder side_search_input = new PlaceHolder("Search");
         JButton side_search_button = new JButton("Search");
-        side_search_button.addActionListener(e -> searchTab());
+        side_search_button.addActionListener(e -> searchTab(side_search_input.getText()));
         new_group_button = new JButton("New");
-        JButton side_more_button = new JButton("...");
+        side_more_button = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -148,7 +152,7 @@ public class mainChat extends JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(side_scroll, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
         );
-        onlineFriend();
+        allChat();
     }
 
     private JPopupMenu MoreMenu() {
@@ -164,13 +168,28 @@ public class mainChat extends JFrame {
         online_friend_button.addActionListener(e -> onlineFriend());
         group_button.addActionListener(e -> groupChat());
         friend_request_button.addActionListener(e -> friendRequest());
-        user_profile_button.addActionListener(e -> openProfile());
+
+        user_profile_button.addActionListener(e -> {
+            JFrame newWindow = new component.profileWindow(uid);
+            newWindow.setVisible(true);
+        });
 
         more_menu.add(all_button);
         more_menu.add(online_friend_button);
         more_menu.add(group_button);
         more_menu.add(friend_request_button);
         more_menu.add(user_profile_button);
+
+        if(isAdmin) {
+            JMenuItem goBackAdmin = new JMenuItem("Go Back");
+            goBackAdmin.addActionListener(e -> {
+                dispose();
+                JFrame newWindow = new component.adminMenu(uid);
+                newWindow.setVisible(true);
+            });
+            more_menu.add(goBackAdmin);
+        }
+
         return more_menu;
     }
 
@@ -301,6 +320,7 @@ public class mainChat extends JFrame {
         GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
         List<GroupChatDTO> groupList = groupMembersBUS.getGroups(uid);
         mode = "Group";
+        side_more_button.setText("Group");
         reloadFriendSide(Collections.emptyList(), groupList);
 
     }
@@ -308,46 +328,58 @@ public class mainChat extends JFrame {
         FriendListBUS friendListBUS = new FriendListBUS();
         List<UsersDTO> friendList = friendListBUS.getOnlineFriends(uid);
         mode = "Online";
+        side_more_button.setText("Online");
         reloadFriendSide(friendList, Collections.emptyList());
     }
 
     private static void allChat() {
         FriendListBUS friendListBUS = new FriendListBUS();
         List<UsersDTO> friendList = friendListBUS.getFriends(uid);
-        GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
-        List<GroupChatDTO> groupList = groupMembersBUS.getGroups(uid);
         mode = "All";
-        reloadFriendSide(friendList, groupList);
+        side_more_button.setText("All");
+        reloadFriendSide(friendList, Collections.emptyList());
     }
 
     private void friendRequest() {
         FriendListBUS friendListBUS = new FriendListBUS();
         List<UsersDTO> friendList = friendListBUS.getFriendsRequesting(uid);
         mode = "Request";
+        side_more_button.setText("Request");
         reloadFriendSide(friendList, Collections.emptyList());
-    }
-
-    private void openProfile() {
-        JFrame newWindow = new component.profileWindow(uid);
-        newWindow.setVisible(true);
     }
 
     private void createGroupChat() {
 
     }
 
-    private void searchTab() {
+    private void searchTab(String query) {
         List<UsersDTO> users = new ArrayList<>();
         List<GroupChatDTO> groups = new ArrayList<>();
-        switch (mode){
+        FriendListBUS friendListBUS = new FriendListBUS();
+        UsersBUS usersBUS = new UsersBUS();
+        List<UsersDTO> friendList = new ArrayList<>();
+        switch (mode) {
+            case "Group":
+                GroupChatBUS groupChatBUS = new GroupChatBUS();
+                GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+                groups = groupChatBUS.getByName(query);
+                groups.retainAll(groupMembersBUS.getGroups(uid));
+                break;
             case "Online":
+                friendList = friendListBUS.getOnlineFriends(uid);
+                users = usersBUS.getByNameOrUName(query);
+                users.retainAll(friendList);
                 break;
             case "All":
-                break;
-            case "Group":
+                BlockBUS blockBUS = new BlockBUS();
+                friendList = blockBUS.getBlocked(uid);
+                users = usersBUS.getByNameOrUName(query);
+                users.removeAll(friendList);
                 break;
             case "Request":
-
+                friendList = friendListBUS.getFriendsRequesting(uid);
+                users = usersBUS.getByNameOrUName(query);
+                users.retainAll(friendList);
         }
         reloadFriendSide(users, groups);
     }

@@ -1,4 +1,5 @@
 package component;
+import dao.BlockDAO;
 import dto.*;
 import bus.*;
 import presentation.component.PlaceHolder;
@@ -9,9 +10,12 @@ import javax.swing.*;
 public class friendChatSection extends JPanel {
     private JPanel navigator;
     private static int uid;
-    private int uid2;
-
+    private final int uid2;
+    private int block;
+    private BlockBUS blockBUS;
     private JPanel send_message_panel;
+    private PlaceHolder input_message;
+    private JButton send_button;
 
     private JScrollPane chat_scroll;
     private JPanel chat_side;
@@ -22,10 +26,13 @@ public class friendChatSection extends JPanel {
         setVerifyInputWhenFocusTarget(false);
         uid = id;
         uid2 = user.getuID();
+        blockBUS = new BlockBUS();
+        BlockDAO dao = new BlockDAO();
+        block = dao.getRelationship(uid, uid2);
 
         setupNavigatorLayout(user.getuName(), (user.getStatus()).equals("online"));
         setupSendMessageLayout();
-        createChatSide();
+        loadChatSide();
 
         GroupLayout chat_panelLayout = new GroupLayout(this);
         this.setLayout(chat_panelLayout);
@@ -74,11 +81,27 @@ public class friendChatSection extends JPanel {
         JPopupMenu dropdownMenu = new JPopupMenu();
 
         JMenuItem unfriend_button = new JMenuItem("Unfriend");
-        JMenuItem block_button = new JMenuItem("Block");
+        JMenuItem block_button = new JMenuItem(block == 1 ? "Unblock" : "Block");
         JMenuItem add_to_group_button = new JMenuItem("Add Group");
 
         unfriend_button.addActionListener(e -> unfriend());
-        block_button.addActionListener(e -> blockFriend());
+        block_button.addActionListener(e -> {
+            if (block_button.getText().equals("Block")) {
+                blockBUS.blockFriend(uid, uid2);
+                input_message.setEnabled(false);
+                send_button.setEnabled(false);
+                input_message.setText("You can't send message due to block!");
+                block = 1;
+                block_button.setText("Unblock");
+            } else{
+                block_button.setText("Block");
+                input_message.setEnabled(true);
+                send_button.setEnabled(true);
+                input_message.setText("Text...");
+                block = 0;
+                blockBUS.unblockFriend(uid, uid2);
+            }
+        });
         add_to_group_button.addActionListener(e -> addToGroup());
 
         dropdownMenu.add(unfriend_button);
@@ -116,7 +139,7 @@ public class friendChatSection extends JPanel {
         );
     }
     
-    private void createChatSide() {
+    private void loadChatSide() {
         chat_side = new JPanel();
         chat_side.setLayout(new BoxLayout(chat_side, BoxLayout.Y_AXIS));
         chat_side.setBackground(Color.WHITE);
@@ -124,6 +147,7 @@ public class friendChatSection extends JPanel {
         chat_scroll = new JScrollPane(chat_side);
         chat_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         chat_scroll.setBorder(null);
+
 
         addMessage("Hello there", false);
         addMessage("How are you doing?", false);
@@ -137,9 +161,10 @@ public class friendChatSection extends JPanel {
         send_message_panel = new JPanel();
         send_message_panel.setBackground(new java.awt.Color(204, 204, 204));
 
-        PlaceHolder input_message = new PlaceHolder("Text....");
+        input_message = new PlaceHolder("Text....");
 
-        JButton send_button = new JButton("Send");
+        send_button = new JButton("Send");
+        send_button.addActionListener(e -> sendMessage(input_message.getText()));
         send_button.setBackground(new java.awt.Color(153, 204, 255));
         send_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         send_button.setForeground(new java.awt.Color(255, 255, 255));
@@ -193,11 +218,20 @@ public class friendChatSection extends JPanel {
         });
     }
 
-    private void reportUser() {}                                                        
+    private void sendMessage(String message) {
 
-    private void unfriend() {}                                                 
+    }
+
+    private void reportUser() {
+        SpamBUS spamBUS = new SpamBUS();
+        spamBUS.addSpamReport(uid2);
+    }
+
+    private void unfriend() {
+        FriendListBUS friendListBUS = new FriendListBUS();
+        friendListBUS.rejectFriend(uid, uid2);
+    }
 
     private void addToGroup() {}                                                             
 
-    private void blockFriend() {}   
 }

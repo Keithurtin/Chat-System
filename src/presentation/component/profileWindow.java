@@ -80,7 +80,7 @@ public class profileWindow extends JFrame {
                                 .addGap(39, 39, 39)
                                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(content_sideLayout.createSequentialGroup()
-                                .addContainerGap()
+                                .addGap(39, 39, 39)
                                 .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(GroupLayout.Alignment.TRAILING, content_sideLayout.createSequentialGroup()
                                                 .addGap(0, 16, Short.MAX_VALUE)
@@ -101,12 +101,12 @@ public class profileWindow extends JFrame {
                                                         .addComponent(username_value_label, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(email_value_label, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(num_of_friend_value_label, GroupLayout.PREFERRED_SIZE, 256, GroupLayout.PREFERRED_SIZE))
-                                                .addGap(28, 28, 28))))
+                                                .addGap(20, 20, 20))))
                         .addGroup(GroupLayout.Alignment.TRAILING, content_sideLayout.createSequentialGroup()
                                 .addComponent(manage_button)
                                 .addGap(201, 201, 201))
                         .addGroup(GroupLayout.Alignment.TRAILING, content_sideLayout.createSequentialGroup()
-                                .addGap(16, 16, 16)
+                                .addGap(39, 39, 39)
                                 .addComponent(password_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(change_password_button)
@@ -162,13 +162,13 @@ public class profileWindow extends JFrame {
         main_panelLayout.setHorizontalGroup(
             main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(main_scroll)
+            .addComponent(content_side, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
         );
         main_panelLayout.setVerticalGroup(
             main_panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(main_panelLayout.createSequentialGroup()
                 .addComponent(navigator, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
-                .addComponent(main_scroll, GroupLayout.PREFERRED_SIZE, 410, GroupLayout.PREFERRED_SIZE))
+                .addComponent(content_side, GroupLayout.PREFERRED_SIZE, 510, GroupLayout.PREFERRED_SIZE))
         );
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -194,7 +194,7 @@ public class profileWindow extends JFrame {
         navigatorLayout.setHorizontalGroup(
             navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(navigatorLayout.createSequentialGroup()
-                .addGap(110, 110, 110)
+                .addGap(140, 140, 140)
                 .addComponent(title)
                 .addContainerGap(112, Short.MAX_VALUE))
         );

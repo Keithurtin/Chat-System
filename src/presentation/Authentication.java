@@ -586,9 +586,9 @@ public class Authentication extends JFrame {
         UsersDTO user = existingUser.getFirst();
         JFrame newWindow;
         if(user.getIsAdmin()) {
-                newWindow = new component.adminMenu();
+                newWindow = new component.adminMenu(user.getuID());
         } else {
-                newWindow = new component.mainChat(12);
+                newWindow = new component.mainChat(user.getuID());
         }
         dispose();
         newWindow.setVisible(true);

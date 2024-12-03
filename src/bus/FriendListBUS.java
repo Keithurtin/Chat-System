@@ -16,6 +16,11 @@ public class FriendListBUS {
         return dao.acceptFriend(user, friend);
     }
 
+    public boolean rejectFriend(int user, int friend) {
+        FriendListDAO dao = new FriendListDAO();
+        return dao.rejectFriend(user, friend);
+    }
+
     public List<UsersDTO> getOnlineFriends(int user) {
         FriendListDAO dao = new FriendListDAO();
         List<Integer> idList = dao.getFriends(user);

@@ -18,12 +18,14 @@ import java.util.List;
 public class adminMenu extends JFrame {
 
     private JPanel admin_menu;
+    private static int uid;
     private JPanel navigator;
     private JScrollPane user_table_scroll;
     private JTable user_table;
     static DefaultTableModel tableModel;
 
-    public adminMenu() {
+    public adminMenu(int uid) {
+        this.uid = uid;
         initComponents();
     }
 
@@ -378,7 +380,7 @@ public class adminMenu extends JFrame {
     }
 
     private void openChatBox() {
-        JFrame newWindow = new component.mainChat(12);
+        JFrame newWindow = new component.mainChat(uid);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
@@ -399,6 +401,6 @@ public class adminMenu extends JFrame {
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new component.adminMenu().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new component.adminMenu(1).setVisible(true));
     }
 }

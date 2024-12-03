@@ -154,4 +154,12 @@ public class UsersDTO {
         this.createTime = createTime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UsersDTO user = (UsersDTO) o;
+        return uID == user.uID; // Compare based on 'id' attribute
+    }
+
 }
