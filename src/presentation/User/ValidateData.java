@@ -2,18 +2,6 @@
     import java.util.regex.*;
 
     public class ValidateData {
-         /**
-         * Validates a phone number.
-         * Supports Vietnamese phone numbers starting with +84 or 0,
-         * followed by valid prefixes and 8 digits.
-         */
-        public static boolean isValidPhoneNumber(String phoneNumber) {
-            String regex = "^(\\+84|0)(3|5|7|8|9)\\d{8}$";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(phoneNumber);
-            return matcher.matches();
-        }
-
         /**
          * Validates an email address.
          * Supports standard email formats.

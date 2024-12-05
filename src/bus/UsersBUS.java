@@ -86,6 +86,20 @@ public class UsersBUS {
         return ans;
     }
 
+    public UsersDTO getByMail(String mail) {
+        UsersDAO userDAO = new UsersDAO();
+        List<UsersDTO> list = userDAO.getAll();
+        String regex = ".*" + Pattern.quote(mail) + ".*";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        for (UsersDTO user : list) {
+            Matcher matcher = pattern.matcher(user.getEmail());
+            if (matcher.matches()) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     public List<UsersDTO> getByFriend(int friend, int comp) {
         UsersDAO userDAO = new UsersDAO();
         FriendListBUS friendListBUS = new FriendListBUS();
