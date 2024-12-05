@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -153,8 +154,27 @@ private void setupNavigatorLayout() {
 
     JMenuItem ByName = new JMenuItem("By Name");
     JMenuItem ByTime = new JMenuItem("By Time");
-//    ByName.addActionListener(); //function
-//    ByTime.addActionListener();
+    ByName.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            currentList.sort((o1, o2) ->o1.getUsername().compareTo(o2.getUsername()));
+            loadTable(currentList);
+        }
+    }); //function
+    ByTime.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            List<ActivityDTO> activeList = new ArrayList<>();
+            for (ActivityDTO activity : currentList) {
+                if (activity.getLastActive() != null) {
+                    activeList.add(activity);
+                }
+            }
+            currentList = activeList;
+            currentList.sort(((o1, o2) -> o2.getLastActive().compareTo(o1.getLastActive())));
+            loadTable(currentList);
+        }
+    });
 
 
     sort_menu.add(ByName);
