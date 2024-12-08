@@ -59,4 +59,16 @@ public class GroupChatBUS {
         list.sort((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime()));
         return list;
     }
+
+    public boolean updateName(GroupChatDTO group) {
+        GroupChatDAO groupChatDAO = new GroupChatDAO();
+        return groupChatDAO.update(group);
+    }
+
+    public boolean deleteGroup(int gID) {
+        GroupChatDAO dao = new GroupChatDAO();
+        GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+        groupMembersBUS.deleteAll(gID);
+        return dao.deleteGroup(gID);
+    }
 }

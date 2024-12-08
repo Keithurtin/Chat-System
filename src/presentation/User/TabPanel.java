@@ -10,8 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TabPanel extends JPanel{
-    private int ID;
-    private int ofID;
+    private final int ID;
+    private final int ofID;
     private BlockDAO blockDAO;
     private JLabel name_label;
     private FriendListBUS friendListBUS;
@@ -53,8 +53,9 @@ public class TabPanel extends JPanel{
         repaint();
     }
 
-    public TabPanel(GroupChatDTO group) {
+    public TabPanel(int uid, GroupChatDTO group) {
         ID = group.getGID();
+        ofID = uid;
         setLayout(new BorderLayout()); // Set layout for `this`
         setPreferredSize(new Dimension(200, 100)); // Set a default size
 
@@ -151,6 +152,7 @@ public class TabPanel extends JPanel{
         send_request_button.setText("Unblock");
         send_request_button.addActionListener(e -> {
             if(send_request_button.getText().equals("Unblock")){
+                send_request_button.setText("Send Request");
                 blockDAO.unblockFriend(ofID, ID);
                 return;
             }

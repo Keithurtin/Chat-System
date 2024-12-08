@@ -143,4 +143,43 @@ public class GroupMembersDAO {
         }
         return groups;
     }
+
+    public boolean deleteAll (int gID) {
+        UtilityDAO util = new UtilityDAO();
+        Connection con = util.getConnection();
+        if (con == null) {
+            return false;
+        }
+
+        String query = "DELETE from GroupMembers where group_id = ?";
+
+        try (PreparedStatement pstmt = con.prepareStatement(query)) {
+            pstmt.setInt(1, gID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteMember(int gID, int uID) {
+        UtilityDAO util = new UtilityDAO();
+        Connection con = util.getConnection();
+        if (con == null) {
+            return false;
+        }
+
+        String query = "DELETE from GroupMembers where group_id = ? and user_id = ?";
+
+        try (PreparedStatement pstmt = con.prepareStatement(query)) {
+            pstmt.setInt(1, gID);
+            pstmt.setInt(2, uID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

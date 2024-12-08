@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.awt.*;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.swing.*;
 
@@ -123,9 +124,13 @@ public class AddMemberWindow extends JFrame {
         FriendListDAO friendListDAO = new FriendListDAO();
         List<Integer> idList = friendListDAO.getFriends(uid);
 
+        Set<Integer> memberUIDs = memberList.stream()
+                .map(GroupMembersDTO::getUID)
+                .collect(Collectors.toSet());
+
         List<Integer> result = idList.stream()
-                .filter(friendId -> memberList.stream().anyMatch(member -> member.getUID() != friendId))
-                .toList();
+                .filter(friendId -> !memberUIDs.contains(friendId))
+                .collect(Collectors.toList());
 
         UsersBUS usersBUS = new UsersBUS();
         for (int id : result) {
@@ -147,6 +152,9 @@ public class AddMemberWindow extends JFrame {
         add_button.addActionListener(e -> {
             GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
             groupMembersBUS.addMember(gid, user.getuID());
+            list_side.remove(user_panel);
+            list_side.revalidate();
+            list_side.repaint();
         });
         add_button.setFont(new Font("Segoe UI", 1, 12));
 

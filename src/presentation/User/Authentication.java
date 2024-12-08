@@ -91,7 +91,6 @@ public class Authentication extends JFrame {
                 notification.setText("Error");
                 return;
             }
-
             goToLogin();
         });
 
@@ -619,7 +618,6 @@ public class Authentication extends JFrame {
         } else {
             signup_notification.setText("Error");
         }
-
         completeSignup(newUser);
     }
 
@@ -631,6 +629,8 @@ public class Authentication extends JFrame {
             return;
         }
         UsersDTO user = existingUser.getFirst();
+        user.setStatus("Online");
+        usersBUS.updateUser(user);
         JFrame newWindow;
         if(user.getIsAdmin()) {
                 newWindow = new Admin.adminMenu(user.getuID());
