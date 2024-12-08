@@ -16,6 +16,28 @@ public class GroupMembersBUS {
         return dao.setAdmin(gID, uID, isAdmin);
     }
 
+    public boolean deleteAll(int gID) {
+        GroupMembersDAO dao = new GroupMembersDAO();
+        return dao.deleteAll(gID);
+    }
+
+    public boolean deleteMember(int gID, int uID) {
+        GroupMembersDAO dao = new GroupMembersDAO();
+        dao.deleteMember(gID, uID);
+        List<GroupMembersDTO> list = getAdmin(gID);
+        if(list.isEmpty()){
+            list = getAll(gID);
+            if(list.size() < 2){
+                GroupChatBUS groupChatBUS = new GroupChatBUS();
+                groupChatBUS.deleteGroup(gID);
+                return true;
+            }
+            GroupMembersDTO groupMembersDTO = list.getFirst();
+            setAdmin(groupMembersDTO.getGID(), groupMembersDTO.getUID(), true);
+        }
+        return true;
+    }
+
     public List<GroupMembersDTO> getAll(int gID) {
         GroupMembersDAO dao = new GroupMembersDAO();
         return dao.getAll(gID);

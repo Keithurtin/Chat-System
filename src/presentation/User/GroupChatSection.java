@@ -1,28 +1,31 @@
 package presentation.User;
 
+import bus.GroupChatBUS;
+import bus.GroupMembersBUS;
+import bus.SpamBUS;
+import dao.GroupChatDAO;
 import dto.*;
 
 import java.awt.*;
 import javax.swing.*;
 
 public class GroupChatSection extends JPanel {
-    private JPanel navigator;
     private final int gid;
-    private JPanel send_message_panel;
     private static int uid;
     private static boolean isAdmin;
     private JScrollPane chat_scroll;
     private JPanel chat_side;
+    private DeletionListener listener;
 
-    public GroupChatSection(GroupChatDTO group, int id) {
+    public GroupChatSection(int id, GroupChatDTO group) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
         gid = group.getGID();
         uid = id;
 
-        setupNavigatorLayout(group.getName(), group.getNumMember());
-        setupSendMessageLayout();
+        JPanel navigator = setupNavigatorLayout(group.getName(), group.getNumMember());
+        JPanel send_message_panel = setupSendMessageLayout();
         createChatSide();
 
         GroupLayout chat_panelLayout = new GroupLayout(this);
@@ -44,20 +47,42 @@ public class GroupChatSection extends JPanel {
         );
     }
 
-    private void setupNavigatorLayout(String name, int member) {
-        navigator = new JPanel();
+    private JPanel setupNavigatorLayout(String name, int member) {
+        JPanel navigator = new JPanel();
         navigator.setBackground(new java.awt.Color(153, 204, 255));
         navigator.setPreferredSize(new java.awt.Dimension(390, 70));
 
-        JButton report_button = new JButton("Out Group!");
-        report_button.setBackground(new java.awt.Color(255, 102, 102));
-        report_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        report_button.setForeground(new java.awt.Color(255, 255, 255));
-        report_button.addActionListener(e -> reportGroup());
+        CardLayout cardLayout = new CardLayout();
+        JPanel name_panel = new JPanel(cardLayout);
+        name_panel.setBackground(new java.awt.Color(153, 204, 255));
+
+        JButton report_user_button = new JButton("Out Group");
+        report_user_button.setBackground(new java.awt.Color(255, 102, 102));
+        report_user_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        report_user_button.setForeground(new java.awt.Color(255, 255, 255));
+        report_user_button.addActionListener(e -> {
+            GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+            groupMembersBUS.deleteMember(gid, uid);
+            Container parent = GroupChatSection.this.getParent();
+            if (parent != null) {
+                parent.remove(GroupChatSection.this);
+                parent.revalidate();
+                parent.repaint();
+            }
+            delete();
+        });
 
         JLabel name_label = new JLabel( name);
         name_label.setFont(new java.awt.Font("Segoe UI", 1, 18));
         name_label.setForeground(Color.WHITE);
+
+        JTextField name_input = new JTextField(name);
+        name_input.setFont(new java.awt.Font("Segoe UI", 0, 16));
+
+        name_panel.add(name_label, "label");
+        name_panel.add(name_input, "input");
+
+        cardLayout.show(name_panel, "Label");
 
         JButton manage_button = new JButton("Manage");
         manage_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
@@ -65,7 +90,23 @@ public class GroupChatSection extends JPanel {
 
         JButton change_name_button = new JButton("Change");
         change_name_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        change_name_button.addActionListener(e -> changeGroupName());
+        change_name_button.addActionListener(e -> {
+            if(change_name_button.getText().equals("Change")){
+                change_name_button.setText("Save");
+                cardLayout.show(name_panel, "input");
+            } else {
+                GroupChatBUS groupChatBUS = new GroupChatBUS();
+                GroupChatDTO groupChatDTO = groupChatBUS.getById(gid);
+                String new_name = name_input.getText();
+                if(!(groupChatDTO.getName().equals(new_name))){
+                    groupChatDTO.setName(new_name);
+                    groupChatBUS.updateName(groupChatDTO);
+                    name_label.setText(new_name);
+                }
+                change_name_button.setText("Change");
+                cardLayout.show(name_panel, "label");
+            }
+        });
 
         JLabel number_member_label = new JLabel("<html> Member: <span style='color: black'>" + member +"</span></html>");
         number_member_label.setFont(new java.awt.Font("Segoe UI", 1, 16));
@@ -79,13 +120,13 @@ public class GroupChatSection extends JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(number_member_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(name_label, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
+                    .addComponent(name_panel, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(change_name_button)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(manage_button)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(report_button)
+                .addComponent(report_user_button)
                 .addContainerGap())
         );
         navigatorLayout.setVerticalGroup(
@@ -94,29 +135,29 @@ public class GroupChatSection extends JPanel {
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(manage_button)
-                        .addComponent(report_button))
+                        .addComponent(manage_button))
                     .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(name_label)
-                        .addComponent(change_name_button)))
+                        .addComponent(name_panel)
+                        .addComponent(change_name_button)
+                        .addComponent(report_user_button)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(number_member_label)
                 .addGap(32, 32, 32))
         );
+        return navigator;
     }
 
-    private void setupSendMessageLayout() {
-        send_message_panel = new JPanel();
+    private JPanel setupSendMessageLayout() {
+        JPanel send_message_panel = new JPanel();
         send_message_panel.setBackground(new java.awt.Color(204, 204, 204));
 
         PlaceHolder input_message = new PlaceHolder("Text....");
-        input_message.addActionListener(e -> inputMessage());
 
         JButton send_button = new JButton("Send");
         send_button.setBackground(new java.awt.Color(153, 204, 255));
         send_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         send_button.setForeground(new java.awt.Color(255, 255, 255));
-        send_button.addActionListener(e -> sendMessage());
+        send_button.addActionListener(e -> sendMessage(input_message.getText()));
 
         GroupLayout send_message_panelLayout = new GroupLayout(send_message_panel);
         send_message_panel.setLayout(send_message_panelLayout);
@@ -138,6 +179,7 @@ public class GroupChatSection extends JPanel {
                     .addComponent(send_button, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
+        return send_message_panel;
     }
     
     private void createChatSide() {
@@ -187,16 +229,21 @@ public class GroupChatSection extends JPanel {
         });
     }
 
-    private void reportGroup() {}                                                        
-
     private void manageGroup() {
         java.awt.EventQueue.invokeLater(() -> new GroupManageWindow(gid, uid).setVisible(true));
-    }                                                 
+    }
 
-    private void changeGroupName() {}                                                             
+    private void sendMessage(String message) {
 
-    private void inputMessage() {}                                                        
+    }
 
-    private void sendMessage() {}
+    public void setDeletionListener(DeletionListener listener) {
+        this.listener = listener;
+    }
 
+    public void delete() {
+        if (listener != null) {
+            listener.onDeleted(); // Notify listener
+        }
+    }
 }

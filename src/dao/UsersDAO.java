@@ -71,7 +71,7 @@ public class UsersDAO {
             return false;
         }
 
-        String query = "update Users set username = ?, is_locked = ?, full_name = ?, address = ?, birth_date = ?, gender = ?, email = ?, password = ? where user_id = ?";
+        String query = "update Users set username = ?, is_locked = ?, full_name = ?, address = ?, birth_date = ?, gender = ?, email = ?, password = ?, user_status = ? where user_id = ?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, user.getuName());
@@ -82,7 +82,8 @@ public class UsersDAO {
             pstmt.setString(6, user.getGender());
             pstmt.setString(7, user.getEmail());
             pstmt.setString(8, user.getPassword());
-            pstmt.setInt(9, user.getuID());
+            pstmt.setString(9, user.getStatus());
+            pstmt.setInt(10, user.getuID());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

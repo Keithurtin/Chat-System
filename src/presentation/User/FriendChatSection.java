@@ -19,8 +19,9 @@ public class FriendChatSection extends JPanel {
 
     private JScrollPane chat_scroll;
     private JPanel chat_side;
+    private DeletionListener listener;
 
-    public FriendChatSection(UsersDTO user, int id) {
+    public FriendChatSection(int id, UsersDTO user) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
@@ -51,6 +52,10 @@ public class FriendChatSection extends JPanel {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(send_message_panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+    }
+
+    public void setDeletionListener(DeletionListener listener) {
+        this.listener = listener;
     }
 
     private void setupNavigatorLayout(String name, boolean isOn) {
@@ -94,6 +99,7 @@ public class FriendChatSection extends JPanel {
             unfriend_button.addActionListener(e -> {
                 dropdownMenu.remove(unfriend_button);
                 FriendListBUS friendListBUS = new FriendListBUS();
+                delete();
                 if(friendListBUS.rejectFriend(uid, uid2)){
                     System.out.println("User " + uid + " Unfriend user " + uid2);
                 }
@@ -109,6 +115,7 @@ public class FriendChatSection extends JPanel {
                 input_message.setText("You can't send message due to block!");
                 block = 1;
                 block_button.setText("Unblock");
+                delete();
             } else{
                 block_button.setText("Block");
                 input_message.setEnabled(true);
@@ -169,6 +176,10 @@ public class FriendChatSection extends JPanel {
         addMessage("I'm doing great, thanks!", true);
         addMessage("That's wonderful to hear!", false);
         addMessage("How about you", true);
+        addMessage("Not so great", false);
+        addMessage("Not so great", true);
+        addMessage("Not so great", false);
+        addMessage("Not so great", true);
         addMessage("Not so great", false);
     }
 
@@ -249,4 +260,9 @@ public class FriendChatSection extends JPanel {
 
     }
 
+    public void delete() {
+        if (listener != null) {
+            listener.onDeleted(); // Notify listener
+        }
+    }
 }
