@@ -25,7 +25,6 @@ public class MainUserWindow extends JFrame {
     private static GroupLayout.ParallelGroup horizontalGroup;
     private static GroupLayout.SequentialGroup verticalGroup;
     private static JPanel blank_chat_panel;
-    private static JButton new_group_button;
     private static JButton side_more_button;
 
     public MainUserWindow(int id) {
@@ -70,7 +69,6 @@ public class MainUserWindow extends JFrame {
         PlaceHolder side_search_input = new PlaceHolder("Search");
         JButton side_search_button = new JButton("Search");
         side_search_button.addActionListener(_ -> searchTab(side_search_input.getText()));
-        new_group_button = new JButton("New");
         side_more_button = new JButton();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -79,8 +77,6 @@ public class MainUserWindow extends JFrame {
 
         side_navigator.setBackground(new Color(153, 204, 255));
         side_navigator.setPreferredSize(new Dimension(218, 70));
-
-        new_group_button.addActionListener(_ -> createGroupChat());
 
         JPopupMenu more_menu = MoreMenu();
 
@@ -97,8 +93,7 @@ public class MainUserWindow extends JFrame {
                         .addComponent(side_more_button))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                     .addGroup(side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(side_search_button, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(new_group_button, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(side_search_button, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE))
                     .addContainerGap(14, Short.MAX_VALUE))
         );
         side_navigatorLayout.setVerticalGroup(
@@ -106,7 +101,6 @@ public class MainUserWindow extends JFrame {
                 .addGroup(side_navigatorLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(new_group_button, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                             .addComponent(side_more_button, GroupLayout.Alignment.TRAILING))
                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(side_navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -288,7 +282,7 @@ public class MainUserWindow extends JFrame {
         clearFriendSide();
         synchronized (fetchLock) {
             if (isFetching) {
-                return;  // Prevent a new fetch operation if one is already ongoing
+                return;
             }
             mode = modeName;
             side_more_button.setText(modeName);
@@ -296,7 +290,7 @@ public class MainUserWindow extends JFrame {
 
             new Thread(() -> {
                 try {
-                    fetchTask.run();  // Run the data fetching task (for example, fetching friends or groups)
+                    fetchTask.run();
                 } catch (Exception e) {
                     e.printStackTrace();
                     SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null,
@@ -315,13 +309,13 @@ public class MainUserWindow extends JFrame {
         SwingUtilities.invokeLater(() -> {
             loadFriendTabs(friends);
             loadGroupTabs(groups);
-            updateGroupButtonVisibility();
         });
     }
 
     private static void clearFriendSide() {
-        System.out.print("clear");
         friend_side.removeAll();
+        friend_side.revalidate();
+        friend_side.repaint();
         chatPanel.removeAll();
         chatPanel.add(blank_chat_panel, "0");
         cardLayout.show(chatPanel, "0");
@@ -378,12 +372,6 @@ public class MainUserWindow extends JFrame {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED);
 
         friend_side.add(tag_panel);
-    }
-
-    private static void updateGroupButtonVisibility() {
-        boolean isGroupMode = mode.equals("Online");
-        new_group_button.setVisible(isGroupMode);
-        new_group_button.setEnabled(isGroupMode);
     }
 
     public static void groupChat() {

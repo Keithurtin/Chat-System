@@ -10,7 +10,7 @@ import dto.*;
 import dao.*;
 
 public class GroupChatBUS {
-    public boolean addNewGroup(String name, int initMembers) {
+    public int addNewGroup(String name, int initMembers) {
         GroupChatDAO dao = new GroupChatDAO();
         return dao.addNewGroup(name, initMembers);
     }

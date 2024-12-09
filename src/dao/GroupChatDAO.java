@@ -7,25 +7,31 @@ import dto.*;
 import java.sql.*;
 
 public class GroupChatDAO {
-    public boolean addNewGroup(String name, int initMembers) {
+    public int addNewGroup(String name, int initMembers) {
         UtilityDAO utilityDAO = new UtilityDAO();
         Connection conn = utilityDAO.getConnection();
         if (conn == null) {
-            return false;
+            return -1; // Return -1 to indicate an error
         }
 
-        String query = "INSERT INTO GroupChat (group_name, initial_member) VALUES (?, ?)";
+        String query = "INSERT INTO GroupChat (group_name, initial_member) VALUES (?, ?); SELECT SCOPE_IDENTITY();";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setString(1, name);
             pstmt.setInt(2, initMembers);
-            pstmt.executeUpdate();
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return false;
+            return -1;
         }
-        return true;
+        return -1;
     }
+
 
     public List<GroupChatDTO> getAll() {
         List<GroupChatDTO> list = new ArrayList<>();

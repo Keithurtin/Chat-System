@@ -257,7 +257,8 @@ public class FriendChatSection extends JPanel {
     }
 
     private void addToGroup() {
-
+        JFrame newWindow = new createOrAddGroupWindow(uid, uid2);
+        newWindow.setVisible(true);
     }
 
     public void delete() {
