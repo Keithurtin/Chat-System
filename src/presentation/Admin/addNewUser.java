@@ -5,10 +5,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
+import java.util.Arrays;
 
 import bus.UsersBUS;
 import com.toedter.calendar.JDateChooser;
 import dto.UsersDTO;
+import presentation.User.HashString;
 
 import static Admin.adminMenu.reloadAdminTable;
 
@@ -56,7 +58,11 @@ public class addNewUser extends JPanel {
                 String username = username_input.getText();
                 String fullname = fullname_input.getText();
                 String address = address_input.getText();
-                String password = password_input.getText();
+
+                char[] passwordChars = password_input.getPassword();
+                String password = HashString.hashString(new String(passwordChars));
+                Arrays.fill(passwordChars, '0');
+
                 String gender = (String) gender_input.getSelectedItem();
                 String email = email_input.getText();
                 Date birthday = new java.sql.Date(birthdate_input.getDate().getTime());
@@ -64,7 +70,8 @@ public class addNewUser extends JPanel {
 
                 int res = JOptionPane.showConfirmDialog(null, "Do you want to add this user?", "Add New User", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
-                    if (usersBUS.addUser(newUser) == true) {
+                    newUser = usersBUS.addUser(newUser);
+                    if (newUser.getuID() != -1) {
                         JOptionPane.showMessageDialog(null, "User added successfully", "Success", JOptionPane.PLAIN_MESSAGE);
                         reloadAdminTable();
                     } else {

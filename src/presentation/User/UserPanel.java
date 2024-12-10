@@ -21,9 +21,11 @@ public class UserPanel {
         friendChat = new FriendChatSection(uid, user);
         friendChat.setDeletionListener(() -> {
             Container parent = tab.getParent();
-            parent.remove(tab);
-            parent.revalidate();
-            parent.repaint();
+            if(parent != null) {
+                parent.remove(tab);
+                parent.revalidate();
+                parent.repaint();
+            }
         });
     }
 
@@ -35,9 +37,11 @@ public class UserPanel {
         groupChat = new GroupChatSection(uid, group);
         groupChat.setDeletionListener(() -> {
             Container parent = tab.getParent();
-            parent.remove(tab);
-            parent.revalidate();
-            parent.repaint();
+            if(parent != null) {
+                parent.remove(tab);
+                parent.revalidate();
+                parent.repaint();
+            }
         });
     }
 }

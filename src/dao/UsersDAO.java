@@ -39,14 +39,14 @@ public class UsersDAO {
         return list;
     }
 
-    public boolean insert(UsersDTO user) {
+    public UsersDTO insert(UsersDTO user) {
         UtilityDAO utilityDAO = new UtilityDAO();
         Connection conn = utilityDAO.getConnection();
         if (conn == null) {
-            return false;
+            return user;
         }
 
-        String query = "insert into Users (username, full_name, address, birth_date, gender, email, password) values (?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Users (username, full_name, address, birth_date, gender, email, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, user.getuName());
@@ -56,13 +56,23 @@ public class UsersDAO {
             pstmt.setString(5, user.getGender());
             pstmt.setString(6, user.getEmail());
             pstmt.setString(7, user.getPassword());
-            pstmt.executeUpdate();
+
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int uID = rs.getInt(1);
+                        return new UsersDTO(uID, user.getuName(), user.getIsAdmin(), user.getIsLocked(), user.getFullname(), user.getAddress(), user.getBirthDate(), user.getGender(), user.getEmail(), user.getPassword(), user.getStatus(), user.getCreateTime());
+                    }
+                }
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-            return false;
+            return user;
         }
-        return true;
+        return user;
     }
+
 
     public boolean update(UsersDTO user) {
         UtilityDAO utilityDAO = new UtilityDAO();

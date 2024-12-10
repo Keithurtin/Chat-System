@@ -48,6 +48,7 @@ public class UsersDTO {
     }
 
     public UsersDTO(String uName, String fullname, String address, Date birthDate, String gender, String email, String password) {
+        uID = -1;
         this.address = address;
         this.birthDate = birthDate;
         this.email = email;

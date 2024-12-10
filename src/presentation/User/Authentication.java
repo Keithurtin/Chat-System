@@ -65,7 +65,7 @@ public class Authentication extends JFrame {
 
         JButton submit_button = new JButton("Submit");
 
-        submit_button.addActionListener(e -> {
+        submit_button.addActionListener(_ -> {
             if (!(ValidateData.isValidName(fullname_input.getText()))) {
                 notification.setText("Your name is invalid");
                 return;
@@ -87,11 +87,12 @@ public class Authentication extends JFrame {
 
             if (usersBUS.updateUser(newUser)) {
                 notification.setText("Done!");
+                newWindow.dispose();
+                Authentication login = new Authentication();
+                login.setVisible(true);
             } else {
                 notification.setText("Error");
-                return;
             }
-            goToLogin();
         });
 
         newWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -569,7 +570,8 @@ public class Authentication extends JFrame {
             return;
         }
         String new_password = generateRandomPassword(10);
-        user.setPassword(new_password);
+        String store_password = HashString.hashString(new_password);
+        user.setPassword(store_password);
         if(usersBUS.updateUser(user)){
             System.out.println(user.getPassword());
             SendMail newMail = new SendMail(mail, new_password);
@@ -610,26 +612,26 @@ public class Authentication extends JFrame {
         String address = "Unknown Address";
         String gender = "Male";
         Date birthday = new java.sql.Date(System.currentTimeMillis());
-
+        password = HashString.hashString(password);
         UsersDTO newUser = new UsersDTO(username, fullname, address, birthday, gender, email, password);
-
-        if (usersBUS.addUser(newUser)) {
+        newUser = usersBUS.addUser(newUser);
+        if (newUser.getuID() != -1) {
             signup_notification.setText("Done!");
+            completeSignup(newUser);
         } else {
             signup_notification.setText("Error");
         }
-        completeSignup(newUser);
     }
 
     private void loginButton(String username, String password) {
         UsersBUS usersBUS = new UsersBUS();
         List<UsersDTO> existingUser = usersBUS.getByUserName(username);
-        if (existingUser == null || existingUser.isEmpty() || !existingUser.getFirst().getPassword().equals(password)) {
+        if (existingUser == null || existingUser.isEmpty() || !HashString.verifyHash(password, existingUser.getFirst().getPassword())) {
             login_notification.setText("Your username/password is wrong");
             return;
         }
         UsersDTO user = existingUser.getFirst();
-        user.setStatus("Online");
+        user.setStatus("online");
         usersBUS.updateUser(user);
         JFrame newWindow;
         if(user.getIsAdmin()) {

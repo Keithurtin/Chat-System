@@ -27,6 +27,10 @@ public class MainUserWindow extends JFrame {
     private static JPanel blank_chat_panel;
     private static JButton side_more_button;
 
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> new MainUserWindow(1).setVisible(true));
+    }
+
     public MainUserWindow(int id) {
         uid = id;
         UsersBUS usersBUS = new UsersBUS();
@@ -60,6 +64,13 @@ public class MainUserWindow extends JFrame {
         setResizable(false);
         setLocation(400, 150);
         pack();
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                close();
+            }
+        });
     }
 
     private void setupSideLayout() {
@@ -164,35 +175,7 @@ public class MainUserWindow extends JFrame {
         group_button.addActionListener(_ -> groupChat());
         friend_request_button.addActionListener(_ -> friendRequest());
         logout.addActionListener(_ -> {
-            removeAll();
-            dispose();
-            new Thread(() -> {
-                synchronized (fetchLock) {
-                    while (isFetching) {
-                        try {
-                            fetchLock.wait();
-                        } catch (InterruptedException e) {
-                            Thread.currentThread().interrupt();
-                            return;
-                        }
-                    }
-
-                    try {
-                        isFetching = true; // Mark the operation as ongoing
-                        UsersBUS usersBUS = new UsersBUS();
-                        UsersDTO user = usersBUS.getById(uid);
-                        if (user != null) {
-                            user.setStatus("Offline");
-                            usersBUS.updateUser(user);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        isFetching = false; // Reset the flag
-                        fetchLock.notifyAll(); // Notify other waiting threads
-                    }
-                }
-            }).start();
+            close();
             Authentication newWindow = new Authentication();
             newWindow.setVisible(true);
         });
@@ -316,6 +299,13 @@ public class MainUserWindow extends JFrame {
         friend_side.removeAll();
         friend_side.revalidate();
         friend_side.repaint();
+        for (Component comp : chatPanel.getComponents()) {
+            if (comp instanceof FriendChatSection) {
+                ((FriendChatSection) comp).delete();
+            } else if (comp instanceof GroupChatSection) {
+                System.out.println("delete Group");
+            }
+        }
         chatPanel.removeAll();
         chatPanel.add(blank_chat_panel, "0");
         cardLayout.show(chatPanel, "0");
@@ -406,10 +396,6 @@ public class MainUserWindow extends JFrame {
         });
     }
 
-    private void createGroupChat() {
-
-    }
-
     private void searchTab(String query) {
         List<UsersDTO> users = new ArrayList<>();
         List<GroupChatDTO> groups = new ArrayList<>();
@@ -442,8 +428,35 @@ public class MainUserWindow extends JFrame {
         reloadFriendSide(users, groups);
     }
 
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new MainUserWindow(1).setVisible(true));
-    }
+    private void close(){
+            clearFriendSide();
+            dispose();
+            new Thread(() -> {
+                synchronized (fetchLock) {
+                    while (isFetching) {
+                        try {
+                            fetchLock.wait();
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                            return;
+                        }
+                    }
 
+                    try {
+                        isFetching = true; // Mark the operation as ongoing
+                        UsersBUS usersBUS = new UsersBUS();
+                        UsersDTO user = usersBUS.getById(uid);
+                        if (user != null) {
+                            user.setStatus("offline");
+                            usersBUS.updateUser(user);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        isFetching = false; // Reset the flag
+                        fetchLock.notifyAll(); // Notify other waiting threads
+                    }
+                }
+            }).start();
+    }
 }

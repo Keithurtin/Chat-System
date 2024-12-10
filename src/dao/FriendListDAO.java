@@ -15,7 +15,7 @@ public class FriendListDAO {
             return false;
         }
 
-        String insertUserQuery  = "INSERT INTO FriendList (user_id, friend_id, requesting) VALUES (?, ?, 1)";
+        String insertUserQuery  = "INSERT INTO FriendList (user_id, friend_id, requested) VALUES (?, ?, 1)";
         try (PreparedStatement pstmt = conn.prepareStatement(insertUserQuery)) {
             pstmt.setInt(1, userID);
             pstmt.setInt(2, friendID);
@@ -25,7 +25,7 @@ public class FriendListDAO {
             return false;
         }
 
-        String insertFriendQuery  = "INSERT INTO FriendList (user_id, friend_id, requested) VALUES (?, ?, 1)";
+        String insertFriendQuery  = "INSERT INTO FriendList (user_id, friend_id, requesting) VALUES (?, ?, 1)";
         try (PreparedStatement pstmt = conn.prepareStatement(insertFriendQuery)) {
             pstmt.setInt(1, friendID);
             pstmt.setInt(2, userID);

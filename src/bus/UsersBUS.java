@@ -152,7 +152,7 @@ public class UsersBUS {
         return list;
     }
 
-    public boolean addUser(UsersDTO user) {
+    public UsersDTO addUser(UsersDTO user) {
         UsersDAO userDAO = new UsersDAO();
         return userDAO.insert(user);
     }

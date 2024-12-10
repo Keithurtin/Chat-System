@@ -5,7 +5,16 @@ import dto.*;
 import bus.*;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import javax.swing.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class FriendChatSection extends JPanel {
     private JPanel navigator;
@@ -16,10 +25,86 @@ public class FriendChatSection extends JPanel {
     private JPanel send_message_panel;
     private PlaceHolder input_message;
     private JButton send_button;
+    private final ChatDMBUS chatDMBUS;
 
     private JScrollPane chat_scroll;
     private JPanel chat_side;
     private DeletionListener listener;
+
+    private static final String SERVER_ADDRESS = "127.0.0.1";
+    private static final int PORT = 12345;
+    private BufferedReader in;
+    private PrintWriter out;
+    private Socket socket;
+
+    private void connectToServer() {
+        try {
+            socket = new Socket(SERVER_ADDRESS, PORT);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(uid + "to" + uid2);
+            new Thread(new FriendChatSection.MessageReader(in)).start();
+        } catch (IOException e) {
+            System.out.println("Unable to connect to the server: " + e.getMessage());
+        }
+    }
+
+    private void sendMessage(String message) {
+        if (out != null) {
+            String formattedMessage = String.format("/private %s %s", uid2 + "to" + uid, message);
+            out.println(formattedMessage);
+            chatDMBUS.addChat(uid, uid2, message);
+            addMessage(new ChatDMDTO(0, uid, uid2, message, LocalDateTime.now()));
+            input_message.setText("");
+        } else {
+            System.out.println("Unable to send message. Not connected to server.");
+        }
+    }
+
+    private void showServerMessage(String message) {
+        SwingUtilities.invokeLater(() -> {
+            addMessage(new ChatDMDTO(0, uid2, uid, message));
+        });
+    }
+
+    private class MessageReader implements Runnable {
+        private final BufferedReader in;
+
+        public MessageReader(BufferedReader in) {
+            this.in = in;
+        }
+
+        @Override
+        public void run() {
+            try {
+                String message;
+                while ((message = in.readLine()) != null) {
+                    String finalMessage = message;
+                    SwingUtilities.invokeLater(() -> showServerMessage(finalMessage));
+                }
+            } catch (IOException e) {
+                System.out.println("Server connection lost.");
+            }
+        }
+    }
+
+    private void closeConnection() {
+        try {
+            if (out != null) {
+                out.println("exit"); // Optionally, notify the server that the client is disconnecting
+                out.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+            System.out.println("Disconnected from server.");
+        } catch (IOException e) {
+            System.out.println("Error while disconnecting: " + e.getMessage());
+        }
+    }
 
     public FriendChatSection(int id, UsersDTO user) {
         setBackground(new java.awt.Color(255, 255, 255));
@@ -30,6 +115,7 @@ public class FriendChatSection extends JPanel {
         blockBUS = new BlockBUS();
         BlockDAO dao = new BlockDAO();
         block = dao.getRelationship(uid, uid2);
+        chatDMBUS = new ChatDMBUS();
 
         setupSendMessageLayout();
         setupNavigatorLayout(user.getuName(), (user.getStatus()).equals("online"));
@@ -52,6 +138,7 @@ public class FriendChatSection extends JPanel {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(send_message_panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+        new Thread(this::connectToServer).start();
     }
 
     public void setDeletionListener(DeletionListener listener) {
@@ -67,7 +154,7 @@ public class FriendChatSection extends JPanel {
         report_user_button.setBackground(new java.awt.Color(255, 102, 102));
         report_user_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
         report_user_button.setForeground(new java.awt.Color(255, 255, 255));
-        report_user_button.addActionListener(e -> {
+        report_user_button.addActionListener(_ -> {
             SpamBUS spamBUS = new SpamBUS();
             spamBUS.addSpamReport(uid2);
         });
@@ -91,12 +178,19 @@ public class FriendChatSection extends JPanel {
         JMenuItem unfriend_button = new JMenuItem();
         JMenuItem block_button = new JMenuItem(block == 1 ? "Unblock" : "Block");
         JMenuItem add_to_group_button = new JMenuItem("Add Group");
+        JMenuItem del_button = new JMenuItem("Delete Chat");
+        del_button.addActionListener(_ -> {
+            chatDMBUS.deleteAllChat(uid, uid2);
+            chat_side.removeAll();
+            chat_side.validate();
+            chat_side.repaint();
+        });
 
         if(block == 0 && FriendListDAO.getRelationship(uid, uid2) == 2) {
             unfriend_button.setText("Unfriend");
             dropdownMenu.add(unfriend_button);
 
-            unfriend_button.addActionListener(e -> {
+            unfriend_button.addActionListener(_ -> {
                 dropdownMenu.remove(unfriend_button);
                 FriendListBUS friendListBUS = new FriendListBUS();
                 delete();
@@ -106,7 +200,7 @@ public class FriendChatSection extends JPanel {
             });
         }
 
-        block_button.addActionListener(e -> {
+        block_button.addActionListener(_ -> {
             if (block_button.getText().equals("Block")) {
                 dropdownMenu.remove(unfriend_button);
                 blockBUS.blockFriend(uid, uid2);
@@ -125,12 +219,13 @@ public class FriendChatSection extends JPanel {
                 blockBUS.unblockFriend(uid, uid2);
             }
         });
-        add_to_group_button.addActionListener(e -> addToGroup());
+        add_to_group_button.addActionListener(_ -> addToGroup());
 
         dropdownMenu.add(block_button);
         dropdownMenu.add(add_to_group_button);
+        dropdownMenu.add(del_button);
 
-        more_button.addActionListener(e -> dropdownMenu.show(more_button, 0, more_button.getHeight()));
+        more_button.addActionListener(_ -> dropdownMenu.show(more_button, 0, more_button.getHeight()));
 
         GroupLayout navigatorLayout = new GroupLayout(navigator);
         navigator.setLayout(navigatorLayout);
@@ -170,17 +265,11 @@ public class FriendChatSection extends JPanel {
         chat_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         chat_scroll.setBorder(null);
 
+        List<ChatDMDTO> chat = chatDMBUS.getAll(uid, uid2);
 
-        addMessage("Hello there", false);
-        addMessage("How are you doing?", false);
-        addMessage("I'm doing great, thanks!", true);
-        addMessage("That's wonderful to hear!", false);
-        addMessage("How about you", true);
-        addMessage("Not so great", false);
-        addMessage("Not so great", true);
-        addMessage("Not so great", false);
-        addMessage("Not so great", true);
-        addMessage("Not so great", false);
+        for(ChatDMDTO msg : chat) {
+            addMessage(msg);
+        }
     }
 
     private void setupSendMessageLayout() {
@@ -190,7 +279,7 @@ public class FriendChatSection extends JPanel {
         input_message = new PlaceHolder("Text....");
 
         send_button = new JButton("Send");
-        send_button.addActionListener(e -> sendMessage(input_message.getText()));
+        send_button.addActionListener(_ -> sendMessage(input_message.getText()));
         send_button.setBackground(new java.awt.Color(153, 204, 255));
         send_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         send_button.setForeground(new java.awt.Color(255, 255, 255));
@@ -223,17 +312,38 @@ public class FriendChatSection extends JPanel {
         );
     }
     
-    private void addMessage(String message, boolean isYou) {
+    private void addMessage(ChatDMDTO msg) {
         JPanel messagePanel = new JPanel();
-        messagePanel.setLayout(new FlowLayout(isYou ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        messagePanel.setLayout(new FlowLayout(msg.getSenderID() == uid ? FlowLayout.RIGHT : FlowLayout.LEFT));
         messagePanel.setOpaque(false);
+
+        messagePanel.setToolTipText(msg.getTime());
 
         JPanel messageBox = new JPanel();
         messageBox.setLayout(new BorderLayout());
-        messageBox.setBackground(isYou ? new Color(200, 255, 200) : new Color(200, 200, 255));
+        messageBox.setBackground(msg.getSenderID() == uid ? new Color(200, 255, 200) : new Color(200, 200, 255));
         messageBox.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); // Padding inside the box
 
-        JLabel messageLabel = new JLabel(message);
+        messagePanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    JPopupMenu menu = new JPopupMenu();
+                    JMenuItem del = new JMenuItem("Delete Message");
+                    del.addActionListener(_ -> {
+                        chatDMBUS.deleteChat(msg.getID());
+                        chat_side.remove(messagePanel);
+                        chat_side.revalidate();
+                        chat_side.repaint();
+                    });
+                    menu.add(del);
+                    menu.show(messagePanel, e.getX(), e.getY());
+                }
+            }
+        });
+
+
+        JLabel messageLabel = new JLabel(msg.getMessage());
         messageBox.add(messageLabel, BorderLayout.CENTER);
 
         messagePanel.add(messageBox);
@@ -250,18 +360,14 @@ public class FriendChatSection extends JPanel {
         });
     }
 
-    private void sendMessage(String message) {
-        if(message.isEmpty()){
-            return;
-        }
-    }
-
     private void addToGroup() {
         JFrame newWindow = new createOrAddGroupWindow(uid, uid2);
         newWindow.setVisible(true);
     }
 
     public void delete() {
+        closeConnection();
+
         if (listener != null) {
             listener.onDeleted(); // Notify listener
         }
