@@ -69,6 +69,18 @@ public class Server {
                             out.println("Incorrect private message format. Use /private <nickname> <message>");
                         }
                     }
+
+                    if (message.startsWith("/block")) {
+                        String[] parts = message.split(" ", 3); // Split into at least 3 parts
+                        if (parts.length == 3) {
+                            String recipientNickname = parts[1];
+                            String privateMessage = "block" + parts[1];
+                            System.out.println(privateMessage);// The remaining message could contain spaces
+                            sendPrivateMessage(recipientNickname, privateMessage);
+                        } else {
+                            out.println("Incorrect private message format. Use /private <nickname> <message>");
+                        }
+                    }
                 }
 
                 // Handle client disconnection

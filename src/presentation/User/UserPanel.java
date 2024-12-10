@@ -20,6 +20,13 @@ public class UserPanel {
                 parent.revalidate();
                 parent.repaint();
             }
+
+            Container parent2 = friendChat.getParent();
+            if(parent != null) {
+                parent2.remove(friendChat);
+                parent2.revalidate();
+                parent2.repaint();
+            }
         });
     }
     // group
@@ -33,6 +40,12 @@ public class UserPanel {
                 parent.revalidate();
                 parent.repaint();
             }
-        });
-    }
+
+            Container parent2 = groupChat.getParent();
+            if(parent != null) {
+                parent2.remove(groupChat);
+                parent2.revalidate();
+                parent2.repaint();
+            }
+    });
 }

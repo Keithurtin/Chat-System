@@ -25,10 +25,12 @@ public class BlockDAO {
             return false;
         }
 
-        query = "DELETE from FriendList where user_id = ? and friend_id = ?";
+        query = "DELETE from FriendList where (user_id = ? and friend_id = ?) or (user_id = ? and friend_id = ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(query)) {
             pstmt.setInt(1, userID);
             pstmt.setInt(2, friendID);
+            pstmt.setInt(3, friendID);
+            pstmt.setInt(4, userID);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

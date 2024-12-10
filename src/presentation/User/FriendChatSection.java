@@ -64,6 +64,10 @@ public class FriendChatSection extends JPanel {
 
     private void showServerMessage(String message) {
         SwingUtilities.invokeLater(() -> {
+            if(message.equals("block" + uid + "to" + uid2)) {
+                delete();
+                return;
+            }
             addMessage(new ChatDMDTO(0, uid2, uid, message));
         });
     }
@@ -209,6 +213,12 @@ public class FriendChatSection extends JPanel {
                 send_button.setEnabled(false);
                 input_message.setText("You can't send message due to block!");
                 block = 1;
+                if (out != null) {
+                    String formattedMessage = String.format("/block %s %s", uid2 + "to" + uid, "message");
+                    out.println(formattedMessage);
+                } else {
+                    System.out.println("Unable to send message. Not connected to server.");
+                }
                 block_button.setText("Unblock");
                 delete();
             } else{
