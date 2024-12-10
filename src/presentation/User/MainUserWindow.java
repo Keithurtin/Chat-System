@@ -12,23 +12,26 @@ import java.util.List;
 import javax.swing.*;
 
 public class MainUserWindow extends JFrame {
+    //id
+    private static int uid;
+    private final boolean isAdmin;
+    //component
     private static JPanel chatPanel;
     private static CardLayout cardLayout;
-    private static int uid;
     private static int numberOfTab = 0;
     private static String mode;
-    private final boolean isAdmin;
-    private static volatile boolean isFetching = false;
-    private static final Object fetchLock = new Object();
     private JPanel side_panel;
     private static JPanel friend_side;
     private static GroupLayout.ParallelGroup horizontalGroup;
     private static GroupLayout.SequentialGroup verticalGroup;
     private static JPanel blank_chat_panel;
     private static JButton side_more_button;
+    //thread
+    private static volatile boolean isFetching = false;
+    private static final Object fetchLock = new Object();
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new MainUserWindow(1).setVisible(true));
+        EventQueue.invokeLater(() -> new MainUserWindow(4).setVisible(true));
     }
 
     public MainUserWindow(int id) {
@@ -303,7 +306,7 @@ public class MainUserWindow extends JFrame {
             if (comp instanceof FriendChatSection) {
                 ((FriendChatSection) comp).delete();
             } else if (comp instanceof GroupChatSection) {
-                System.out.println("delete Group");
+                ((GroupChatSection) comp).delete();
             }
         }
         chatPanel.removeAll();

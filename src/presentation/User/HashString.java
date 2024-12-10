@@ -68,14 +68,15 @@ public class HashString {
         }
     }
 
+    //usage illustration
     public static void main(String[] args) {
-        String originalString = "mySecurePassword";
+        String originalString = "original";
         String hashedString = HashString.hashString(originalString);
 
         System.out.println("Original: " + originalString);
         System.out.println("Hashed: " + hashedString);
 
         boolean isMatch = HashString.verifyHash(originalString, hashedString);
-        System.out.println("Do they match? " + isMatch);
+        System.out.println("Match: " + isMatch);
     }
 }

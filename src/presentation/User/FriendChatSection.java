@@ -17,26 +17,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class FriendChatSection extends JPanel {
-    private JPanel navigator;
+    //id
     private static int uid;
     private final int uid2;
+    // component
+    private JPanel navigator;
     private int block;
     private final BlockBUS blockBUS;
     private JPanel send_message_panel;
     private PlaceHolder input_message;
     private JButton send_button;
-    private final ChatDMBUS chatDMBUS;
-
     private JScrollPane chat_scroll;
     private JPanel chat_side;
     private DeletionListener listener;
-
+    // data
+    private final ChatDMBUS chatDMBUS;
     private static final String SERVER_ADDRESS = "127.0.0.1";
     private static final int PORT = 12345;
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
-
+    //socket
     private void connectToServer() {
         try {
             socket = new Socket(SERVER_ADDRESS, PORT);
@@ -105,7 +106,7 @@ public class FriendChatSection extends JPanel {
             System.out.println("Error while disconnecting: " + e.getMessage());
         }
     }
-
+    // friend chat
     public FriendChatSection(int id, UsersDTO user) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
@@ -317,14 +318,14 @@ public class FriendChatSection extends JPanel {
         messagePanel.setLayout(new FlowLayout(msg.getSenderID() == uid ? FlowLayout.RIGHT : FlowLayout.LEFT));
         messagePanel.setOpaque(false);
 
-        messagePanel.setToolTipText(msg.getTime());
 
-        JPanel messageBox = new JPanel();
-        messageBox.setLayout(new BorderLayout());
-        messageBox.setBackground(msg.getSenderID() == uid ? new Color(200, 255, 200) : new Color(200, 200, 255));
-        messageBox.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); // Padding inside the box
+        JLabel messageLabel = new JLabel(msg.getMessage());
+        messageLabel.setBackground(msg.getSenderID() == uid ? new Color(200, 255, 200) : new Color(200, 200, 255));
+        messageLabel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); // Padding inside the box
 
-        messagePanel.addMouseListener(new MouseAdapter() {
+        messageLabel.setToolTipText(msg.getTime());
+
+        messageLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
@@ -337,19 +338,16 @@ public class FriendChatSection extends JPanel {
                         chat_side.repaint();
                     });
                     menu.add(del);
-                    menu.show(messagePanel, e.getX(), e.getY());
+                    menu.show(messageLabel, e.getX(), e.getY());
                 }
             }
         });
+        messageLabel.setOpaque(true);
 
-
-        JLabel messageLabel = new JLabel(msg.getMessage());
-        messageBox.add(messageLabel, BorderLayout.CENTER);
-
-        messagePanel.add(messageBox);
+        messagePanel.add(messageLabel);
 
         chat_side.add(messagePanel);
-        chat_side.add(Box.createVerticalStrut(10));
+        chat_side.add(Box.createVerticalStrut(1));
 
         chat_side.revalidate();
         chat_side.repaint();
@@ -361,7 +359,7 @@ public class FriendChatSection extends JPanel {
     }
 
     private void addToGroup() {
-        JFrame newWindow = new createOrAddGroupWindow(uid, uid2);
+        JFrame newWindow = new createOrAddGroupToWindow(uid, uid2);
         newWindow.setVisible(true);
     }
 

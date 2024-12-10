@@ -8,10 +8,11 @@ import bus.*;
 import java.util.List;
 
 public class GroupManageWindow extends JFrame {
-
-    private JPanel navigator;
-    private int gid;
+    //id
+    private final int gid;
     private static int uid;
+    //component
+    private JPanel navigator;
     private static boolean isAdmin;
     private JPanel list_side;
     private JScrollPane list_scroll;
@@ -142,22 +143,19 @@ public class GroupManageWindow extends JFrame {
         JLabel member_status = new JLabel("<html> Status:" + ((user.getStatus()).equals("online") ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
 
         JButton more_button = new JButton("More");
-        more_button.setFont(new Font("Segoe UI", 1, 12));
-
-        JPopupMenu more_menu = new JPopupMenu();
-
-        JMenuItem chat_button = new JMenuItem("Chat");
-        more_menu.add(chat_button);
+        more_button.setVisible(false);
 
         if(isAdmin){
             JMenuItem kick_button = new JMenuItem("Kick");
             JMenuItem assign_button = new JMenuItem("Assign Admin");
 
+            more_button.setVisible(true);
+            more_button.setFont(new Font("Segoe UI", 1, 12));
+            JPopupMenu more_menu = new JPopupMenu();
             more_menu.add(kick_button);
             more_menu.add(assign_button);
+            more_button.addActionListener(e -> more_menu.show(more_button, 0, more_button.getHeight()));
         }
-
-        more_button.addActionListener(e -> more_menu.show(more_button, 0, more_button.getHeight()));
 
         GroupLayout member_panelLayout = new GroupLayout(member_panel);
         member_panel.setLayout(member_panelLayout);

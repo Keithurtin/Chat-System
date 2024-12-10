@@ -22,6 +22,13 @@ public class newUsersManage extends JFrame {
     JPanel navigator;
     List<UsersDTO> currentList;
 
+    public static void main(String[] args) {
+        JFrame newWindow = new newUsersManage();
+        newWindow.setResizable(false);
+        newWindow.setLocation(480, 190);
+        newWindow.setVisible(true);
+    }
+
     public newUsersManage() {
         setTitle("User Registration List");
         setSize(600, 400);
@@ -36,7 +43,7 @@ public class newUsersManage extends JFrame {
         add(table_scroll, BorderLayout.CENTER);
     }
 
-private void setupNavigatorLayout() {
+    private void setupNavigatorLayout() {
     navigator = new JPanel();
     navigator.setBackground(new Color(153, 204, 255));
     JLabel title = new JLabel("New Register Menu");
@@ -249,12 +256,5 @@ private void setupNavigatorLayout() {
         JPanel chartPanel = new Admin.chartDisplay(year, data, true);
         chartFrame.add(chartPanel);
         chartFrame.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-            JFrame newWindow = new newUsersManage();
-            newWindow.setResizable(false);
-            newWindow.setLocation(480, 190);
-            newWindow.setVisible(true);
     }
 }

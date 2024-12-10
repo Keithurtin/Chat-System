@@ -18,46 +18,27 @@ import java.util.List;
 import static Admin.adminMenu.reloadAdminTable;
 
 public class userManage extends JPanel {
+    private final JDateChooser birthdate_value_label;
+    private final JTextField username_value_label;
+    private final JTextField fullname_value_label;
+    private final JTextField address_value_label;
+    private final JTextField gender_value_label;
+    private final JTextField email_value_label;
+    private final JPasswordField password_value_label;
+    private final JComboBox<String> lock_value_label;
 
-    private JPanel main_panel;
-    private JPanel navigator;
-    private JLabel title;
-
-    private JScrollPane main_scroll;
-    private JPanel content_side;
-    
-    private JDateChooser birthdate_value_label;
-    private JTextField username_value_label;
-    private JTextField fullname_value_label;
-    private JTextField address_value_label;
-    private JTextField gender_value_label;
-    private JTextField email_value_label;
-    private JPasswordField password_value_label;
-    private JComboBox<String> lock_value_label;
-    private JButton manage_button;
-    private JButton delete_button;
-    private JSeparator separator;
-
-    private JLabel history_login_label;
     private JScrollPane login_scroll;
-    private JTable login_table;
     DefaultTableModel tableModel2;
 
-    private JLabel friend_list_label;
     private JScrollPane friend_list_scroll;
-    private JTable friend_list_table;
     DefaultTableModel tableModel;
 
     public userManage(UsersDTO user) {
-        initComponents(user);
-    }
-
-    private void initComponents(UsersDTO user) {
-        main_panel = new JPanel();
-        navigator = new JPanel();
-        title = new JLabel();
-        main_scroll = new JScrollPane();
-        content_side = new JPanel();
+        JPanel main_panel = new JPanel();
+        JPanel navigator = new JPanel();
+        JLabel title = new JLabel();
+        JScrollPane main_scroll = new JScrollPane();
+        JPanel content_side = new JPanel();
         JLabel username_label = new JLabel();
         JLabel fullname_label = new JLabel();
         JLabel address_label = new JLabel();
@@ -79,11 +60,11 @@ public class userManage extends JPanel {
             lock_value_label.setSelectedItem("Unlock");
         }
         password_value_label = new JPasswordField(user.getPassword());
-        manage_button = new JButton();
-        delete_button = new JButton();
-        history_login_label = new JLabel();
-        friend_list_label = new JLabel();
-        separator = new JSeparator();
+        JButton manage_button = new JButton();
+        JButton delete_button = new JButton();
+        JLabel history_login_label = new JLabel();
+        JLabel friend_list_label = new JLabel();
+        JSeparator separator = new JSeparator();
 
         GroupLayout main_panelLayout = new GroupLayout(main_panel);
         main_panel.setLayout(main_panelLayout);
@@ -347,7 +328,7 @@ public class userManage extends JPanel {
 
     private void createFriendTableLayout(int uID) {
         tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Status", "Fullname", "No. F"});
-        friend_list_table = new JTable(tableModel);
+        JTable friend_list_table = new JTable(tableModel);
 
         friend_list_table.setRowHeight(30);
         friend_list_table.getColumnModel().getColumn(0).setPreferredWidth(100);
@@ -382,7 +363,7 @@ public class userManage extends JPanel {
     
     private void createLoginTableLayout(int uID) {
         tableModel2 = new DefaultTableModel(new Object[][]{}, new String[]{"UserID", "Time"});
-        login_table = new JTable(tableModel2);
+        JTable login_table = new JTable(tableModel2);
 
         login_table.setRowHeight(30);
         login_table.getColumnModel().getColumn(0).setPreferredWidth(100);
@@ -408,5 +389,4 @@ public class userManage extends JPanel {
             addRowToTableLogin(login.getUId(), login.getLoginTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
         }
     }
-
 }

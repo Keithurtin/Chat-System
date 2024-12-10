@@ -15,24 +15,28 @@ import presentation.User.HashString;
 import static Admin.adminMenu.reloadAdminTable;
 
 public class addNewUser extends JPanel {
-
-    private JPanel main_panel;
-    private JPanel navigator;
-
-    private JScrollPane main_scroll;
-    private JPanel content_side;
+    public static void main(String[] args) {
+        JFrame newWindow = new JFrame("User Management");
+        JPanel userManage = new addNewUser();
+        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        Dimension panelSize = userManage.getPreferredSize();
+        newWindow.add(userManage);
+        newWindow.setResizable(false);
+        newWindow.setLocation(600, 180);
+        newWindow.setSize(panelSize);
+        newWindow.setVisible(true);
+    }
 
     public addNewUser() {
         initComponents();
     }
 
     private void initComponents() {
-
-        main_panel = new JPanel();
-        navigator = new JPanel();
+        JPanel main_panel = new JPanel();
+        JPanel navigator = new JPanel();
         JLabel title = new JLabel("Add New User");
-        main_scroll = new JScrollPane();
-        content_side = new JPanel();
+        JScrollPane main_scroll = new JScrollPane();
+        JPanel content_side = new JPanel();
 
         JLabel username_label = new JLabel("Username:");
         JLabel fullname_label = new JLabel("Fullname:");
@@ -236,17 +240,5 @@ public class addNewUser extends JPanel {
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(main_scroll, GroupLayout.PREFERRED_SIZE, 430, GroupLayout.PREFERRED_SIZE)))
         );
-    }
-
-    public static void main(String[] args) {
-        JFrame newWindow = new JFrame("User Management");
-        JPanel userManage = new addNewUser();
-        newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        Dimension panelSize = userManage.getPreferredSize();
-        newWindow.add(userManage);
-        newWindow.setResizable(false);
-        newWindow.setLocation(600, 180);
-        newWindow.setSize(panelSize);
-        newWindow.setVisible(true);
     }
 }

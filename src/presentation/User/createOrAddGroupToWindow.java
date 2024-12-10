@@ -12,19 +12,21 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class createOrAddGroupWindow extends JFrame{
-    private JPanel list_side;
+public class createOrAddGroupToWindow extends JFrame{
+    //id
     private static int uid;
     private static int uid2;
+    //component
+    private JPanel list_side;
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
     public static void main(String[] args) {
-        JFrame window = new createOrAddGroupWindow(1, 2);
+        JFrame window = new createOrAddGroupToWindow(1, 2);
         window.setVisible(true);
     }
 
-    public createOrAddGroupWindow(int uID, int uID2) {
+    public createOrAddGroupToWindow(int uID, int uID2) {
         uid = uID;
         uid2 = uID2;
         initComponents();

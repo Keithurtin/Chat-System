@@ -19,10 +19,10 @@ import dto.*;
 import bus.*;
 
 public class activeUserManage extends JFrame {
-    DefaultTableModel tableModel;
-    JTable table;
-    JScrollPane table_scroll;
     JPanel navigator;
+    JTable table;
+    DefaultTableModel tableModel;
+    JScrollPane table_scroll;
     List<ActivityDTO> currentList;
 
     public activeUserManage() {
@@ -39,7 +39,7 @@ public class activeUserManage extends JFrame {
         add(table_scroll, BorderLayout.CENTER);
     }
 
-private void setupNavigatorLayout() {
+    private void setupNavigatorLayout() {
     navigator = new JPanel();
     navigator.setBackground(new Color(153, 204, 255));
     JLabel title = new JLabel("Active Users Menu");

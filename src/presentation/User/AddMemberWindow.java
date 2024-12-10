@@ -17,41 +17,45 @@ import javax.swing.*;
 
 
 public class AddMemberWindow extends JFrame {
-
-    private JPanel list_side;
+    //id
     private static int uid;
     private static int gid;
+    //component
+    private JPanel list_side;
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            AddMemberWindow frame = new AddMemberWindow(1, 1);
+            frame.setVisible(true);
+        });
+    }
+    //constructor
     public AddMemberWindow(int gID, int uID) {
         uid = uID;
         gid = gID;
-        initComponents();
-    }
-
-    private void initComponents() {
         JPanel menu = new JPanel();
         menu.setBackground(new Color(255, 255, 255));
         menu.setFocusable(false);
         menu.setPreferredSize(new Dimension(620, 500));
-        
+
         JPanel navigator = setupNavigatorLayout();
         JScrollPane list_scroll = createMemberList();
 
         GroupLayout menuLayout = new GroupLayout(menu);
         menu.setLayout(menuLayout);
         menuLayout.setHorizontalGroup(
-            menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+                menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
         );
         menuLayout.setVerticalGroup(
-            menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(menuLayout.createSequentialGroup()
-                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
+                menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(menuLayout.createSequentialGroup()
+                                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -117,7 +121,7 @@ public class AddMemberWindow extends JFrame {
         loadUsers();
         return  list_scroll;
     }
-
+    //load friend not in group
     private void loadUsers() {
         GroupMembersDAO groupMembersDAO = new GroupMembersDAO();
         List<GroupMembersDTO> memberList = groupMembersDAO.getAll(gid);
@@ -138,7 +142,7 @@ public class AddMemberWindow extends JFrame {
             addFriendToList(friend);
         }
     }
-
+    //add loaded friend to list
     private void addFriendToList(UsersDTO user) {
         JPanel user_panel = new JPanel();
         user_panel.setPreferredSize(new Dimension(0, 85));
@@ -192,12 +196,5 @@ public class AddMemberWindow extends JFrame {
         list_side.add(user_panel);
         list_side.revalidate();
         list_side.repaint();
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            AddMemberWindow frame = new AddMemberWindow(1, 1);
-            frame.setVisible(true);
-        });
     }
 }

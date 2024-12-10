@@ -14,7 +14,7 @@ import bus.UsersBUS;
 import dto.UsersDTO;
 
 public class Authentication extends JFrame {
-
+    //component
     private final JPanel main_panel;
     private final CardLayout card_layout;
     private JPanel reset_password_panel;
@@ -24,7 +24,12 @@ public class Authentication extends JFrame {
     JLabel login_notification;
     JLabel forgetPassword_notification;
 
-
+    public static void main(String args[]) {
+        EventQueue.invokeLater(() -> {
+            new Authentication().setVisible(true);
+        });
+    }
+    //constructor
     public Authentication() {
         setUpLogin();
         setUpSignUp();
@@ -44,7 +49,7 @@ public class Authentication extends JFrame {
         getContentPane().add(main_panel);
         card_layout.show(main_panel, "login_panel");
     }
-
+    //complete signup information before login
     private void completeSignup(UsersDTO newUser) {
         dispose();
         JFrame newWindow = new JFrame();
@@ -213,7 +218,7 @@ public class Authentication extends JFrame {
         newWindow.pack();
         newWindow.setVisible(true);
     }
-
+    //signup window
     private void setUpSignUp() {
         signup_panel = new JPanel();
         signup_panel.setBackground(new Color(255, 255, 255));
@@ -332,7 +337,7 @@ public class Authentication extends JFrame {
                                 .addContainerGap(46, Short.MAX_VALUE))
         );
     }
-
+    //login window
     private void setUpLogin() {
         login_panel = new JPanel();
         login_panel.setBackground(new Color(255, 255, 255));
@@ -457,7 +462,7 @@ public class Authentication extends JFrame {
                                 .addContainerGap(29, Short.MAX_VALUE))
         );
     }
-
+    //reset password window
     private void setUpResetPassword() {
         reset_password_panel = new JPanel();
         reset_password_panel.setBackground(new Color(255, 255, 255));
@@ -539,12 +544,22 @@ public class Authentication extends JFrame {
                                 .addContainerGap(67, Short.MAX_VALUE))
         );
     }
-
+    //change layout to login
     private void goToLogin() {
         login_notification.setText(" ");
         card_layout.show(main_panel, "login_panel");
     }
-
+    //change layout to signup
+    private void goToSignUp() {
+        signup_notification.setText(" ");
+        card_layout.show(main_panel, "signup_panel");
+    }
+    //change layout to reset password
+    private void goToResetPassword() {
+        forgetPassword_notification.setText(" ");
+        card_layout.show(main_panel, "reset_password_panel");
+    }
+    //generate new password for reset password
     private String generateRandomPassword (int length) {
         String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         SecureRandom RANDOM = new SecureRandom();
@@ -555,7 +570,7 @@ public class Authentication extends JFrame {
         }
         return sb.toString();
     }
-
+    //reset and send mail
     private void resetPassword(String mail) {
         if(!ValidateData.isValidEmail(mail)){
             forgetPassword_notification.setText("Your email is invalid!");
@@ -580,12 +595,7 @@ public class Authentication extends JFrame {
             JOptionPane.showMessageDialog(this, "There something went wrong!", "Success", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
-    private void goToResetPassword() {
-        forgetPassword_notification.setText(" ");
-        card_layout.show(main_panel, "reset_password_panel");
-    }
-
+    //signup
     private void signupButton(String username, String email, String password) {
         //check valid input
         if(username.isEmpty()) {
@@ -622,7 +632,7 @@ public class Authentication extends JFrame {
             signup_notification.setText("Error");
         }
     }
-
+    //login
     private void loginButton(String username, String password) {
         UsersBUS usersBUS = new UsersBUS();
         List<UsersDTO> existingUser = usersBUS.getByUserName(username);
@@ -641,16 +651,5 @@ public class Authentication extends JFrame {
         }
         dispose();
         newWindow.setVisible(true);
-    }
-
-    private void goToSignUp() {
-        signup_notification.setText(" ");
-        card_layout.show(main_panel, "signup_panel");
-    }
-
-    public static void main(String args[]) {
-        EventQueue.invokeLater(() -> {
-            new Authentication().setVisible(true);
-        });
     }
 }

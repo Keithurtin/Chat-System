@@ -11,16 +11,12 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class groupManage extends JFrame {
-
     JPanel navigator;
     JScrollPane table_scroll;
     JTable table;
     private DefaultTableModel tableModel;
 
     public groupManage(int gID, String name) {
-        initComponents(gID, name);
-    }   
-    private void initComponents(int gID, String name) {
         JPanel menu = new JPanel();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -55,10 +51,10 @@ public class groupManage extends JFrame {
                         .addComponent(menu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
 
-        setResizable(false); 
+        setResizable(false);
         setLocation(400, 150);
         pack();
-    }
+    }   
 
     private void setupNavigatorLayout(int gID, String name) {
         navigator = new JPanel();

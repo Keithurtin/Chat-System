@@ -15,6 +15,7 @@ public class ChatDMDTO {
         this.uID = uID;
         this.uID2 = uID2;
         this.message = message;
+        sender_time = LocalDateTime.now();
     }
 
     public ChatDMDTO(int id, int uID, int uID2, String message, LocalDateTime sender_time) {
@@ -45,6 +46,5 @@ public class ChatDMDTO {
             return sender_time.format(formatter);
         }
         return "";
-        // Format the LocalDateTime to a String
     }
 }

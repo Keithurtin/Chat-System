@@ -6,12 +6,15 @@ import com.toedter.calendar.JDateChooser;
 import dto.*;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 public class UserProfileWindow extends JFrame {
     private final CardLayout cardLayout;
     private final JPanel main_panel;
 
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> new UserProfileWindow(1).setVisible(true));
+    }
+    //constructor
     public UserProfileWindow(int uid) {
         UsersBUS usersBUS = new UsersBUS();
         UsersDTO user = usersBUS.getById(uid);
@@ -51,6 +54,34 @@ public class UserProfileWindow extends JFrame {
         setSize(panelSize);
     }
 
+    private JPanel setupNavigatorLayout() {
+        JPanel navigator = new JPanel();
+        navigator.setBackground(new Color(153, 204, 255));
+        navigator.setPreferredSize(new Dimension(400, 70));
+
+        JLabel title = new JLabel("Personal Profile");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setForeground(new Color(255, 255, 255));
+
+        GroupLayout navigatorLayout = new GroupLayout(navigator);
+        navigator.setLayout(navigatorLayout);
+        navigatorLayout.setHorizontalGroup(
+                navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(navigatorLayout.createSequentialGroup()
+                                .addGap(140, 140, 140)
+                                .addComponent(title)
+                                .addContainerGap(112, Short.MAX_VALUE))
+        );
+        navigatorLayout.setVerticalGroup(
+                navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(navigatorLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(title)
+                                .addContainerGap(8, Short.MAX_VALUE))
+        );
+        return navigator;
+    }
+    // default mode
     private JPanel defaultLayout(UsersDTO user) {
         FriendListBUS friendListBUS = new FriendListBUS();
         JPanel content_side = new JPanel();
@@ -59,7 +90,7 @@ public class UserProfileWindow extends JFrame {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"); // You can change the pattern as needed
         String birthDateString = formatter.format(user.getBirthDate());
         JLabel username_label = new JLabel("Name: ");
-        JLabel fullname_label = new JLabel("Fullname: ");
+        JLabel fullname_label = new JLabel("Full Name: ");
         JLabel gender_label = new JLabel("Gender: ");
         JLabel address_label = new JLabel("Address: ");
         JLabel birthdate_label = new JLabel("Birthday: ");
@@ -194,14 +225,14 @@ public class UserProfileWindow extends JFrame {
         );
         return content_side;
     }
-
+    // edit mode
     private JPanel editLayout(UsersDTO user) {
         UsersBUS usersBUS = new UsersBUS();
         JPanel content_side = new JPanel();
         content_side.setBackground(new Color(255, 255, 255));
 
         JLabel username_label = new JLabel("Name: ");
-        JLabel fullname_label = new JLabel("Fullname: ");
+        JLabel fullname_label = new JLabel("Full Name: ");
         JLabel gender_label = new JLabel("Gender: ");
         JLabel address_label = new JLabel("Address: ");
         JLabel birthdate_label = new JLabel("Birthday: ");
@@ -368,42 +399,10 @@ public class UserProfileWindow extends JFrame {
         );
         return content_side;
     }
-
-    private JPanel setupNavigatorLayout() {
-        JPanel navigator = new JPanel();
-        navigator.setBackground(new Color(153, 204, 255));
-        navigator.setPreferredSize(new Dimension(400, 70));
-
-        JLabel title = new JLabel("Personal Profile");
-        title.setFont(new Font("Segoe UI", 1, 24));
-        title.setForeground(new Color(255, 255, 255));
-
-        GroupLayout navigatorLayout = new GroupLayout(navigator);
-        navigator.setLayout(navigatorLayout);
-        navigatorLayout.setHorizontalGroup(
-            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(navigatorLayout.createSequentialGroup()
-                .addGap(140, 140, 140)
-                .addComponent(title)
-                .addContainerGap(112, Short.MAX_VALUE))
-        );
-        navigatorLayout.setVerticalGroup(
-            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(navigatorLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(title)
-                .addContainerGap(8, Short.MAX_VALUE))
-        );
-        return navigator;
-    }
     
     private void changePassword(int uid) {
         JFrame newWindow = new ChangePasswordWindow(uid);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new UserProfileWindow(1).setVisible(true));
     }
 }

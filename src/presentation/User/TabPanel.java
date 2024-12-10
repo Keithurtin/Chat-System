@@ -10,12 +10,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TabPanel extends JPanel{
+    //id
     private final int ID;
     private final int ofID;
+    //component
     private BlockDAO blockDAO;
     private JLabel name_label;
     private FriendListBUS friendListBUS;
-
+    //user
     public TabPanel(int uid, UsersDTO user) {
         ID = user.getuID();
         ofID = uid;
@@ -52,7 +54,7 @@ public class TabPanel extends JPanel{
         revalidate();
         repaint();
     }
-
+    //group
     public TabPanel(int uid, GroupChatDTO group) {
         ID = group.getGID();
         ofID = uid;
@@ -64,7 +66,7 @@ public class TabPanel extends JPanel{
         revalidate();
         repaint();
     }
-    
+    // friend user
     private JPanel friend(UsersDTO user){
         JPanel friendPanel = new JPanel();
         name_label = new JLabel(user.getuName());
@@ -95,7 +97,7 @@ public class TabPanel extends JPanel{
         );
         return friendPanel;
     }
-
+    // not friend user (no acquaintance) (send/unsent request)
     private JPanel notFriend(UsersDTO user, boolean relationship){
         JPanel friendPanel = new JPanel();
         JLabel name_label = new JLabel(user.getuName());
@@ -141,7 +143,7 @@ public class TabPanel extends JPanel{
         );
         return friendPanel;
     }
-
+    // user being blocked
     private JPanel blockFriend(UsersDTO user){
         JPanel friendPanel = new JPanel();
         JLabel name_label = new JLabel(user.getuName());
@@ -187,7 +189,7 @@ public class TabPanel extends JPanel{
         );
         return friendPanel;
     }
-    
+    // user send friend request
     private JPanel requestingFriend(UsersDTO user) {
         JPanel friendPanel = new JPanel();
         setPreferredSize(new Dimension(0, 85));
@@ -251,7 +253,7 @@ public class TabPanel extends JPanel{
         );
         return friendPanel;
     }
-
+    // group
     private JPanel groupTab(GroupChatDTO group) {
         JPanel groupPanel = new JPanel();
         setPreferredSize(new Dimension(162, 50));

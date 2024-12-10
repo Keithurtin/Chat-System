@@ -17,19 +17,24 @@ import bus.*;
 import static Admin.adminMenu.reloadAdminTable;
 
 public class spamManage extends JFrame {
-
-    private JPanel menu;
     private JPanel navigator;
     private JScrollPane table_scroll;
     private JTable table;
     private DefaultTableModel tableModel;
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            spamManage frame = new spamManage();
+            frame.setVisible(true);
+        });
+    }
 
     public spamManage() {
         initComponents();
     }
 
     private void initComponents() {
-        menu = new JPanel();
+        JPanel menu = new JPanel();
         navigator = new JPanel();
         table_scroll = new JScrollPane();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -258,11 +263,5 @@ public class spamManage extends JFrame {
         public Object getCellEditorValue() {
             return label;
         }
-    }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            spamManage frame = new spamManage();
-            frame.setVisible(true);
-        });
     }
 }

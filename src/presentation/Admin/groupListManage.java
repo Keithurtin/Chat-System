@@ -18,11 +18,14 @@ public class groupListManage extends JFrame {
     private GroupLayout.ParallelGroup horizontalGroup;
     private GroupLayout.SequentialGroup verticalGroup;
 
-    public groupListManage() {
-        initComponents();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            groupListManage frame = new groupListManage();
+            frame.setVisible(true);
+        });
     }
 
-    private void initComponents() {
+    public groupListManage() {
         JPanel menu = new JPanel();
         menu.setBackground(new java.awt.Color(255, 255, 255));
         menu.setFocusable(false);
@@ -34,16 +37,16 @@ public class groupListManage extends JFrame {
         GroupLayout menuLayout = new GroupLayout(menu);
         menu.setLayout(menuLayout);
         menuLayout.setHorizontalGroup(
-            menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
+                menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 620, Short.MAX_VALUE)
         );
         menuLayout.setVerticalGroup(
-            menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(menuLayout.createSequentialGroup()
-                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
+                menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(menuLayout.createSequentialGroup()
+                                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(list_scroll, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -54,7 +57,7 @@ public class groupListManage extends JFrame {
         setLocation(600, 180);
         setSize(panelSize);
     }
-    
+
     private void setupNavigatorLayout() {
         navigator = new JPanel();
         navigator.setBackground(new Color(153, 204, 255));
@@ -231,14 +234,7 @@ public class groupListManage extends JFrame {
     }
 
     private void openGroupInformation(int gID, String name) {
-        groupManage newWindow = new groupManage(gID, name);
+        Admin.groupManage newWindow = new Admin.groupManage(gID, name);
         newWindow.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            groupListManage frame = new groupListManage();
-            frame.setVisible(true);
-        });
     }
 }

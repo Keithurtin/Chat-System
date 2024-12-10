@@ -13,11 +13,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class loginTimeHistory extends JFrame {
-
     private JPanel navigator;
     private JScrollPane user_table_scroll;
-    private JTable user_table;
     static DefaultTableModel tableModel;
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> new loginTimeHistory().setVisible(true));
+    }
 
     public loginTimeHistory() {
         initComponents();
@@ -94,7 +96,7 @@ public class loginTimeHistory extends JFrame {
 
     private void createTableLayout() {
         tableModel = new DefaultTableModel(new Object[][]{}, new String[]{"ID", "Username", "Fullname", "Login Time"});
-        user_table = new JTable(tableModel);
+        JTable user_table = new JTable(tableModel);
 
         user_table.setRowHeight(30);
         user_table.getColumnModel().getColumn(0).setPreferredWidth(50);
@@ -126,9 +128,5 @@ public class loginTimeHistory extends JFrame {
             UsersDTO user = usersBUS.getById(login.getUId());
             addRowToTable(user.getuID(), user.getuName(), user.getFullname(), login.getLoginTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mm:ss")));
         }
-    }
-
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new loginTimeHistory().setVisible(true));
     }
 }

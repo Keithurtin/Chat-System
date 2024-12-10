@@ -16,21 +16,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class adminMenu extends JFrame {
-
-    private JPanel admin_menu;
+    //id
     private static int uid;
+    //component
     private JPanel navigator;
-    private JScrollPane user_table_scroll;
+    private final JScrollPane user_table_scroll;
     private JTable user_table;
     static DefaultTableModel tableModel;
 
-    public adminMenu(int uid) {
-        this.uid = uid;
-        initComponents();
+    public static void main(String[] args) {
+        java.awt.EventQueue.invokeLater(() -> new Admin.adminMenu(1).setVisible(true));
     }
 
-    private void initComponents() {
-        admin_menu = new JPanel();
+    public adminMenu(int uid) {
+        this.uid = uid;
+        JPanel admin_menu = new JPanel();
         user_table_scroll = new JScrollPane();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -43,26 +43,26 @@ public class adminMenu extends JFrame {
         GroupLayout admin_menuLayout = new GroupLayout(admin_menu);
         admin_menu.setLayout(admin_menuLayout);
         admin_menuLayout.setHorizontalGroup(
-            admin_menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(user_table_scroll, GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+                admin_menuLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(navigator, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(user_table_scroll, GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         admin_menuLayout.setVerticalGroup(
-            admin_menuLayout.createSequentialGroup()
-                .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(user_table_scroll, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+                admin_menuLayout.createSequentialGroup()
+                        .addComponent(navigator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(user_table_scroll, GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
         );
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(admin_menu, GroupLayout.PREFERRED_SIZE, 800, GroupLayout.PREFERRED_SIZE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(admin_menu, GroupLayout.PREFERRED_SIZE, 800, GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addComponent(admin_menu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(admin_menu, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
 
         setResizable(false);
@@ -333,7 +333,7 @@ public class adminMenu extends JFrame {
         JFrame newWindow = new JFrame("User Management");
         UsersBUS userBUS = new UsersBUS();
         UsersDTO user = userBUS.getById(id);
-        JPanel userManage = new userManage(user);
+        Admin.userManage userManage = new Admin.userManage(user);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         Dimension panelSize = userManage.getPreferredSize();
         newWindow.add(userManage);
@@ -344,35 +344,35 @@ public class adminMenu extends JFrame {
     }
 
     private void openGroupList() {
-        JFrame newWindow = new groupListManage();
+        JFrame newWindow = new Admin.groupListManage();
         newWindow.setResizable(false);
         newWindow.setLocation(640, 200);
         newWindow.setVisible(true);
     }
 
     private void openSpamSection() {
-        JFrame newWindow = new spamManage();
+        Admin.spamManage newWindow = new Admin.spamManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
     }
 
     private void openNewRegister() {
-        JFrame newWindow = new Admin.newUsersManage();
+        Admin.newUsersManage newWindow = new Admin.newUsersManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
     }
 
     private void openActiveUser() {
-        JFrame newWindow = new Admin.activeUserManage();
+        Admin.activeUserManage newWindow = new Admin.activeUserManage();
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
         newWindow.setVisible(true);
     }
 
     private void openLoginHistory() {
-        JFrame newWindow = new loginTimeHistory();
+        Admin.loginTimeHistory newWindow = new Admin.loginTimeHistory();
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setResizable(false);
         newWindow.setLocation(470, 200);
@@ -380,7 +380,7 @@ public class adminMenu extends JFrame {
     }
 
     private void openChatBox() {
-        JFrame newWindow = new MainUserWindow(uid);
+        MainUserWindow newWindow = new MainUserWindow(uid);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setResizable(false);
         newWindow.setLocation(480, 190);
@@ -398,9 +398,5 @@ public class adminMenu extends JFrame {
         newWindow.setLocation(600, 180);
         newWindow.setSize(panelSize);
         newWindow.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(() -> new Admin.adminMenu(1).setVisible(true));
     }
 }

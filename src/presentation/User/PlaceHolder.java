@@ -6,36 +6,11 @@ import javax.swing.text.Document;
 
 @SuppressWarnings("serial")
 public class PlaceHolder extends JTextField {
-
-
     private String placeholder;
-
-    public PlaceHolder() {
-    }
-
-    public PlaceHolder(
-            final Document pDoc,
-            final String pText,
-            final int pColumns)
-    {
-        super(pDoc, pText, pColumns);
-    }
-
-    public PlaceHolder(final int pColumns) {
-        super(pColumns);
-    }
 
     public PlaceHolder(final String pText) {
         super("");
         setPlaceholder(pText);
-    }
-
-    public PlaceHolder(final String pText, final int pColumns) {
-        super(pText, pColumns);
-    }
-
-    public String getPlaceholder() {
-        return placeholder;
     }
 
     @Override

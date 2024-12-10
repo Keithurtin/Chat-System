@@ -1,28 +1,138 @@
 package presentation.User;
 
+import bus.ChatGroupBUS;
 import bus.GroupChatBUS;
 import bus.GroupMembersBUS;
-import bus.SpamBUS;
-import dao.GroupChatDAO;
+import bus.UsersBUS;
 import dto.*;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import javax.swing.*;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GroupChatSection extends JPanel {
+    //id
     private final int gid;
     private static int uid;
+    private boolean isIsAdmin;
+    //component
     private static boolean isAdmin;
     private JScrollPane chat_scroll;
     private JPanel chat_side;
     private DeletionListener listener;
+    private PlaceHolder input_message;
+    //data
+    private final ChatGroupBUS chatGroupBUS;
+    private final GroupMembersBUS groupMembersBUS;
+    private List<GroupMembersDTO> memberList;
+    private final UsersBUS usersBUS;
+    //socket component
+    private final ExecutorService executorService = Executors.newFixedThreadPool(10);
+    private static final String SERVER_ADDRESS = "127.0.0.1";
+    private static final int PORT = 12345;
+    private BufferedReader in;
+    private PrintWriter out;
+    private Socket socket;
+    //socket
+    private void connectToServer() {
+        try {
+            socket = new Socket(SERVER_ADDRESS, PORT);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream(), true);
+            out.println(uid + "group" + gid);
+            new Thread(new GroupChatSection.MessageReader(in)).start();
+        } catch (IOException e) {
+            System.out.println("Unable to connect to the server: " + e.getMessage());
+        }
+    }
 
+    private void sendMessage(String message) {
+        if (out != null) {
+            executorService.submit(() -> {
+                for (GroupMembersDTO member : memberList) {
+                    if (member.getUID() != uid) {
+                        String formattedMessage = String.format("/private %s %s",
+                                member.getUID() + "group" + gid, uid + "/" + message);
+                        out.println(formattedMessage);
+                    }
+                }
+            });
+            SwingUtilities.invokeLater(() -> {
+                input_message.setText("");
+                chatGroupBUS.addChat(uid, gid, message);
+                addMessage(new ChatGroupDTO(uid, gid, message));
+            });
+        } else {
+            System.out.println("Unable to send message. Not connected to server.");
+        }
+    }
+
+    private void showServerMessage(String message) {
+        SwingUtilities.invokeLater(() -> {
+            String[] parts = message.split("/", 2);
+            int sender_id = Integer.parseInt(parts[0].trim());
+            addMessage(new ChatGroupDTO(sender_id, gid, parts[1]));
+        });
+    }
+
+    private class MessageReader implements Runnable {
+        private final BufferedReader in;
+
+        public MessageReader(BufferedReader in) {
+            this.in = in;
+        }
+
+        @Override
+        public void run() {
+            try {
+                String message;
+                while ((message = in.readLine()) != null) {
+                    String finalMessage = message;
+                    SwingUtilities.invokeLater(() -> showServerMessage(finalMessage));
+                }
+            } catch (IOException e) {
+                System.out.println("Server connection lost.");
+            }
+        }
+    }
+
+    private void closeConnection() {
+        try {
+            if (out != null) {
+                out.println("exit"); // Optionally, notify the server that the client is disconnecting
+                out.close();
+            }
+            if (in != null) {
+                in.close();
+            }
+            if (socket != null) {
+                socket.close();
+            }
+            System.out.println("Disconnected from server.");
+        } catch (IOException e) {
+            System.out.println("Error while disconnecting: " + e.getMessage());
+        }
+    }
+    //group chat
     public GroupChatSection(int id, GroupChatDTO group) {
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
         gid = group.getGID();
         uid = id;
+        chatGroupBUS = new ChatGroupBUS();
+        groupMembersBUS = new GroupMembersBUS();
+        usersBUS = new UsersBUS();
+        memberList = groupMembersBUS.getAll(gid);
 
         JPanel navigator = setupNavigatorLayout(group.getName(), group.getNumMember());
         JPanel send_message_panel = setupSendMessageLayout();
@@ -45,6 +155,7 @@ public class GroupChatSection extends JPanel {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(send_message_panel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         );
+        new Thread(this::connectToServer).start();
     }
 
     private JPanel setupNavigatorLayout(String name, int member) {
@@ -112,13 +223,13 @@ public class GroupChatSection extends JPanel {
         number_member_label.setFont(new java.awt.Font("Segoe UI", 1, 16));
         number_member_label.setForeground(Color.WHITE);
 
-        GroupLayout navigatorLayout = new GroupLayout(navigator);
-        navigator.setLayout(navigatorLayout);
-        navigatorLayout.setHorizontalGroup(
-            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(navigatorLayout.createSequentialGroup()
+        GroupLayout otherLayout = new GroupLayout(navigator);
+        navigator.setLayout(otherLayout);
+        otherLayout.setHorizontalGroup(
+            otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(otherLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                .addGroup(otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addComponent(number_member_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(name_panel, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -129,14 +240,14 @@ public class GroupChatSection extends JPanel {
                 .addComponent(report_user_button)
                 .addContainerGap())
         );
-        navigatorLayout.setVerticalGroup(
-            navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createSequentialGroup()
+        otherLayout.setVerticalGroup(
+            otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, otherLayout.createSequentialGroup()
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addGroup(otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, otherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(manage_button))
-                    .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addGroup(GroupLayout.Alignment.TRAILING, otherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(name_panel)
                         .addComponent(change_name_button)
                         .addComponent(report_user_button)))
@@ -147,11 +258,27 @@ public class GroupChatSection extends JPanel {
         return navigator;
     }
 
+    private void createChatSide() {
+        chat_side = new JPanel();
+        chat_side.setLayout(new BoxLayout(chat_side, BoxLayout.Y_AXIS));
+        chat_side.setBackground(Color.WHITE);
+
+        chat_scroll = new JScrollPane(chat_side);
+        chat_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        chat_scroll.setBorder(null);
+
+        List<ChatGroupDTO> chatGroupDTO = chatGroupBUS.getAll(gid);
+
+        for(ChatGroupDTO chat : chatGroupDTO) {
+            addMessage(chat);
+        }
+    }
+
     private JPanel setupSendMessageLayout() {
         JPanel send_message_panel = new JPanel();
         send_message_panel.setBackground(new java.awt.Color(204, 204, 204));
 
-        PlaceHolder input_message = new PlaceHolder("Text....");
+        input_message = new PlaceHolder("Text....");
 
         JButton send_button = new JButton("Send");
         send_button.setBackground(new java.awt.Color(153, 204, 255));
@@ -181,43 +308,67 @@ public class GroupChatSection extends JPanel {
         );
         return send_message_panel;
     }
-    
-    private void createChatSide() {
-        chat_side = new JPanel();
-        chat_side.setLayout(new BoxLayout(chat_side, BoxLayout.Y_AXIS));
-        chat_side.setBackground(Color.WHITE);
 
-        chat_scroll = new JScrollPane(chat_side);
-        chat_scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        chat_scroll.setBorder(null);
-        
-        addMessage("Hello there", false);
-        addMessage("How are you doing?", false);
-        addMessage("I'm doing great, thanks!", true);
-        addMessage("That's wonderful to hear!", false);
-        addMessage("How about you", true);
-        addMessage("Not so great", false);
-    }
-
-    private void addMessage(String message, boolean isYou) {
+    private void addMessage(ChatGroupDTO msg) {
+        boolean isMe = msg.getSenderID() == uid;
         JPanel messagePanel = new JPanel();
-        messagePanel.setLayout(new FlowLayout(isYou ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        messagePanel.setLayout(new FlowLayout(isMe ? FlowLayout.RIGHT : FlowLayout.LEFT));
         messagePanel.setOpaque(false);
 
-        JPanel messageBox = new JPanel();
-        messageBox.setLayout(new BorderLayout());
-        messageBox.setBackground(isYou ? new Color(200, 255, 200) : new Color(200, 200, 255));
-        messageBox.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15)); // Padding inside the box
 
-        JLabel messageLabel = new JLabel(message);
-        messageBox.add(messageLabel, BorderLayout.CENTER);
+        JLabel messageLabel = new JLabel(msg.getMessage());
+        messageLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        messageLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        messageLabel.setBackground(isMe ? new Color(200, 255, 200) : new Color(200, 200, 255));
+        messageLabel.setToolTipText(msg.getTime());
 
-        // Add the message box to the message panel
-        messagePanel.add(messageBox);
+        if(isMe) {
+            messagePanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            messagePanel.add(messageLabel);
+        } else{  //add name for sender
+            UsersDTO user = usersBUS.getById(msg.getSenderID());
+            JLabel name = new JLabel(user.getuName());
+            name.setBackground(Color.white);
+            name.setFont(new java.awt.Font("Segoe UI", 1, 14));
+            GroupLayout otherLayout = new GroupLayout(messagePanel);
+            messagePanel.setLayout(otherLayout);
+            otherLayout.setHorizontalGroup(
+                    otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(name)
+                            .addGroup(otherLayout.createSequentialGroup()
+                                    .addComponent(messageLabel)
+                                    .addContainerGap(112, Short.MAX_VALUE))
+            );
+            otherLayout.setVerticalGroup(
+                    otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addGroup(otherLayout.createSequentialGroup()
+                                    .addComponent(name)
+                                    .addComponent(messageLabel)
+                                    .addContainerGap(8, Short.MAX_VALUE))
+            );
+        }
+        messageLabel.setOpaque(true);
 
-        // Add gap between messages
+        messageLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    JPopupMenu menu = new JPopupMenu();
+                    JMenuItem del = new JMenuItem("Delete Message");
+                    del.addActionListener(_ -> {
+                        chatGroupBUS.deleteChat(msg.getGroupID());
+                        chat_side.remove(messagePanel);
+                        chat_side.revalidate();
+                        chat_side.repaint();
+                    });
+                    menu.add(del);
+                    menu.show(messageLabel, e.getX(), e.getY());
+                }
+            }
+        });
+
         chat_side.add(messagePanel);
-        chat_side.add(Box.createVerticalStrut(10)); // Adds vertical spacing
+        chat_side.add(Box.createVerticalStrut(1));
 
         chat_side.revalidate();
         chat_side.repaint();
@@ -233,15 +384,12 @@ public class GroupChatSection extends JPanel {
         java.awt.EventQueue.invokeLater(() -> new GroupManageWindow(gid, uid).setVisible(true));
     }
 
-    private void sendMessage(String message) {
-
-    }
-
     public void setDeletionListener(DeletionListener listener) {
         this.listener = listener;
     }
 
     public void delete() {
+        closeConnection();
         if (listener != null) {
             listener.onDeleted(); // Notify listener
         }

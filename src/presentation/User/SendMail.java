@@ -4,8 +4,8 @@ import jakarta.mail.internet.*;
 
 import java.util.Properties;
 public class SendMail {
-    private static final String from = "nhminh22@clc.fitus.edu.vn";
-    private static final String appPass = "erbd vxij fsuc hczf";
+    private static final String from = "nhminh22@clc.fitus.edu.vn"; //sender email
+    private static final String appPass = "erbd vxij fsuc hczf"; //app password
 
     public SendMail(String to, String pass) {
         try{
@@ -14,7 +14,7 @@ public class SendMail {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject("Mail Subject");
 
-            // Add custom headers
+            //add header
             message.setHeader("X-Priority", "1"); // High priority
             message.setHeader("X-MSMail-Priority", "High");
             message.setHeader("Importance", "High");
@@ -26,7 +26,7 @@ public class SendMail {
             plainTextPart.setText("");
             multipart.addBodyPart(plainTextPart);
 
-            // Create the HTML part
+            //template sending
             BodyPart htmlPart = new MimeBodyPart();
             String htmlContent = "<p>Hello there,<br>" +
                     "<br>" +
@@ -42,7 +42,7 @@ public class SendMail {
             htmlPart.setContent(htmlContent, "text/html");
             multipart.addBodyPart(htmlPart);
 
-            // Set the complete message parts
+            //complete and send msg
             message.setContent(multipart);
             Transport.send(message);
         } catch (Exception e) {
