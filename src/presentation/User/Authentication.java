@@ -1,5 +1,6 @@
 package presentation.User;
 
+import bus.LoginHistoryBUS;
 import com.toedter.calendar.JDateChooser;
 
 import java.awt.*;
@@ -643,6 +644,8 @@ public class Authentication extends JFrame {
         UsersDTO user = existingUser.getFirst();
         user.setStatus("online");
         usersBUS.updateUser(user);
+        LoginHistoryBUS loginHistoryBUS = new LoginHistoryBUS();
+        loginHistoryBUS.addLoginHistory(user.getuID());
         JFrame newWindow;
         if(user.getIsAdmin()) {
                 newWindow = new Admin.adminMenu(user.getuID());

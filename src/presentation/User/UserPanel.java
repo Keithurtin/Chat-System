@@ -35,17 +35,18 @@ public class UserPanel {
         groupChat = new GroupChatSection(uid, group);
         groupChat.setDeletionListener(() -> {
             Container parent = tab.getParent();
-            if(parent != null) {
+            if (parent != null) {
                 parent.remove(tab);
                 parent.revalidate();
                 parent.repaint();
             }
 
             Container parent2 = groupChat.getParent();
-            if(parent != null) {
+            if (parent != null) {
                 parent2.remove(groupChat);
                 parent2.revalidate();
                 parent2.repaint();
             }
-    });
+        });
+    }
 }

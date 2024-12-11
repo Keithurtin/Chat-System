@@ -380,6 +380,7 @@ public class adminMenu extends JFrame {
     }
 
     private void openChatBox() {
+        dispose();
         MainUserWindow newWindow = new MainUserWindow(uid);
         newWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         newWindow.setResizable(false);

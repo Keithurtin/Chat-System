@@ -12,8 +12,10 @@ import java.sql.Date;
 import java.time.format.DateTimeFormatter;
 import bus.*;
 import dto.*;
+import presentation.User.HashString;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import static Admin.adminMenu.reloadAdminTable;
 
@@ -59,7 +61,7 @@ public class userManage extends JPanel {
         } else {
             lock_value_label.setSelectedItem("Unlock");
         }
-        password_value_label = new JPasswordField(user.getPassword());
+        password_value_label = new JPasswordField();
         JButton manage_button = new JButton();
         JButton delete_button = new JButton();
         JLabel history_login_label = new JLabel();
@@ -132,37 +134,40 @@ public class userManage extends JPanel {
         manage_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         manage_button.setForeground(new java.awt.Color(255, 255, 255));
         manage_button.setText("Change");
-        manage_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int res = JOptionPane.showConfirmDialog(null, "Do you want to change this user?", "Change User", JOptionPane.YES_NO_OPTION);
-                if (res == JOptionPane.YES_OPTION) {
-                    String username = username_value_label.getText();
-                    String password = password_value_label.getText();
-                    String fullname = fullname_value_label.getText();
-                    String address = address_value_label.getText();
-                    Date birthday = new java.sql.Date(birthdate_value_label.getDate().getTime());
-                    String gender = gender_value_label.getText();
-                    String email = email_value_label.getText();
-                    boolean lock = false;
-                    if (lock_value_label.getSelectedItem().equals("Lock")) {
-                        lock = true;
-                    }
-                    user.setuName(username);
-                    user.setPassword(password);
-                    user.setFullname(fullname);
-                    user.setAddress(address);
-                    user.setBirthDate(birthday);
-                    user.setGender(gender);
-                    user.setEmail(email);
-                    user.setIsLocked(lock);
-                    UsersBUS usersBUS = new UsersBUS();
-                    if (usersBUS.updateUser(user) == true) {
-                        JOptionPane.showMessageDialog(null, "User changed successfully", "Success", JOptionPane.PLAIN_MESSAGE);
-                        reloadAdminTable();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
-                    }
+        manage_button.addActionListener(_ -> {
+            int res = JOptionPane.showConfirmDialog(null, "Do you want to change this user?", "Change User", JOptionPane.YES_NO_OPTION);
+            if (res == JOptionPane.YES_OPTION) {
+                String username = username_value_label.getText();
+
+                char[] passwordChars = password_value_label.getPassword();
+                String password = new String(passwordChars);
+                Arrays.fill(passwordChars, '0');
+
+                String fullname = fullname_value_label.getText();
+                String address = address_value_label.getText();
+                Date birthday = new Date(birthdate_value_label.getDate().getTime());
+                String gender = gender_value_label.getText();
+                String email = email_value_label.getText();
+                boolean lock = false;
+                if (lock_value_label.getSelectedItem().equals("Lock")) {
+                    lock = true;
+                }
+                user.setuName(username);
+                if(!password.isEmpty()){
+                    user.setPassword(HashString.hashString(password));
+                }
+                user.setFullname(fullname);
+                user.setAddress(address);
+                user.setBirthDate(birthday);
+                user.setGender(gender);
+                user.setEmail(email);
+                user.setIsLocked(lock);
+                UsersBUS usersBUS = new UsersBUS();
+                if (usersBUS.updateUser(user)) {
+                    JOptionPane.showMessageDialog(null, "User changed successfully", "Success", JOptionPane.PLAIN_MESSAGE);
+                    reloadAdminTable();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Something went wrong", "Error", JOptionPane.PLAIN_MESSAGE);
                 }
             }
         });
@@ -177,7 +182,7 @@ public class userManage extends JPanel {
                 int res = JOptionPane.showConfirmDialog(null, "Do you want to delete this user?", "Delete User", JOptionPane.YES_NO_OPTION);
                 if (res == JOptionPane.YES_OPTION) {
                     UsersBUS usersBUS = new UsersBUS();
-                    if (usersBUS.deleteUser(user.getuID()) == true) {
+                    if (usersBUS.deleteUser(user.getuID())) {
                         JOptionPane.showMessageDialog(null, "User deleted successfully", "Success", JOptionPane.PLAIN_MESSAGE);
                         reloadAdminTable();
                     } else {
