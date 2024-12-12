@@ -71,4 +71,9 @@ public class GroupChatBUS {
         groupMembersBUS.deleteAll(gID);
         return dao.deleteGroup(gID);
     }
+
+    public boolean deleteGroup_Member(int gID) {
+        GroupChatDAO dao = new GroupChatDAO();
+        return dao.deleteGroup_Member(gID);
+    }
 }

@@ -21,4 +21,9 @@ public class LoginHistoryBUS {
         LoginHistoryDAO dao = new LoginHistoryDAO();
         return dao.getAll();
     }
+
+    public boolean deleteLoginHistory(int uID) {
+        LoginHistoryDAO dao = new LoginHistoryDAO();
+        return dao.deleteLoginHistory(uID);
+    }
 }

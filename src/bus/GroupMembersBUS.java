@@ -59,4 +59,9 @@ public class GroupMembersBUS {
         }
         return groupList;
     }
+
+    public boolean deleteGroupMember(int uID) {
+        GroupMembersDAO dao = new GroupMembersDAO();
+        return dao.deleteGroupMember(uID);
+    }
 }
