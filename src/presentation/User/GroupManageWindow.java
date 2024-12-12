@@ -147,13 +147,30 @@ public class GroupManageWindow extends JFrame {
 
         if(isAdmin){
             JMenuItem kick_button = new JMenuItem("Kick");
-            JMenuItem assign_button = new JMenuItem("Assign Admin");
+            JMenuItem assign_button = new JMenuItem(member.isAdmin()?"Unassign Admin":"Assign Admin");
+            GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
 
             more_button.setVisible(true);
             more_button.setFont(new Font("Segoe UI", 1, 12));
+
             JPopupMenu more_menu = new JPopupMenu();
             more_menu.add(kick_button);
+            kick_button.addActionListener(_ -> {
+                groupMembersBUS.deleteMember(member.getGID(), member.getUID());
+                list_side.remove(member_panel);
+            });
             more_menu.add(assign_button);
+            assign_button.addActionListener(_ -> {
+                if(assign_button.getText().equals("Assign Admin")) {
+                    groupMembersBUS.setAdmin(member.getGID(), member.getUID(), true);
+                    assign_button.setText("Unassign Admin");
+                    member_name.setText("<html>" + user.getuName() + " <span style='color: red; font-weight: bold;'>ADMIN</span></html>");
+                } else {
+                    groupMembersBUS.setAdmin(member.getGID(), member.getUID(), false);
+                    assign_button.setText("Assign Admin");
+                    member_name.setText("<html>" + user.getuName() + "</html>");
+                }
+            });
             more_button.addActionListener(e -> more_menu.show(more_button, 0, more_button.getHeight()));
         }
 
