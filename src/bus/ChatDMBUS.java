@@ -25,4 +25,8 @@ public class ChatDMBUS {
         return dao.deleteAllChat(uid, uid2);
     }
 
+    public boolean deleteUserChat(int id) {
+        ChatDMDAO dao = new ChatDMDAO();
+        return dao.deleteUserChat(id);
+    }
 }

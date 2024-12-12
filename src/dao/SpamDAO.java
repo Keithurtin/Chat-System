@@ -52,4 +52,23 @@ public class SpamDAO {
         }
         return list;
     }
+
+    public boolean deleteSpamReport(int uID) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection  conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "delete from Spam where reported_user_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, uID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

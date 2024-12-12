@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 import dto.*;
+
+import javax.xml.catalog.Catalog;
 import java.sql.*;
 
 public class GroupChatDAO {
@@ -91,6 +93,25 @@ public class GroupChatDAO {
 
         try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, gID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteGroup_Member(int uID) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "update GroupChat set initial_member = null where initial_member = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1, uID);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

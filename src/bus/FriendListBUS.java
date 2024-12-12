@@ -74,4 +74,9 @@ public class FriendListBUS {
         }
         return FoF;
     }
+
+    public boolean deleteFriend(int user) {
+        FriendListDAO dao = new FriendListDAO();
+        return dao.deleteFriend(user);
+    }
 }

@@ -163,6 +163,23 @@ public class UsersBUS {
     }
 
     public boolean deleteUser(int id) {
+        SpamBUS spamBUS = new SpamBUS();
+        spamBUS.deleteSpamReport(id);
+        LoginHistoryBUS loginHistoryBUS = new LoginHistoryBUS();
+        loginHistoryBUS.deleteLoginHistory(id);
+        GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
+        groupMembersBUS.deleteGroupMember(id);
+        GroupChatBUS groupChatBUS = new GroupChatBUS();
+        groupChatBUS.deleteGroup_Member(id);
+        FriendListBUS friendListBUS = new FriendListBUS();
+        friendListBUS.deleteFriend(id);
+        ChatGroupBUS chatGroupBUS = new ChatGroupBUS();
+        chatGroupBUS.deleteMemberChat(id);
+        ChatDMBUS chatDMBUS = new ChatDMBUS();
+        chatDMBUS.deleteUserChat(id);
+        BlockBUS blockBUS = new BlockBUS();
+        blockBUS.deleteBlocked(id);
+
         UsersDAO userDAO = new UsersDAO();
         return userDAO.delete(id);
     }

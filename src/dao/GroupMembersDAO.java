@@ -182,4 +182,23 @@ public class GroupMembersDAO {
         }
         return true;
     }
+
+    public boolean deleteGroupMember(int uID) {
+        UtilityDAO util = new UtilityDAO();
+        Connection con = util.getConnection();
+        if (con == null) {
+            return false;
+        }
+
+        String query = "DELETE from GroupMembers where user_id = ?";
+
+        try (PreparedStatement pstmt = con.prepareStatement(query)) {
+            pstmt.setInt(1, uID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

@@ -25,4 +25,8 @@ public class ChatGroupBUS {
         return dao.deleteAllChat(gid);
     }
 
+    public boolean deleteMemberChat(int id) {
+        ChatGroupDAO dao = new ChatGroupDAO();
+        return dao.deleteMemberChat(id);
+    }
 }

@@ -40,4 +40,9 @@ public class BlockBUS {
         }
         return blockList;
     }
+
+    public boolean deleteBlocked(int id) {
+        BlockDAO dao = new BlockDAO();
+        return dao.deleteBlocked(id);
+    }
 }

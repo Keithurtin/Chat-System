@@ -78,4 +78,23 @@ public class LoginHistoryDAO {
         list.sort((o1, o2) -> o2.getLoginTime().compareTo(o1.getLoginTime()));
         return list;
     }
+
+    public boolean deleteLoginHistory(int uID) {
+        UtilityDAO utilityDAO = new UtilityDAO();
+        Connection conn = utilityDAO.getConnection();
+        if (conn == null) {
+            return false;
+        }
+
+        String query = "delete from LoginHistory where user_id = ?";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, uID);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+        return true;
+    }
 }

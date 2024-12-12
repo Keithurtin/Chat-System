@@ -67,4 +67,9 @@ public class SpamBUS {
         }
         return ans;
     }
+
+    public boolean deleteSpamReport(int uID) {
+       SpamDAO dao = new SpamDAO();
+       return dao.deleteSpamReport(uID);
+    }
 }
