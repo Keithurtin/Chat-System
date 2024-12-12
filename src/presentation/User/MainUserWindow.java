@@ -31,7 +31,7 @@ public class MainUserWindow extends JFrame {
     private static final Object fetchLock = new Object();
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new MainUserWindow(1).setVisible(true));
+        EventQueue.invokeLater(() -> new MainUserWindow(2012).setVisible(true));
     }
 
     public MainUserWindow(int id) {

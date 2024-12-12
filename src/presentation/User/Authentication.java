@@ -578,7 +578,6 @@ public class Authentication extends JFrame {
             return;
         }
         UsersBUS usersBUS = new UsersBUS();
-        System.out.println(mail);
 
         UsersDTO user = usersBUS.getByMail(mail);
         if(user == null) {
@@ -589,7 +588,6 @@ public class Authentication extends JFrame {
         String store_password = HashString.hashString(new_password);
         user.setPassword(store_password);
         if(usersBUS.updateUser(user)){
-            System.out.println(user.getPassword());
             SendMail newMail = new SendMail(mail, new_password);
             forgetPassword_notification.setText("There's a new password sent to your email!");
         } else {
@@ -615,7 +613,6 @@ public class Authentication extends JFrame {
         UsersBUS usersBUS = new UsersBUS();
         List<UsersDTO> existingUser = usersBUS.getByUserName(username);
         if (existingUser != null && !existingUser.isEmpty()) {
-            System.out.println(existingUser);
             signup_notification.setText("Your username has been used!");
             return;
         }

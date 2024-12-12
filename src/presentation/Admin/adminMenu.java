@@ -304,7 +304,6 @@ public class adminMenu extends JFrame {
                 if (row >= 0) {
                     String selectedUsername = user_table.getValueAt(row, 1).toString();
                     int id = (int) user_table.getValueAt(row, 0);
-                    System.out.println("clicked at " + selectedUsername);
                     openUserWindow(id);
                 }
             }

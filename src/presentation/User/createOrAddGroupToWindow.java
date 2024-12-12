@@ -223,6 +223,7 @@ public class createOrAddGroupToWindow extends JFrame{
             if(gid != -1) {
                 GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
                 groupMembersBUS.addMember(gid, uid);
+                groupMembersBUS.setAdmin(gid, uid, true)    ;
                 groupMembersBUS.addMember(gid, uid2);
                 JOptionPane.showMessageDialog(this, "You have created new group", "Success", JOptionPane.INFORMATION_MESSAGE);
             }

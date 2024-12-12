@@ -167,7 +167,8 @@ public class ChangePasswordWindow extends JFrame {
 
         UsersBUS usersBUS = new UsersBUS();
         UsersDTO usersDTO = usersBUS.getById(uid);
-        if(!HashString.verifyHash(usersDTO.getPassword(), oldPasswordStr)){
+        boolean match = HashString.verifyHash(oldPasswordStr, usersDTO.getPassword());
+        if(!match){
             JOptionPane.showMessageDialog(this, "Old password is incorrect.", "Error", JOptionPane.ERROR_MESSAGE);            return;
         }
         usersDTO.setPassword(HashString.hashString(newPasswordStr));

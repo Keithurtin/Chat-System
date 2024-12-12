@@ -103,7 +103,6 @@ public class spamManage extends JFrame {
 
         sort_options.addActionListener(e -> {
             String selectedOption = (String) sort_options.getSelectedItem();
-            System.out.println("Sorting by: " + selectedOption);
         });
 
         sort_options.setFont(new java.awt.Font("Segoe UI", 0, 14));

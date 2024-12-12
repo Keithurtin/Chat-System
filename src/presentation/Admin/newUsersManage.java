@@ -84,7 +84,6 @@ public class newUsersManage extends JFrame {
         Date toDate = toDateChooser.getDate();
         LocalDateTime to = getEndOfDay(toDate);
 
-        System.out.println("Search input: " + username);
         UsersBUS usersBUS = new UsersBUS();
         currentList = usersBUS.filterByUsername(usersBUS.getByRegisterTime(from, to), username);
         tableModel.setRowCount(0);
