@@ -31,14 +31,15 @@ public class MainUserWindow extends JFrame {
     private static final Object fetchLock = new Object();
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(() -> new MainUserWindow(2012).setVisible(true));
+        EventQueue.invokeLater(() -> new MainUserWindow(2013).setVisible(true));
     }
 
     public MainUserWindow(int id) {
         uid = id;
         UsersBUS usersBUS = new UsersBUS();
-        isAdmin = (usersBUS.getById(uid)).getIsAdmin();
-
+        UsersDTO user = usersBUS.getById(uid);
+        isAdmin = user.getIsAdmin();
+        setTitle("Username: " + user.getuName());
         cardLayout = new CardLayout();
         chatPanel = new JPanel(cardLayout);
         blank_chat_panel = createBlankChat("Blank Chat...");
@@ -428,6 +429,8 @@ public class MainUserWindow extends JFrame {
                 users = usersBUS.getByNameOrUName(query);
                 users.retainAll(friendList);
         }
+        users.remove(usersBUS.getById(uid));
+        clearFriendSide();
         reloadFriendSide(users, groups);
     }
 

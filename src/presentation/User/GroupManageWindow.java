@@ -158,6 +158,8 @@ public class GroupManageWindow extends JFrame {
             kick_button.addActionListener(_ -> {
                 groupMembersBUS.deleteMember(member.getGID(), member.getUID());
                 list_side.remove(member_panel);
+                list_side.validate();
+                list_side.repaint();
             });
             more_menu.add(assign_button);
             assign_button.addActionListener(_ -> {
