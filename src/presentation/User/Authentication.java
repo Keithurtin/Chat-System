@@ -56,10 +56,10 @@ public class Authentication extends JFrame {
         JFrame newWindow = new JFrame();
         JPanel navigator = new JPanel();
         JPanel content_side = new JPanel();
-        JLabel fullname_label = new JLabel("Fullname: ");
-        JLabel birthdate_label = new JLabel("Birthdate: ");
+        JLabel fullname_label = new JLabel("<html>Full Name:<span style='color: red; font-weight: bold;'>*</span></html>");
+        JLabel birthdate_label = new JLabel("<html>Birthdate:<span style='color: red; font-weight: bold;'>*</span></html>");
         JLabel address_label = new JLabel("Address: ");
-        JLabel gender_label = new JLabel("Gender: ");
+        JLabel gender_label = new JLabel("<html>Gender:<span style='color: red; font-weight: bold;'>*</span></html>");
         JTextField fullname_input = new JTextField();
         JTextField address_input = new JTextField();
         JDateChooser birthdate_input = new JDateChooser();

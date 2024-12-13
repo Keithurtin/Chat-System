@@ -201,7 +201,7 @@ public class addNewUser extends JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(birthdate_label)
-                                        .addComponent(birthdate_input))
+                                        .addComponent(birthdate_input, 27, 27, 27))
                                 .addGap(18, 18, 18)
                                 .addGroup(content_sideLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(gender_label)
