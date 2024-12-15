@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendChatSection extends JPanel {
@@ -30,6 +31,8 @@ public class FriendChatSection extends JPanel {
     private JScrollPane chat_scroll;
     private JPanel chat_side;
     private DeletionListener listener;
+    private final List<JLabel> searchResults = new ArrayList<>();
+    private int currentSearchIndex = -1;
     // data
     private final ChatDMBUS chatDMBUS;
     private static final String SERVER_ADDRESS = "127.0.0.1";
@@ -112,8 +115,8 @@ public class FriendChatSection extends JPanel {
     }
     // friend chat
     public FriendChatSection(int id, UsersDTO user) {
-        setBackground(new java.awt.Color(255, 255, 255));
-        setPreferredSize(new java.awt.Dimension(593, 450));
+        setBackground(new Color(255, 255, 255));
+        setPreferredSize(new Dimension(593, 450));
         setVerifyInputWhenFocusTarget(false);
         uid = id;
         uid2 = user.getuID();
@@ -152,30 +155,52 @@ public class FriendChatSection extends JPanel {
 
     private void setupNavigatorLayout(String name, boolean isOn) {
         navigator = new JPanel();
-        navigator.setBackground(new java.awt.Color(153, 204, 255));
-        navigator.setPreferredSize(new java.awt.Dimension(390, 70));
+        navigator.setBackground(new Color(153, 204, 255));
+        navigator.setPreferredSize(new Dimension(390, 70));
 
         JButton report_user_button = new JButton("Report!");
-        report_user_button.setBackground(new java.awt.Color(255, 102, 102));
-        report_user_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        report_user_button.setForeground(new java.awt.Color(255, 255, 255));
+        report_user_button.setBackground(new Color(255, 102, 102));
+        report_user_button.setFont(new Font("Segoe UI", 1, 14));
+        report_user_button.setForeground(new Color(255, 255, 255));
         report_user_button.addActionListener(_ -> {
             SpamBUS spamBUS = new SpamBUS();
             spamBUS.addSpamReport(uid2);
         });
 
         JLabel name_label = new JLabel(name);
-        name_label.setFont(new java.awt.Font("Segoe UI", 1, 20));
-        name_label.setForeground(new java.awt.Color(255, 255, 255));
+        name_label.setFont(new Font("Segoe UI", 1, 20));
+        name_label.setForeground(new Color(255, 255, 255));
 
         JLabel status_label = new JLabel("<html> Status: " + (isOn ? "<span style='color: green; font-weight: bold;'>Online" : "<span style='color: red; font-weight: bold;'>Offline") + "</span></html>");
-        status_label.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        status_label.setForeground(new java.awt.Color(255, 255, 255));
+        status_label.setFont(new Font("Segoe UI", 1, 14));
+        status_label.setForeground(new Color(255, 255, 255));
+
+        PlaceHolder search_msg = new PlaceHolder("...");
+        JButton search_msg_btn = new JButton("Search");
+
+        search_msg_btn.addActionListener(_ -> findMessages(search_msg.getText().trim()));
+
+        JButton prev_btn = new JButton("<");
+        JButton next_btn = new JButton(">");
+
+        next_btn.addActionListener(_ -> {
+            if (!searchResults.isEmpty()) {
+                int nextIndex = (currentSearchIndex + 1) % searchResults.size();
+                navigateToMessage(nextIndex);
+            }
+        });
+
+        prev_btn.addActionListener(_ -> {
+            if (!searchResults.isEmpty()) {
+                int prevIndex = (currentSearchIndex - 1 + searchResults.size()) % searchResults.size();
+                navigateToMessage(prevIndex);
+            }
+        });
 
         JButton more_button = new JButton("...");
-        more_button.setBackground(new java.awt.Color(153, 204, 255));
-        more_button.setFont(new java.awt.Font("Segoe UI", 1, 18));
-        more_button.setForeground(new java.awt.Color(255, 255, 255));
+        more_button.setBackground(new Color(153, 204, 255));
+        more_button.setFont(new Font("Segoe UI", 1, 18));
+        more_button.setForeground(new Color(255, 255, 255));
         more_button.setBorder(null);
         
         JPopupMenu dropdownMenu = new JPopupMenu();
@@ -245,8 +270,16 @@ public class FriendChatSection extends JPanel {
             .addGroup(GroupLayout.Alignment.TRAILING, navigatorLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(name_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(status_label, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
+                        .addGroup(navigatorLayout.createSequentialGroup()
+                                .addComponent(name_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(20,20,20)
+                                .addComponent(status_label, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                        .addGroup(navigatorLayout.createSequentialGroup()
+                                .addComponent(search_msg, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                                .addComponent(search_msg_btn, GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                                .addGap(10,10,10)
+                                .addComponent(prev_btn, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                                .addComponent(next_btn, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(more_button)
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -259,10 +292,15 @@ public class FriendChatSection extends JPanel {
                 .addContainerGap()
                 .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(name_label)
+                    .addComponent(status_label)
                     .addComponent(more_button)
                     .addComponent(report_user_button))
+                .addGroup(navigatorLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(search_msg)
+                    .addComponent(search_msg_btn)
+                    .addComponent(prev_btn)
+                    .addComponent(next_btn))
                 .addGap(2, 2, 2)
-                .addComponent(status_label)
                 .addContainerGap(14, Short.MAX_VALUE))
         );
     }
@@ -285,15 +323,15 @@ public class FriendChatSection extends JPanel {
 
     private void setupSendMessageLayout() {
         send_message_panel = new JPanel();
-        send_message_panel.setBackground(new java.awt.Color(204, 204, 204));
+        send_message_panel.setBackground(new Color(204, 204, 204));
 
         input_message = new PlaceHolder("Text....");
 
         send_button = new JButton("Send");
         send_button.addActionListener(_ -> sendMessage(input_message.getText()));
-        send_button.setBackground(new java.awt.Color(153, 204, 255));
-        send_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        send_button.setForeground(new java.awt.Color(255, 255, 255));
+        send_button.setBackground(new Color(153, 204, 255));
+        send_button.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
+        send_button.setForeground(new Color(255, 255, 255));
 
         if(block == 1) {
             input_message.setEnabled(false);
@@ -327,7 +365,6 @@ public class FriendChatSection extends JPanel {
         JPanel messagePanel = new JPanel();
         messagePanel.setLayout(new FlowLayout(msg.getSenderID() == uid ? FlowLayout.RIGHT : FlowLayout.LEFT));
         messagePanel.setOpaque(false);
-
 
         JLabel messageLabel = new JLabel(msg.getMessage());
         messageLabel.setBackground(msg.getSenderID() == uid ? new Color(200, 255, 200) : new Color(200, 200, 255));
@@ -366,6 +403,49 @@ public class FriendChatSection extends JPanel {
             JScrollBar verticalBar = chat_scroll.getVerticalScrollBar();
             verticalBar.setValue(verticalBar.getMaximum());
         });
+    }
+
+    private void findMessages(String messageText) {
+        searchResults.clear();
+        currentSearchIndex = -1;
+        if(messageText.isBlank()){
+            return;
+        }
+        for (Component component : chat_side.getComponents()) {
+            if (component instanceof JPanel panel) {
+                for (Component innerComponent : panel.getComponents()) {
+                    if (innerComponent instanceof JLabel label) {
+                        if (label.getText().contains(messageText)) {
+                            searchResults.add(label);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (searchResults.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No messages found!", "Search", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            navigateToMessage(0);
+        }
+    }
+
+    private void navigateToMessage(int index) {
+        if (index < 0 || index >= searchResults.size()) {
+            return;
+        }
+        currentSearchIndex = index;
+        JLabel currentLabel = searchResults.get(currentSearchIndex);
+        Color panelColor = currentLabel.getBackground();
+        currentLabel.setBackground(new Color(255, 255, 150)); // Yellow highlight
+        currentLabel.setOpaque(true);
+        currentLabel.repaint();
+        SwingUtilities.invokeLater(() -> currentLabel.scrollRectToVisible(currentLabel.getBounds()));
+        Timer timer = new Timer(1000, _ -> {
+            currentLabel.setBackground(panelColor);
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     private void addToGroup() {

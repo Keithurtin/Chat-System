@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,7 +31,9 @@ public class GroupChatSection extends JPanel {
     private JPanel chat_side;
     private DeletionListener listener;
     private PlaceHolder input_message;
-    //data
+    private final List<JLabel> searchResults = new ArrayList<>();
+    private int currentSearchIndex = -1;
+    // data
     private final ChatGroupBUS chatGroupBUS;
     private final GroupMembersBUS groupMembersBUS;
     private List<GroupMembersDTO> memberList;
@@ -136,7 +139,7 @@ public class GroupChatSection extends JPanel {
 
         JPanel navigator = setupNavigatorLayout(group.getName(), group.getNumMember());
         JPanel send_message_panel = setupSendMessageLayout();
-        createChatSide();
+        loadChatSide();
 
         GroupLayout chat_panelLayout = new GroupLayout(this);
         this.setLayout(chat_panelLayout);
@@ -167,11 +170,33 @@ public class GroupChatSection extends JPanel {
         JPanel name_panel = new JPanel(cardLayout);
         name_panel.setBackground(new java.awt.Color(153, 204, 255));
 
-        JButton report_user_button = new JButton("Out Group");
-        report_user_button.setBackground(new java.awt.Color(255, 102, 102));
-        report_user_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        report_user_button.setForeground(new java.awt.Color(255, 255, 255));
-        report_user_button.addActionListener(e -> {
+        PlaceHolder search_msg = new PlaceHolder("...");
+        JButton search_msg_btn = new JButton("Search");
+
+        search_msg_btn.addActionListener(_ -> findMessages(search_msg.getText().trim()));
+
+        JButton prev_btn = new JButton("<");
+        JButton next_btn = new JButton(">");
+
+        next_btn.addActionListener(_ -> {
+            if (!searchResults.isEmpty()) {
+                int nextIndex = (currentSearchIndex + 1) % searchResults.size();
+                navigateToMessage(nextIndex);
+            }
+        });
+
+        prev_btn.addActionListener(_ -> {
+            if (!searchResults.isEmpty()) {
+                int prevIndex = (currentSearchIndex - 1 + searchResults.size()) % searchResults.size();
+                navigateToMessage(prevIndex);
+            }
+        });
+
+        JButton out_group_btn = new JButton("Out Group");
+        out_group_btn.setBackground(new java.awt.Color(255, 102, 102));
+        out_group_btn.setFont(new java.awt.Font("Segoe UI", 1, 12));
+        out_group_btn.setForeground(new java.awt.Color(255, 255, 255));
+        out_group_btn.addActionListener(e -> {
             GroupMembersBUS groupMembersBUS = new GroupMembersBUS();
             groupMembersBUS.deleteMember(gid, uid);
             Container parent = GroupChatSection.this.getParent();
@@ -196,11 +221,11 @@ public class GroupChatSection extends JPanel {
         cardLayout.show(name_panel, "Label");
 
         JButton manage_button = new JButton("Manage");
-        manage_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        manage_button.setFont(new java.awt.Font("Segoe UI", 1, 12));
         manage_button.addActionListener(e -> manageGroup());
 
         JButton change_name_button = new JButton("Change");
-        change_name_button.setFont(new java.awt.Font("Segoe UI", 1, 14));
+        change_name_button.setFont(new java.awt.Font("Segoe UI", 1, 12));
         change_name_button.addActionListener(e -> {
             if(change_name_button.getText().equals("Change")){
                 change_name_button.setText("Save");
@@ -229,15 +254,23 @@ public class GroupChatSection extends JPanel {
             otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(otherLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addGroup(otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(number_member_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(name_panel, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(change_name_button)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(manage_button)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(report_user_button)
+                    .addGroup(otherLayout.createParallelGroup()
+                            .addGroup(otherLayout.createSequentialGroup()
+                                    .addComponent(name_panel, GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(change_name_button)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(number_member_label, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(manage_button)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(out_group_btn))
+                            .addGroup(otherLayout.createSequentialGroup()
+                                    .addComponent(search_msg, 180, 180, 180)
+                                    .addComponent(search_msg_btn, 76,76,76)
+                                    .addGap(10,10,10)
+                                    .addComponent(prev_btn, 50, 50, 50)
+                                    .addComponent(next_btn, 50, 50,50)))
                 .addContainerGap())
         );
         otherLayout.setVerticalGroup(
@@ -246,19 +279,24 @@ public class GroupChatSection extends JPanel {
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(otherLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(GroupLayout.Alignment.TRAILING, otherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(manage_button))
-                    .addGroup(GroupLayout.Alignment.TRAILING, otherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(name_panel)
                         .addComponent(change_name_button)
-                        .addComponent(report_user_button)))
+                        .addComponent(number_member_label)
+                        .addComponent(manage_button)
+                        .addComponent(out_group_btn)))
+                .addGap(6,6,6)
+                .addGroup(otherLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(search_msg)
+                        .addComponent(search_msg_btn)
+                        .addComponent(prev_btn)
+                        .addComponent(next_btn))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(number_member_label)
                 .addGap(32, 32, 32))
         );
         return navigator;
     }
 
-    private void createChatSide() {
+    private void loadChatSide() {
         chat_side = new JPanel();
         chat_side.setLayout(new BoxLayout(chat_side, BoxLayout.Y_AXIS));
         chat_side.setBackground(Color.WHITE);
@@ -378,6 +416,50 @@ public class GroupChatSection extends JPanel {
             JScrollBar verticalBar = chat_scroll.getVerticalScrollBar();
             verticalBar.setValue(verticalBar.getMaximum());
         });
+    }
+    
+    private void findMessages(String messageText) {
+        searchResults.clear();
+        currentSearchIndex = -1;
+        if(messageText.isBlank()){
+            return;
+        }
+        for (Component component : chat_side.getComponents()) {
+            if (component instanceof JPanel panel) {
+                for (Component innerComponent : panel.getComponents()) {
+                    if (innerComponent instanceof JLabel label) {
+                        if (label.getText().contains(messageText)) {
+                            searchResults.add(label);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (searchResults.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No messages found!", "Search", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            navigateToMessage(0);
+        }
+    }
+
+    private void navigateToMessage(int index) {
+        if (index < 0 || index >= searchResults.size()) {
+            return;
+        }
+        currentSearchIndex = index;
+        JLabel currentLabel = searchResults.get(currentSearchIndex);
+        Color panelColor = currentLabel.getBackground();
+        currentLabel.setBackground(new Color(255, 255, 150)); // Yellow highlight
+        currentLabel.setOpaque(true);
+        currentLabel.repaint();
+        JPanel parent = (JPanel) currentLabel.getParent();
+        SwingUtilities.invokeLater(() -> parent.scrollRectToVisible(parent.getBounds()));
+        Timer timer = new Timer(1000, _ -> {
+            currentLabel.setBackground(panelColor);
+        });
+        timer.setRepeats(false);
+        timer.start();
     }
 
     private void manageGroup() {
