@@ -322,7 +322,12 @@ public class GroupChatSection extends JPanel {
         send_button.setBackground(new java.awt.Color(153, 204, 255));
         send_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         send_button.setForeground(new java.awt.Color(255, 255, 255));
-        send_button.addActionListener(e -> sendMessage(input_message.getText()));
+        send_button.addActionListener(_ -> {
+            if(input_message.getText().isEmpty()){
+                return;
+            }
+            sendMessage(input_message.getText());
+        });
 
         GroupLayout send_message_panelLayout = new GroupLayout(send_message_panel);
         send_message_panel.setLayout(send_message_panelLayout);

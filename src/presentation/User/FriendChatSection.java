@@ -328,7 +328,12 @@ public class FriendChatSection extends JPanel {
         input_message = new PlaceHolder("Text....");
 
         send_button = new JButton("Send");
-        send_button.addActionListener(_ -> sendMessage(input_message.getText()));
+        send_button.addActionListener(_ -> {
+            if(input_message.getText().isEmpty()){
+                return;
+            }
+            sendMessage(input_message.getText());
+        });
         send_button.setBackground(new Color(153, 204, 255));
         send_button.setFont(new Font("Segoe UI", 1, 14)); // NOI18N
         send_button.setForeground(new Color(255, 255, 255));
